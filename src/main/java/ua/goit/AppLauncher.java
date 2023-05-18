@@ -2,6 +2,6 @@ package ua.goit;
 
 public class AppLauncher {
     public static void main(String[] args) {
-        System.out.println("Hello group!!)");
+        System.out.println("Hello group!!!)");
     }
 }
