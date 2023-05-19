@@ -44,6 +44,15 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("options") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
+                    String one = options.getBank().getName();
+                    if (one.equals(inputQueryMessage)) {
+                        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
+                        sendMessage.setText("Ці налаштування встановлені");
+                        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+                        sendNextMessage(sendMessage);
+                        break;
+                    }
+
                     options.setBank(newBank);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
@@ -113,7 +122,7 @@ public class MyTelBot extends TelegramLongPollingBot {
     private InlineKeyboardMarkup getChoiceBankKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Національний банк України");
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("NBUBank");
         inlineKeyboardButton1.setCallbackData("NBUBank");
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
