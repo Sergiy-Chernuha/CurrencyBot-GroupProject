@@ -253,7 +253,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Американський доллар");
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Американський долар");
         inlineKeyboardButton2.setCallbackData("USD");
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
