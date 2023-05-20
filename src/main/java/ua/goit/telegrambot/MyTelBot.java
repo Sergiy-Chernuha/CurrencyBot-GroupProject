@@ -79,7 +79,7 @@ public class MyTelBot extends TelegramLongPollingBot {
     private SendMessage sendEndMessage(long chatId) {
         SendMessage sendEndMessage = new SendMessage();
         sendEndMessage.setChatId(String.valueOf(chatId));
-        sendEndMessage.setText("Дякую за спілкування. До зустрічі!");
+        sendEndMessage.setText("До зустрічі!");
 
         return sendEndMessage;
     }
@@ -187,6 +187,6 @@ public class MyTelBot extends TelegramLongPollingBot {
     // добавить имя и токен своего бота, они не подлежат заливке в GitHub
     @Override
     public String getBotToken() {
-        return "5542489649:AAETFAJZ4_C9vNCiT71yp8ET5hohTHomiiw";
+        return null;
     }
 }
