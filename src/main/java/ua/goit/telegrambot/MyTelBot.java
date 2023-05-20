@@ -29,6 +29,9 @@ public class MyTelBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             if (update.getMessage().hasText() && update.getMessage().getText().equals("/start")) {
                 sendNextMessage(sendHelloMessage(update.getMessage().getChatId()));
+            } else if (update.getMessage().hasText() && update.getMessage().getText().equals("/end")) {
+                sendNextMessage(sendEndMessage(update.getMessage().getChatId()));
+                System.exit(0);
             }
         } else if (update.hasCallbackQuery()) {
             System.out.print("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
@@ -119,6 +122,14 @@ public class MyTelBot extends TelegramLongPollingBot {
         sendMessage.setText("Виберіть валюту:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
+    }
+
+    private SendMessage sendEndMessage(long chatId) {
+        SendMessage sendEndMessage = new SendMessage();
+        sendEndMessage.setChatId(String.valueOf(chatId));
+        sendEndMessage.setText("До зустрічі!");
+
+        return sendEndMessage;
     }
 
     private SendMessage sendChoiceBankMessage(SendMessage sendMessage) {
