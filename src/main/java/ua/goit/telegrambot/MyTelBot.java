@@ -71,6 +71,10 @@ public class MyTelBot extends TelegramLongPollingBot {
                     options.setBank(newBank);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
+                case("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
+                case("nine"), ("ten"), ("eleven"),("twelve"), ("thirteen"), ("fourteen"), ("fifteen"),
+                        ("sixteen"), ("seventeen"), ("eighteen"), ("OffReminder")
+                        -> sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 default -> {
                     sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
                     sendNextMessage(sendMessage);
@@ -125,6 +129,14 @@ public class MyTelBot extends TelegramLongPollingBot {
         InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard();
 
         sendMessage.setText("Виберіть банк");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Оберіть час сповіщення:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
     }
@@ -231,7 +243,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         keyboardButtonsRow3.add(inlineKeyboardButton3);
 
         InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton("Час сповіщень");
-        inlineKeyboardButton4.setCallbackData("notifications");
+        inlineKeyboardButton4.setCallbackData("reminders");
         List<InlineKeyboardButton> keyboardButtonsRow4 = new ArrayList<>();
         keyboardButtonsRow4.add(inlineKeyboardButton4);
 
@@ -245,7 +257,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
+    protected InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
@@ -261,6 +273,67 @@ public class MyTelBot extends TelegramLongPollingBot {
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }
+
+    private InlineKeyboardMarkup getChoiceReminderKeyBoard() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("9");
+        inlineKeyboardButton1.setCallbackData("nine");
+
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("10");
+        inlineKeyboardButton2.setCallbackData("ten");
+
+        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("11");
+        inlineKeyboardButton3.setCallbackData("eleven");
+        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
+        keyboardButtonsRow3.add(inlineKeyboardButton1);
+        keyboardButtonsRow3.add(inlineKeyboardButton2);
+        keyboardButtonsRow3.add(inlineKeyboardButton3);
+
+        InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton("12");
+        inlineKeyboardButton4.setCallbackData("twelve");
+
+        InlineKeyboardButton inlineKeyboardButton5 = new InlineKeyboardButton("13");
+        inlineKeyboardButton5.setCallbackData("thirteen");
+
+        InlineKeyboardButton inlineKeyboardButton6 = new InlineKeyboardButton("14");
+        inlineKeyboardButton6.setCallbackData("fourteen");
+        List<InlineKeyboardButton> keyboardButtonsRow6 = new ArrayList<>();
+        keyboardButtonsRow6.add(inlineKeyboardButton4);
+        keyboardButtonsRow6.add(inlineKeyboardButton5);
+        keyboardButtonsRow6.add(inlineKeyboardButton6);
+
+        InlineKeyboardButton inlineKeyboardButton7 = new InlineKeyboardButton("15");
+        inlineKeyboardButton7.setCallbackData("fifteen");
+
+        InlineKeyboardButton inlineKeyboardButton8 = new InlineKeyboardButton("16");
+        inlineKeyboardButton8.setCallbackData("sixteen");
+
+        InlineKeyboardButton inlineKeyboardButton9 = new InlineKeyboardButton("17");
+        inlineKeyboardButton9.setCallbackData("seventeen");
+        List<InlineKeyboardButton> keyboardButtonsRow9 = new ArrayList<>();
+        keyboardButtonsRow9.add(inlineKeyboardButton7);
+        keyboardButtonsRow9.add(inlineKeyboardButton8);
+        keyboardButtonsRow9.add(inlineKeyboardButton9);
+
+        InlineKeyboardButton inlineKeyboardButton10 = new InlineKeyboardButton("18");
+        inlineKeyboardButton10.setCallbackData("eighteen");
+
+        InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton("Вимкнути сповіщення");
+        inlineKeyboardButton.setCallbackData("OffReminder");
+        List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
+        keyboardButtonsRow.add(inlineKeyboardButton10);
+        keyboardButtonsRow.add(inlineKeyboardButton);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow3);
+        rowList.add(keyboardButtonsRow6);
+        rowList.add(keyboardButtonsRow9);
+        rowList.add(keyboardButtonsRow);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
