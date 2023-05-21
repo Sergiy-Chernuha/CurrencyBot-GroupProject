@@ -59,15 +59,15 @@ public class MyTelBot extends TelegramLongPollingBot {
                     options.setChoicesCurrencies(List.of(Currencies.EUR));
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case ("two") -> {
+                case("two") -> {
                     options.setNumberOfDecimal(2);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case ("three") -> {
+                case("three") -> {
                     options.setNumberOfDecimal(3);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case ("four") -> {
+                case("four") -> {
                     options.setNumberOfDecimal(4);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
@@ -212,7 +212,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("2");
@@ -239,7 +239,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceOptionsKeyBoard() {
+    private InlineKeyboardMarkup getChoiceOptionsKeyBoard(){
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Знаки після коми");
@@ -272,7 +272,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
+    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
