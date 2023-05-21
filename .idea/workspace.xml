@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="При введении /end бот отправляет финальное сообщение и завершает диалог">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="Add part working features">
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
     </list>
@@ -23,9 +22,13 @@
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="master" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+        <entry key="$PROJECT_DIR$" value="khylyk" />
         <entry key="$PROJECT_DIR$" value="Dima" />
         <entry key="$PROJECT_DIR$" value="khylyk" />
       </map>
@@ -45,6 +48,8 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
@@ -127,6 +132,7 @@
                   <entry key="branch">
                     <value>
                       <list>
+                        <option value="origin/khylyk" />
                         <option value="Dima" />
                         <option value="origin/khylyk" />
                         <option value="origin/Dima" />
@@ -160,6 +166,35 @@
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Add first change in start branch" />
     <MESSAGE value="Add part working features" />
+    <MESSAGE value="Добавила кнопки сповіщення." />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавила кнопки сповіщення." />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand>
+      <path>
+        <item name="CurrencyBot-GroupProject" type="b2602c69:ProjectViewProjectNode" />
+        <item name="CurrencyBot-GroupProject" type="462c0819:PsiDirectoryNode" />
+      </path>
+      <path>
+        <item name="CurrencyBot-GroupProject" type="b2602c69:ProjectViewProjectNode" />
+        <item name="CurrencyBot-GroupProject" type="462c0819:PsiDirectoryNode" />
+        <item name="src" type="462c0819:PsiDirectoryNode" />
+      </path>
+      <path>
+        <item name="CurrencyBot-GroupProject" type="b2602c69:ProjectViewProjectNode" />
+        <item name="CurrencyBot-GroupProject" type="462c0819:PsiDirectoryNode" />
+        <item name="src" type="462c0819:PsiDirectoryNode" />
+        <item name="main" type="462c0819:PsiDirectoryNode" />
+      </path>
+      <path>
+        <item name="CurrencyBot-GroupProject" type="b2602c69:ProjectViewProjectNode" />
+        <item name="CurrencyBot-GroupProject" type="462c0819:PsiDirectoryNode" />
+        <item name="src" type="462c0819:PsiDirectoryNode" />
+        <item name="main" type="462c0819:PsiDirectoryNode" />
+        <item name="java" type="462c0819:PsiDirectoryNode" />
+      </path>
+    </expand>
+    <select />
     <MESSAGE value="При введении /end бот отправляет финальное сообщение и завершает диалог" />
     <option name="LAST_COMMIT_MESSAGE" value="При введении /end бот отправляет финальное сообщение и завершает диалог" />
   </component>
