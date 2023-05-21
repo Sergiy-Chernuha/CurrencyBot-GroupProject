@@ -48,26 +48,26 @@ public class MyTelBot extends TelegramLongPollingBot {
                     sendNextMessage(sendMessage);
                 }
                 case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
-                case("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
-                case("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
-                case("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
-                case("USD") -> {
+                case ("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
+                case ("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
+                case ("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
+                case ("USD") -> {
                     options.setChoicesCurrencies(List.of(Currencies.USD));
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case("EUR") -> {
+                case ("EUR") -> {
                     options.setChoicesCurrencies(List.of(Currencies.EUR));
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case("two") -> {
+                case ("two") -> {
                     options.setNumberOfDecimal(2);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case("three") -> {
+                case ("three") -> {
                     options.setNumberOfDecimal(3);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case("four") -> {
+                case ("four") -> {
                     options.setNumberOfDecimal(4);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
@@ -212,7 +212,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("2");
@@ -239,7 +239,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceOptionsKeyBoard(){
+    private InlineKeyboardMarkup getChoiceOptionsKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Знаки після коми");
@@ -272,7 +272,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    protected InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
+    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
@@ -383,7 +383,6 @@ public class MyTelBot extends TelegramLongPollingBot {
         return "BlackBot23_bot";
     }
 
-    // добавить имя и токен своего бота, они не подлежат заливке в GitHub
     @Override
     public String getBotToken() {
         return null;
