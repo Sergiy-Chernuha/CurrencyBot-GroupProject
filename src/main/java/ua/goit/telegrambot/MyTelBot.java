@@ -71,10 +71,48 @@ public class MyTelBot extends TelegramLongPollingBot {
                     options.setBank(newBank);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
-                case("nine"), ("ten"), ("eleven"),("twelve"), ("thirteen"), ("fourteen"), ("fifteen"),
-                        ("sixteen"), ("seventeen"), ("eighteen"), ("OffReminder")
-                        -> sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
+                case ("nine") -> {
+                    options.setNumberOfDecimal(9);
+                    sendNextMessage(sendChoiceReminderMessage9(sendMessage));
+                }
+                case ("ten") -> {
+                    options.setNumberOfDecimal(10);
+                    sendNextMessage(sendChoiceReminderMessage10(sendMessage));
+                }
+                case ("eleven") -> {
+                    options.setNumberOfDecimal(11);
+                    sendNextMessage(sendChoiceReminderMessage11(sendMessage));
+                }
+                case ("twelve") -> {
+                    options.setNumberOfDecimal(12);
+                    sendNextMessage(sendChoiceReminderMessage12(sendMessage));
+                }
+                case ("thirteen") -> {
+                    options.setNumberOfDecimal(13);
+                    sendNextMessage(sendChoiceReminderMessage13(sendMessage));
+                }
+                case ("fourteen") -> {
+                    options.setNumberOfDecimal(14);
+                    sendNextMessage(sendChoiceReminderMessage14(sendMessage));
+                }
+                case ("fifteen") -> {
+                    options.setNumberOfDecimal(15);
+                    sendNextMessage(sendChoiceReminderMessage15(sendMessage));
+                }
+                case ("sixteen") -> {
+                    options.setNumberOfDecimal(16);
+                    sendNextMessage(sendChoiceReminderMessage16(sendMessage));
+                }
+                case ("seventeen") -> {
+                    options.setNumberOfDecimal(17);
+                    sendNextMessage(sendChoiceReminderMessage17(sendMessage));
+                }
+                case ("eighteen") -> {
+                    options.setNumberOfDecimal(18);
+                    sendNextMessage(sendChoiceReminderMessage18(sendMessage));
+                }
+                case ("OffReminder") -> sendNextMessage(sendChoiceReminderMessageOffReminder(sendMessage));
                 default -> {
                     sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
                     sendNextMessage(sendMessage);
@@ -137,6 +175,94 @@ public class MyTelBot extends TelegramLongPollingBot {
         InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
 
         sendMessage.setText("Оберіть час сповіщення:");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage9(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 9 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage10(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 10 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage11(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 11 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage12(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 12 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage13(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 13 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage14(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 14 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage15(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 15 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage16(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 16 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage17(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 17 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessage18(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Ваш час сповіщень - 18 година");
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
+    }
+
+    private SendMessage sendChoiceReminderMessageOffReminder(SendMessage sendMessage) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+
+        sendMessage.setText("Сповіщення вимкнені");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
     }
