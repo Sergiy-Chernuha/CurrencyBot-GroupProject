@@ -24,6 +24,8 @@ public class MyTelBot extends TelegramLongPollingBot {
         options = new ChatBotSettings();
     }
 
+    private final List<String> choicesCurrencies = new ArrayList<>();
+
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
@@ -46,12 +48,13 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
-                case("USD") -> {
-                    options.setChoicesCurrencies(List.of(Currencies.USD));
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case("EUR") -> {
-                    options.setChoicesCurrencies(List.of(Currencies.EUR));
+                case("USD"), ("EUR") -> choicesCurrencies.add(inputQueryMessage); //при нажатии валюты мы просто сохраняем ее в список, но не отправляем сообщение
+                case("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
+                    List<Currencies> currencies = new ArrayList<>();
+                    for(String currency : choicesCurrencies){
+                        currencies.add(Currencies.valueOf(currency));
+                    }
+                    options.setChoicesCurrencies(currencies);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case("two") -> {
@@ -209,6 +212,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         rowList.add(keyboardButtonsRow3);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
+
         return inlineKeyboardMarkup;
     }
 
@@ -250,17 +254,25 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
         inlineKeyboardButton1.setCallbackData("EUR");
+        inlineKeyboardButton1.setSwitchInlineQueryCurrentChat("+EUR"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Американський долар");
         inlineKeyboardButton2.setCallbackData("USD");
+        inlineKeyboardButton2.setSwitchInlineQueryCurrentChat("+USD"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
+
+        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("Підтвердити вибір");
+        inlineKeyboardButton3.setCallbackData("confirm");
+        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
+        keyboardButtonsRow3.add(inlineKeyboardButton3);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
+        rowList.add(keyboardButtonsRow3);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
