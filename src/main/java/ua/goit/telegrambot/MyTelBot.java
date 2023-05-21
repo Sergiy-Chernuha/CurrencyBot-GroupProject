@@ -26,10 +26,10 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage()) {
-            if (update.getMessage().hasText() && update.getMessage().getText().equals("/start")) {
+        if (update.getMessage().hasText()) {
+            if (update.getMessage().getText().equals("/start")) {
                 sendNextMessage(sendHelloMessage(update.getMessage().getChatId()));
-            } else if (update.getMessage().hasText() && update.getMessage().getText().equals("/end")) {
+            } else if (update.getMessage().getText().equals("/end")) {
                 sendNextMessage(sendEndMessage(update.getMessage().getChatId()));
                 System.exit(0);
             }
