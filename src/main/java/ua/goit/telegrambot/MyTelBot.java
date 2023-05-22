@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings options;
+    private final List<String> choicesCurrencies = new ArrayList<>();
 
     public MyTelBot() {
         options = new ChatBotSettings();
@@ -51,23 +52,35 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case ("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case ("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
-                case ("USD") -> {
-                    options.setChoicesCurrencies(List.of(Currencies.USD));
+                case ("USD"), ("EUR") -> {
+                    if (choicesCurrencies.contains(inputQueryMessage)) {
+                        if (choicesCurrencies.size() > 1) {
+                            choicesCurrencies.remove(inputQueryMessage);
+                        }
+                    } else {
+                        choicesCurrencies.add(inputQueryMessage);
+                    }
+                }
+                case ("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
+                    List<Currencies> currencies = new ArrayList<>();
+
+                    for (String currency : choicesCurrencies) {
+                        currencies.add(Currencies.valueOf(currency));
+                    }
+                    options.setChoicesCurrencies(currencies);
+                    choicesCurrencies.clear();
+
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case ("EUR") -> {
-                    options.setChoicesCurrencies(List.of(Currencies.EUR));
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case("two") -> {
+                case ("two") -> {
                     options.setNumberOfDecimal(2);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case("three") -> {
+                case ("three") -> {
                     options.setNumberOfDecimal(3);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case("four") -> {
+                case ("four") -> {
                     options.setNumberOfDecimal(4);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
@@ -212,7 +225,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("2");
@@ -236,10 +249,11 @@ public class MyTelBot extends TelegramLongPollingBot {
         rowList.add(keyboardButtonsRow3);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
+
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceOptionsKeyBoard(){
+    private InlineKeyboardMarkup getChoiceOptionsKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Знаки після коми");
@@ -258,7 +272,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         keyboardButtonsRow3.add(inlineKeyboardButton3);
 
         InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton("Час сповіщень");
-        inlineKeyboardButton4.setCallbackData("reminders");
+        inlineKeyboardButton4.setCallbackData("notifications");
         List<InlineKeyboardButton> keyboardButtonsRow4 = new ArrayList<>();
         keyboardButtonsRow4.add(inlineKeyboardButton4);
 
@@ -272,22 +286,30 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
+    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
         inlineKeyboardButton1.setCallbackData("EUR");
+        inlineKeyboardButton1.setSwitchInlineQueryCurrentChat("+EUR"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Американський долар");
         inlineKeyboardButton2.setCallbackData("USD");
+        inlineKeyboardButton2.setSwitchInlineQueryCurrentChat("+USD"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
+
+        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("Підтвердити вибір");
+        inlineKeyboardButton3.setCallbackData("confirm");
+        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
+        keyboardButtonsRow3.add(inlineKeyboardButton3);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
+        rowList.add(keyboardButtonsRow3);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
