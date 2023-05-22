@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)">
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="-Added ability to choose both EUR and USD&#10;-Added confirm button for this">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
     </list>
@@ -25,7 +25,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="7be6a39e338d8f1e5e4d189efae8fd6bd6821358" />
+        <entry key="$PROJECT_DIR$" value="severalCurrencies" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -136,7 +136,6 @@
     <MESSAGE value="Add first change in start branch" />
     <MESSAGE value="Add part working features" />
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
-    <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
   </component>
 </project>
