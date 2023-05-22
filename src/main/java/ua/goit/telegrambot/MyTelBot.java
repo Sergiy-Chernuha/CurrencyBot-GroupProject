@@ -19,12 +19,11 @@ import java.util.ArrayList;
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings options;
+    private final List<String> choicesCurrencies = new ArrayList<>();
 
     public MyTelBot() {
         options = new ChatBotSettings();
     }
-
-    private final List<String> choicesCurrencies = new ArrayList<>();
 
     @Override
     public void onUpdateReceived(Update update) {
