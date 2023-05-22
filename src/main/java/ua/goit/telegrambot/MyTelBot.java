@@ -24,7 +24,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         options = new ChatBotSettings();
     }
 
-    private final List<String> choicesCurrencies = new ArrayList<>();
+    private List<String> choicesCurrencies = new ArrayList<>();
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -48,7 +48,19 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
-                case("USD"), ("EUR") -> choicesCurrencies.add(inputQueryMessage); //при нажатии валюты мы просто сохраняем ее в список, но не отправляем сообщение
+                case("USD"), ("EUR") -> {
+                    List<String> localCurrencies = new ArrayList<>();
+                    if (choicesCurrencies.size() == 2) {
+                        choicesCurrencies.clear();
+                    }
+                    if(localCurrencies.contains(inputQueryMessage)){
+                        localCurrencies.remove(inputQueryMessage);
+                    }
+                    else{
+                        localCurrencies.add(inputQueryMessage);
+                    }
+                    choicesCurrencies.addAll(localCurrencies);
+                    }
                 case("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
                     List<Currencies> currencies = new ArrayList<>();
                     for(String currency : choicesCurrencies){
@@ -311,12 +323,12 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "BlackBot23_bot";
+        return "khylykcurrency_bot";
     }
 
     // добавить имя и токен своего бота, они не подлежат заливке в GitHub
     @Override
     public String getBotToken() {
-        return null;
+        return "6227500031:AAGfZ54QoM5rwoenpPpRxNhj0gyWh5AZyv8";
     }
 }
