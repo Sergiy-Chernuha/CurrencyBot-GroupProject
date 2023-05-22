@@ -79,9 +79,13 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     options.setAlertTime(Integer.parseInt(inputQueryMessage));
+                    options.setAlerts(true);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case ("OffReminder") -> sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                case ("OffReminder") -> {
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                    options.setAlerts(false);
+                }
                 default -> {
                     sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
                     sendNextMessage(sendMessage);
@@ -347,6 +351,12 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
+    public void sendMessageFromThread(){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setText(getCurrentData());
+        sendNextMessage(sendMessage);
+    }
+
     private String getCurrentData() {
         StringBuilder result = new StringBuilder();
         int numberOfDecimal = options.getNumberOfDecimal();
@@ -385,6 +395,6 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return null;
+        return "5542489649:AAETFAJZ4_C9vNCiT71yp8ET5hohTHomiiw";
     }
 }

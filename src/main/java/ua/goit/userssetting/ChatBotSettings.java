@@ -12,6 +12,7 @@ public class ChatBotSettings {
     private Banks bank = new PrivatBank();
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
     private int alertTime = 9;
+    boolean alerts = true;
 
     public int getNumberOfDecimal() {
         return numberOfDecimal;
@@ -43,5 +44,13 @@ public class ChatBotSettings {
 
     public void setAlertTime(int alertTime) {
         this.alertTime = alertTime;
+    }
+
+    public boolean isAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(boolean alerts) {
+        this.alerts = alerts;
     }
 }
