@@ -325,12 +325,12 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "khylykcurrency_bot";
+        return "BlackBot23_bot";
     }
 
     // добавить имя и токен своего бота, они не подлежат заливке в GitHub
     @Override
     public String getBotToken() {
-        return "6227500031:AAGfZ54QoM5rwoenpPpRxNhj0gyWh5AZyv8";
+        return null;
     }
 }
