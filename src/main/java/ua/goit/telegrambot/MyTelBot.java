@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.goit.banks.Banks;
-import ua.goit.banks.Currencies;
 import ua.goit.banks.WorkingCurrency;
 import ua.goit.banks.BankFactory;
 import ua.goit.userssetting.ChatBotSettings;
@@ -42,30 +41,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     sendMessage.setText(getCurrentData());
                     sendNextMessage(sendMessage);
                 }
-                case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
-                case("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
-                case("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
-                case("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
-                case("USD") -> {
-                    options.setChoicesCurrencies(List.of(Currencies.USD));
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case("EUR") -> {
-                    options.setChoicesCurrencies(List.of(Currencies.EUR));
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case("two") -> {
-                    options.setNumberOfDecimal(2);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case("three") -> {
-                    options.setNumberOfDecimal(3);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case("four") -> {
-                    options.setNumberOfDecimal(4);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
+                case ("options") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
                     options.setBank(newBank);
@@ -93,30 +69,6 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         sendMessage.setChatId(String.valueOf(chatId));
         sendMessage.setText("Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        return sendMessage;
-    }
-
-    private SendMessage sendChoiceOptionsMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceOptionsKeyBoard();
-
-        sendMessage.setText("Налаштування");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        return sendMessage;
-    }
-
-    private SendMessage sendChoiceDecimalsMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceDecimalsKeyBoard();
-
-        sendMessage.setText("Виберіть кількість знаків після коми:");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        return sendMessage;
-    }
-
-    private SendMessage sendChoiceCurrenciesMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceCurrenciesKeyBoard();
-
-        sendMessage.setText("Виберіть валюту:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
     }
@@ -180,87 +132,6 @@ public class MyTelBot extends TelegramLongPollingBot {
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
         rowList.add(keyboardButtonsRow3);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-        return inlineKeyboardMarkup;
-    }
-
-    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("2");
-        inlineKeyboardButton1.setCallbackData("two");
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(inlineKeyboardButton1);
-
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("3");
-        inlineKeyboardButton2.setCallbackData("three");
-        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow2.add(inlineKeyboardButton2);
-
-        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("4");
-        inlineKeyboardButton3.setCallbackData("four");
-        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
-        keyboardButtonsRow3.add(inlineKeyboardButton3);
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-        rowList.add(keyboardButtonsRow2);
-        rowList.add(keyboardButtonsRow3);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-        return inlineKeyboardMarkup;
-    }
-
-    private InlineKeyboardMarkup getChoiceOptionsKeyBoard(){
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Знаки після коми");
-        inlineKeyboardButton1.setCallbackData("decimals");
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(inlineKeyboardButton1);
-
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Банк");
-        inlineKeyboardButton2.setCallbackData("bank");
-        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow2.add(inlineKeyboardButton2);
-
-        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("Валюти");
-        inlineKeyboardButton3.setCallbackData("currencies");
-        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
-        keyboardButtonsRow3.add(inlineKeyboardButton3);
-
-        InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton("Час сповіщень");
-        inlineKeyboardButton4.setCallbackData("notifications");
-        List<InlineKeyboardButton> keyboardButtonsRow4 = new ArrayList<>();
-        keyboardButtonsRow4.add(inlineKeyboardButton4);
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-        rowList.add(keyboardButtonsRow2);
-        rowList.add(keyboardButtonsRow3);
-        rowList.add(keyboardButtonsRow4);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-        return inlineKeyboardMarkup;
-    }
-
-    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
-        inlineKeyboardButton1.setCallbackData("EUR");
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(inlineKeyboardButton1);
-
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Американський долар");
-        inlineKeyboardButton2.setCallbackData("USD");
-        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow2.add(inlineKeyboardButton2);
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-        rowList.add(keyboardButtonsRow2);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
