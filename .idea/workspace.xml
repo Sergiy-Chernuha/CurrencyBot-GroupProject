@@ -25,7 +25,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="khylyk" />
+        <entry key="$PROJECT_DIR$" value="7be6a39e338d8f1e5e4d189efae8fd6bd6821358" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -64,6 +64,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.AppLauncher" />
+        <item itemvalue="Application.AppLauncher" />
       </list>
     </recent_temporary>
   </component>
@@ -90,14 +91,7 @@
       <option name="project" value="LOCAL" />
       <updated>1684397225817</updated>
     </task>
-    <task id="LOCAL-00003" summary="-Added ability to choose both EUR and USD&#10;-Added confirm button for this">
-      <created>1684657727542</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1684657727542</updated>
-    </task>
-    <option name="localTasksCounter" value="4" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -111,7 +105,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/khylyk" />
+                        <option value="severalCurrencies" />
                       </list>
                     </value>
                   </entry>
@@ -128,7 +122,6 @@
     <MESSAGE value="Add first change in start branch" />
     <MESSAGE value="Add part working features" />
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
-    <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;-if currency is clicked second time, it is not added to options" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;-if currency is clicked second time, it is not added to options" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
   </component>
 </project>

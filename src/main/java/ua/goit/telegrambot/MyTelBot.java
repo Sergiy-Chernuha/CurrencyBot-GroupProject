@@ -24,7 +24,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         options = new ChatBotSettings();
     }
 
-    private List<String> choicesCurrencies = new ArrayList<>();
+    private final List<String> choicesCurrencies = new ArrayList<>();
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -49,24 +49,26 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
                 case("USD"), ("EUR") -> {
-                    List<String> localCurrencies = new ArrayList<>();
-                    if (choicesCurrencies.size() == 2) {
-                        choicesCurrencies.clear();
-                    }
-                    if(localCurrencies.contains(inputQueryMessage)){
-                        localCurrencies.remove(inputQueryMessage);
+
+                    if(choicesCurrencies.contains(inputQueryMessage)){
+                        if(choicesCurrencies.size()>1){
+                            choicesCurrencies.remove(inputQueryMessage);
+                        }
                     }
                     else{
-                        localCurrencies.add(inputQueryMessage);
+                        choicesCurrencies.add(inputQueryMessage);
                     }
-                    choicesCurrencies.addAll(localCurrencies);
-                    }
+
+                }
                 case("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
                     List<Currencies> currencies = new ArrayList<>();
                     for(String currency : choicesCurrencies){
                         currencies.add(Currencies.valueOf(currency));
                     }
                     options.setChoicesCurrencies(currencies);
+
+                    choicesCurrencies.clear();
+
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case("two") -> {
