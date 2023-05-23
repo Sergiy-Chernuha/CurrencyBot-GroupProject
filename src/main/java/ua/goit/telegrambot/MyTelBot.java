@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ua.goit.SecondThreadAlertTime;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.WorkingCurrency;
@@ -15,6 +16,7 @@ import ua.goit.userssetting.ChatBotSettings;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
+
 
 public class MyTelBot extends TelegramLongPollingBot {
 
@@ -39,6 +41,7 @@ public class MyTelBot extends TelegramLongPollingBot {
             System.out.print("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
             String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
             SendMessage sendMessage = new SendMessage();
+            SecondThreadAlertTime secondThreadAlertTime = new SecondThreadAlertTime();
 
             sendMessage.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
 
@@ -78,13 +81,15 @@ public class MyTelBot extends TelegramLongPollingBot {
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
-                    options.setAlertTime(Integer.parseInt(inputQueryMessage));
-                    options.setAlerts(true);
+                    secondThreadAlertTime.setTime(Integer.parseInt(inputQueryMessage));
+                    secondThreadAlertTime.setBol(true);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                    secondThreadAlertTime.run();
                 }
                 case ("OffReminder") -> {
+                    secondThreadAlertTime.setBol(false);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                    options.setAlerts(false);
+                    secondThreadAlertTime.run();
                 }
                 default -> {
                     sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
@@ -353,6 +358,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     public void sendMessageFromThread(){
         SendMessage sendMessage = new SendMessage();
+
         sendMessage.setText(getCurrentData());
         sendNextMessage(sendMessage);
     }
