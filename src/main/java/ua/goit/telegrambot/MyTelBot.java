@@ -2,9 +2,13 @@ package ua.goit.telegrambot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
@@ -28,9 +32,25 @@ public class MyTelBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
+            Message message = update.getMessage();
             if (update.getMessage().hasText() && update.getMessage().getText().equals("/start")) {
                 sendNextMessage(sendHelloMessage(update.getMessage().getChatId()));
             }
+            else if(message.hasText()){
+                String text = message.getText();
+                if(text.equals("Отримати інфо")){
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setChatId(String.valueOf(message.getChatId()));
+                    sendMessage.setText(getCurrentData());
+                    sendNextMessage(sendMessage);
+                }
+                else if(text.equals("Налаштування")){
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setChatId(String.valueOf(message.getChatId()));
+                    sendNextMessage(sendChoiceOptionsMessage(sendMessage));
+                }
+            }
+
         } else if (update.hasCallbackQuery()) {
             System.out.print("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
             String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
@@ -39,11 +59,6 @@ public class MyTelBot extends TelegramLongPollingBot {
             sendMessage.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
 
             switch (inputQueryMessage) {
-                case ("current") -> {
-                    sendMessage.setText(getCurrentData());
-                    sendNextMessage(sendMessage);
-                }
-                case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
                 case("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
@@ -105,11 +120,11 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     private SendMessage sendHelloMessage(long chatId) {
         SendMessage sendMessage = new SendMessage();
-        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
+        ReplyKeyboardMarkup replyKeyboardMarkup = getDefaultKeyBoard();
 
         sendMessage.setChatId(String.valueOf(chatId));
         sendMessage.setText("Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
         return sendMessage;
     }
 
@@ -146,32 +161,33 @@ public class MyTelBot extends TelegramLongPollingBot {
     }
 
     private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
+        ReplyKeyboardMarkup replyKeyboardMarkup = getDefaultKeyBoard();
+        //InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
 
         sendMessage.setText("Налаштування оновлені");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
         return sendMessage;
     }
 
-    private InlineKeyboardMarkup getDefaultKeyBoard() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+    private ReplyKeyboardMarkup getDefaultKeyBoard() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        List<KeyboardRow> keyboard = new ArrayList<>();
 
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Отримати інфо");
-        inlineKeyboardButton1.setCallbackData("current");
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(inlineKeyboardButton1);
+        KeyboardRow row1 = new KeyboardRow();
+        KeyboardButton button1 = new KeyboardButton("Отримати інфо");
+        row1.add(button1);
 
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Налаштування");
-        inlineKeyboardButton2.setCallbackData("options");
-        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow2.add(inlineKeyboardButton2);
+        KeyboardRow row2 = new KeyboardRow();
+        KeyboardButton button2 = new KeyboardButton("Налаштування");
+        row1.add(button2);
 
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-        rowList.add(keyboardButtonsRow2);
+        keyboard.add(row1);
+        keyboard.add(row2);
 
-        inlineKeyboardMarkup.setKeyboard(rowList);
-        return inlineKeyboardMarkup;
+        replyKeyboardMarkup.setKeyboard(keyboard);
+
+        return replyKeyboardMarkup;
     }
 
     private InlineKeyboardMarkup getChoiceBankKeyBoard() {
