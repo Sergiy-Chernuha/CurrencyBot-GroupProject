@@ -11,7 +11,7 @@ public class ChatBotSettings {
     private int numberOfDecimal = 2;
     private Banks bank = new PrivatBank();
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
-    private String alertTime = "9.00";
+    private int alertTime = 9;
 
     public int getNumberOfDecimal() {
         return numberOfDecimal;
@@ -37,11 +37,11 @@ public class ChatBotSettings {
         this.choicesCurrencies = choicesCurrencies;
     }
 
-    public String getAlertTime() {
+    public int getAlertTime() {
         return alertTime;
     }
 
-    public void setAlertTime(String alertTime) {
+    public void setAlertTime(int alertTime) {
         this.alertTime = alertTime;
     }
 }
