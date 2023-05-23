@@ -19,10 +19,12 @@ import java.util.ArrayList;
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings options;
-    private final List<String> choicesCurrencies = new ArrayList<>();
+    private final List<String> choicesCurrencies;
 
     public MyTelBot() {
         options = new ChatBotSettings();
+        choicesCurrencies = new ArrayList<>();
+        choicesCurrencies.add(options.getChoicesCurrencies().get(0).toString());
     }
 
     @Override
@@ -37,7 +39,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                 }
             }
         } else if (update.hasCallbackQuery()) {
-            System.out.print("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
+            System.out.println("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
             String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
             SendMessage sendMessage = new SendMessage();
 
@@ -62,39 +64,29 @@ public class MyTelBot extends TelegramLongPollingBot {
                     }
                 }
                 case ("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
-                    List<Currencies> currencies = new ArrayList<>();
+                    List<Currencies> newCurrenciesList = new ArrayList<>();
 
                     for (String currency : choicesCurrencies) {
-                        currencies.add(Currencies.valueOf(currency));
+                        newCurrenciesList.add(Currencies.valueOf(currency));
                     }
-                    options.setChoicesCurrencies(currencies);
-                    choicesCurrencies.clear();
-
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
+                    options.setChoicesCurrencies(newCurrenciesList);
                 }
-                case ("two") -> {
-                    options.setNumberOfDecimal(2);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case ("three") -> {
-                    options.setNumberOfDecimal(3);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case ("four") -> {
-                    options.setNumberOfDecimal(4);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                case("2"), ("3"), ("4") -> {
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    options.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage,inputQueryMessage));
                     options.setBank(newBank);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     options.setAlertTime(Integer.parseInt(inputQueryMessage));
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
-                case ("OffReminder") -> sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                case ("OffReminder") -> sendNextMessage(sendUpdatedSettingMessage(sendMessage,"false"));
                 default -> {
                     sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
                     sendNextMessage(sendMessage);
@@ -156,7 +148,7 @@ public class MyTelBot extends TelegramLongPollingBot {
     private SendMessage sendChoiceBankMessage(SendMessage sendMessage) {
         InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard();
 
-        sendMessage.setText("Виберіть банк");
+        sendMessage.setText("Виберіть банк:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
     }
@@ -169,11 +161,23 @@ public class MyTelBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage) {
+    private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage, String inputQueryMessage) {
         InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
+        String bank = options.getBank().getName();
+        String numberOfDecimal = String.valueOf(options.getNumberOfDecimal());
+        String currencies = options.getChoicesCurrencies().toString();
+        String alertTime = String.valueOf(options.getAlertTime());
 
-        sendMessage.setText("Налаштування оновлені");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+
+        if (bank.equals(inputQueryMessage) || numberOfDecimal.equals(inputQueryMessage) ||
+                currencies.equals(inputQueryMessage) || alertTime.equals(inputQueryMessage)) {
+            sendMessage.setText("Ці налаштування вже встановлені.");
+
+            return sendMessage;
+        }
+        sendMessage.setText("Налаштування оновлені.");
+
         return sendMessage;
     }
 
@@ -229,17 +233,17 @@ public class MyTelBot extends TelegramLongPollingBot {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("2");
-        inlineKeyboardButton1.setCallbackData("two");
+        inlineKeyboardButton1.setCallbackData("2");
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("3");
-        inlineKeyboardButton2.setCallbackData("three");
+        inlineKeyboardButton2.setCallbackData("3");
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
 
         InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("4");
-        inlineKeyboardButton3.setCallbackData("four");
+        inlineKeyboardButton3.setCallbackData("4");
         List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
         keyboardButtonsRow3.add(inlineKeyboardButton3);
 
@@ -272,7 +276,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         keyboardButtonsRow3.add(inlineKeyboardButton3);
 
         InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton("Час сповіщень");
-        inlineKeyboardButton4.setCallbackData("notifications");
+        inlineKeyboardButton4.setCallbackData("reminders");
         List<InlineKeyboardButton> keyboardButtonsRow4 = new ArrayList<>();
         keyboardButtonsRow4.add(inlineKeyboardButton4);
 
@@ -407,6 +411,6 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return null;
+        return "";
     }
 }
