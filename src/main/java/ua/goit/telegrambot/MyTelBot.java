@@ -8,11 +8,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
-import ua.goit.banks.WorkingCurrency;
 import ua.goit.banks.BankFactory;
 import ua.goit.userssetting.ChatBotSettings;
+import ua.goit.userssetting.SettingUtils;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -47,7 +46,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
             switch (inputQueryMessage) {
                 case ("current") -> {
-                    sendMessage.setText(getCurrentData());
+                    sendMessage.setText(SettingUtils.getCurrentData(options));
                     sendNextMessage(sendMessage);
                 }
                 case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
@@ -371,37 +370,6 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
-    }
-
-    private String getCurrentData() {
-        StringBuilder result = new StringBuilder();
-        int numberOfDecimal = options.getNumberOfDecimal();
-
-        try {
-            options.getBank().updateCurrentData();
-        } catch (IOException e) {
-            System.out.println("No bank connection");
-        }
-
-        result.append("Курс в ");
-        result.append(options.getBank().getName());
-        result.append(": \n");
-
-        for (WorkingCurrency current : options.getBank().getCurrencies()) {
-            if (!options.getChoicesCurrencies().contains(current.getName())) {
-                continue;
-            }
-
-            result.append("\n");
-            result.append(current.getName());
-            result.append("/UAH\n");
-            result.append("   Продаж:");
-            result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencySellingRate()));
-            result.append("   Купівля:");
-            result.append(String.format("%." + numberOfDecimal + "f", current.getCurrencyBuyingRate()));
-        }
-
-        return result.toString();
     }
 
     @Override
