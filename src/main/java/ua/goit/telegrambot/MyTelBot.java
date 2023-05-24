@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ua.goit.SecondThreadAlertTime;
+import ua.goit.ReminderTimer;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.WorkingCurrency;
@@ -21,11 +21,11 @@ import java.util.ArrayList;
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings userSettings;
-    private final SecondThreadAlertTime secondThreadAlertTime;
+    private final ReminderTimer secondThreadAlertTime;
 
     public MyTelBot() {
         userSettings = new ChatBotSettings();
-        secondThreadAlertTime= new SecondThreadAlertTime(this);
+        secondThreadAlertTime= new ReminderTimer(this);
     }
 
     public ChatBotSettings getUserSettings() {
@@ -87,24 +87,17 @@ public class MyTelBot extends TelegramLongPollingBot {
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
-
-                    userSettings.setAlerts(true);
+                    userSettings.setReminderStarted(true);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                    System.out.println("start second thread1");
                     userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
                     secondThreadAlertTime.start();
                 }
                 case ("OffReminder") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                    userSettings.setAlerts(false);
-//                    try {
-//                        secondThreadAlertTime.wait();
-//                    } catch (InterruptedException e) {
-//                        throw new RuntimeException(e);
-//                    }
+                    userSettings.setReminderStarted(false);
                 }
                 default -> {
-                    sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
+                    sendMessage.setText("Немає обробки цієї кнопки: " + update.getCallbackQuery().getData());
                     sendNextMessage(sendMessage);
                 }
             }
@@ -368,17 +361,6 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    public void sendMessageFromThread(SendMessage sendMessage){
-        sendMessage.setText(getCurrentData());
-        sendNextMessage(sendMessage);
-
-//        SendMessage sendMessage = new SendMessage();
-//
-//        sendMessage.setText(getCurrentData());
-//        sendMessage.setChatId(options.getChatId());
-//        sendNextMessage(sendMessage);
-    }
-
     public String getCurrentData() {
         StringBuilder result = new StringBuilder();
         int numberOfDecimal = userSettings.getNumberOfDecimal();
@@ -420,32 +402,3 @@ public class MyTelBot extends TelegramLongPollingBot {
         return "5542489649:AAETFAJZ4_C9vNCiT71yp8ET5hohTHomiiw";
     }
 }
-
-// class RemindeTimer extends Thread {
-//     private final ChatBotSettings options;
-//
-//     public RemindeTimer(ChatBotSettings options) {
-//         this.options = options;
-//     }
-//    @Override
-//    public void run() {
-//
-//        while (options.isAlerts()) {
-//            try {
-//                Thread.sleep(60000);
-//                System.out.println("not time");
-//            } catch (InterruptedException e) {
-//
-//            }
-//
-//
-//            if (LocalTime.now().getHour() == options.getAlertTime()
-//                    && LocalTime.now().getMinute() == 0) {
-////                SettingUtils
-//
-//            }
-//        }
-//
-//        System.out.println("end second thread");
-//    }
-//}

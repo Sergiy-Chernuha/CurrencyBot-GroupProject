@@ -7,7 +7,6 @@ import ua.goit.telegrambot.MyTelBot;
 
 public class AppLauncher {
 
-
     public static void main(String[] args){
         TelegramBotsApi bolts;
 

@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0d7db63f-899b-4d92-b2f5-a0325d5769fc" name="Changes" comment="do part of second thread">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_14_39__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_14_39__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_17_14__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_17_14__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_05__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_05__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_20__Changes_.xml" afterDir="false" />
+    <list default="true" id="0d7db63f-899b-4d92-b2f5-a0325d5769fc" name="Changes" comment="finished ReminderTimer class">
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023__21_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023__21_20__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__10_29__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__10_29__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__10_41__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__10_41__Changes_.xml" afterDir="false" />
@@ -18,7 +13,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/AppLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/AppLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/SecondThreadAlertTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/SecondThreadAlertTime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/SecondThreadAlertTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/ReminderTimer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/ChatBotSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/ChatBotSettings.java" afterDir="false" />
     </list>
@@ -42,7 +37,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Proba" />
+        <entry key="$PROJECT_DIR$" value="Dima" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,7 +66,7 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="AppLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="ua.goit.AppLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ua.goit.AppLauncher" />
       <module name="CurrencyBot-GroupProject" />
       <extension name="coverage">
@@ -86,7 +81,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
       </list>
     </recent_temporary>
   </component>
@@ -159,6 +154,7 @@
     <MESSAGE value="Add part working features" />
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
     <MESSAGE value="do part of second thread" />
-    <option name="LAST_COMMIT_MESSAGE" value="do part of second thread" />
+    <MESSAGE value="finished ReminderTimer class" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished ReminderTimer class" />
   </component>
 </project>
