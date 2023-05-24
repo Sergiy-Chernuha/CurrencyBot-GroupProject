@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)&#10;moved variable choicesCurrencies above constructor">
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="-Changed default buttons to keyboard markup">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
@@ -113,7 +113,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684771729888</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="-Changed default buttons to keyboard markup">
+      <created>1684835526155</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1684835526155</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -146,6 +153,7 @@
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)" />
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)&#10;moved variable choicesCurrencies above constructor" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)&#10;moved variable choicesCurrencies above constructor" />
+    <MESSAGE value="-Changed default buttons to keyboard markup" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Changed default buttons to keyboard markup" />
   </component>
 </project>
