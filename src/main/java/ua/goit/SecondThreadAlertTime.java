@@ -1,81 +1,62 @@
 package ua.goit;
 
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.goit.telegrambot.MyTelBot;
 import ua.goit.userssetting.ChatBotSettings;
 
-import java.util.Date;
+import java.time.LocalTime;
 
+public class SecondThreadAlertTime extends Thread {
+    //    private final ChatBotSettings options;
+    private final MyTelBot myTelBot;
 
-@SuppressWarnings("ALL")
-public class SecondThreadAlertTime extends Thread{
-    private final ChatBotSettings options = new ChatBotSettings();
-    private final MyTelBot myTelBot = new MyTelBot();
-    Thread thread = new Thread();
-    boolean bol = true;
-    int time = 9;
-    int hour;
-    Date date = new Date();
-
-    public void setHour(int hour) {
-        this.hour = hour;
+    public SecondThreadAlertTime(MyTelBot myTelBot) {
+        this.myTelBot = myTelBot;
     }
 
-    public void setBol(boolean bol) {
-        this.bol = bol;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-
-//    public void run() {
-//             setHour(date.getHours());
-//
-//             System.out.print(hour + " ");
-//             System.out.print(time + " ");
-//             System.out.println(bol);
-//
-//        while (bol == true){
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//            if(time+4 == date.getHours()){
-//                myTelBot.sendMessageFromThread();
-//                setBol(false);
-//            }
-//        }
-//
-//    }
 
     @Override
     public void run() {
-        setHour(date.getHours());
 
-        int countMinutes = 0;
-
-        while (bol == true){
-
-             System.out.print(hour + " ");
-             System.out.print(time + " ");
-             System.out.println(bol);
-
+        while (myTelBot.getUserSettings().isAlerts()) {
             try {
-                Thread.sleep(1000);
+                sleep(1000);
+                System.out.println("not time");
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                System.out.println("SecondThreadAlertTime is abort");
             }
-            countMinutes += 1;
 
-            if(time < hour){
-                if((time - hour) * 60 == countMinutes) myTelBot.sendMessageFromThread();
-            } else if (time > hour) {
-                if(((24 - time) + hour) * 60 == countMinutes) myTelBot.sendMessageFromThread();
-            } else if (time == hour) {
-                myTelBot.sendMessageFromThread();
+
+            if (LocalTime.now().getHour() == myTelBot.getUserSettings().getAlertTime()
+                    && LocalTime.now().getMinute() == 0) {
+//                if (LocalTime.now().getMinute() == 43) {
+//                SettingUtils
+                System.out.println("this is true time");
+                sendAlertMessage();
+                    try {
+                        sleep(60000);
+                        System.out.println("not time");
+                    } catch (InterruptedException e) {
+                        System.out.println("SecondThreadAlertTime is abort");
+                    }
             }
         }
+
+        System.out.println("end second thread");
     }
+
+    private void sendAlertMessage() {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(String.valueOf(myTelBot.getUserSettings().getChatId()));
+        sendMessage.setText(myTelBot.getCurrentData());
+//        try {
+        myTelBot.sendNextMessage(sendMessage);
+//            execute(sendMessage);
+//        } catch (TelegramApiException e) {
+//            e.printStackTrace();
+//        }
+//        sendNextMessage(sendMessage);
+    }
+
 }

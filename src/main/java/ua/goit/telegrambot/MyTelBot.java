@@ -20,10 +20,16 @@ import java.util.ArrayList;
 
 public class MyTelBot extends TelegramLongPollingBot {
 
-    private final ChatBotSettings options;
+    private final ChatBotSettings userSettings;
+    private final SecondThreadAlertTime secondThreadAlertTime;
 
     public MyTelBot() {
-        options = new ChatBotSettings();
+        userSettings = new ChatBotSettings();
+        secondThreadAlertTime= new SecondThreadAlertTime(this);
+    }
+
+    public ChatBotSettings getUserSettings() {
+        return userSettings;
     }
 
     @Override
@@ -32,17 +38,17 @@ public class MyTelBot extends TelegramLongPollingBot {
             if (update.getMessage().hasText()) {
                 if (update.getMessage().getText().equals("/start")) {
                     sendNextMessage(sendHelloMessage(update.getMessage().getChatId()));
+                    userSettings.setChatId(update.getMessage().getChatId());
                 } else if (update.getMessage().getText().equals("/end")) {
                     sendNextMessage(sendEndMessage(update.getMessage().getChatId()));
                     System.exit(0);
                 }
             }
         } else if (update.hasCallbackQuery()) {
+//            Нужно убрать следующую строку перед финишем.
             System.out.print("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
             String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
             SendMessage sendMessage = new SendMessage();
-            SecondThreadAlertTime secondThreadAlertTime = new SecondThreadAlertTime();
-
             sendMessage.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
 
             switch (inputQueryMessage) {
@@ -55,46 +61,47 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case ("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
                 case ("USD") -> {
-                    options.setChoicesCurrencies(List.of(Currencies.USD));
+                    userSettings.setChoicesCurrencies(List.of(Currencies.USD));
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case ("EUR") -> {
-                    options.setChoicesCurrencies(List.of(Currencies.EUR));
+                    userSettings.setChoicesCurrencies(List.of(Currencies.EUR));
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case("two") -> {
-                    options.setNumberOfDecimal(2);
+                    userSettings.setNumberOfDecimal(2);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case("three") -> {
-                    options.setNumberOfDecimal(3);
+                    userSettings.setNumberOfDecimal(3);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case("four") -> {
-                    options.setNumberOfDecimal(4);
+                    userSettings.setNumberOfDecimal(4);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
-                    options.setBank(newBank);
+                    userSettings.setBank(newBank);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
-                    secondThreadAlertTime.setTime(Integer.parseInt(inputQueryMessage));
-                    secondThreadAlertTime.setBol(true);
+
+                    userSettings.setAlerts(true);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                    System.out.println("start second thread1");
+                    userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
                     secondThreadAlertTime.start();
-                    options.setChatId(update.getMessage().getChatId());
                 }
                 case ("OffReminder") -> {
-                    secondThreadAlertTime.setBol(false);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                    try {
-                        secondThreadAlertTime.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    userSettings.setAlerts(false);
+//                    try {
+//                        secondThreadAlertTime.wait();
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
                 }
                 default -> {
                     sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
@@ -104,7 +111,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendNextMessage(SendMessage message) {
+    public void sendNextMessage(SendMessage message) {
         try {
             execute(message);
         } catch (TelegramApiException e) {
@@ -361,30 +368,33 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    public void sendMessageFromThread(){
-        SendMessage sendMessage = new SendMessage();
-
+    public void sendMessageFromThread(SendMessage sendMessage){
         sendMessage.setText(getCurrentData());
-        sendMessage.setChatId(options.getChatId());
         sendNextMessage(sendMessage);
+
+//        SendMessage sendMessage = new SendMessage();
+//
+//        sendMessage.setText(getCurrentData());
+//        sendMessage.setChatId(options.getChatId());
+//        sendNextMessage(sendMessage);
     }
 
-    private String getCurrentData() {
+    public String getCurrentData() {
         StringBuilder result = new StringBuilder();
-        int numberOfDecimal = options.getNumberOfDecimal();
+        int numberOfDecimal = userSettings.getNumberOfDecimal();
 
         try {
-            options.getBank().updateCurrentData();
+            userSettings.getBank().updateCurrentData();
         } catch (IOException e) {
             System.out.println("No bank connection");
         }
 
         result.append("Курс в ");
-        result.append(options.getBank().getName());
+        result.append(userSettings.getBank().getName());
         result.append(": \n");
 
-        for (WorkingCurrency current : options.getBank().getCurrencies()) {
-            if (!options.getChoicesCurrencies().contains(current.getName())) {
+        for (WorkingCurrency current : userSettings.getBank().getCurrencies()) {
+            if (!userSettings.getChoicesCurrencies().contains(current.getName())) {
                 continue;
             }
 
@@ -410,3 +420,32 @@ public class MyTelBot extends TelegramLongPollingBot {
         return "5542489649:AAETFAJZ4_C9vNCiT71yp8ET5hohTHomiiw";
     }
 }
+
+// class RemindeTimer extends Thread {
+//     private final ChatBotSettings options;
+//
+//     public RemindeTimer(ChatBotSettings options) {
+//         this.options = options;
+//     }
+//    @Override
+//    public void run() {
+//
+//        while (options.isAlerts()) {
+//            try {
+//                Thread.sleep(60000);
+//                System.out.println("not time");
+//            } catch (InterruptedException e) {
+//
+//            }
+//
+//
+//            if (LocalTime.now().getHour() == options.getAlertTime()
+//                    && LocalTime.now().getMinute() == 0) {
+////                SettingUtils
+//
+//            }
+//        }
+//
+//        System.out.println("end second thread");
+//    }
+//}
