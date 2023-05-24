@@ -10,7 +10,7 @@ import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.BankFactory;
 import ua.goit.userssetting.ChatBotSettings;
-import ua.goit.userssetting.SettingUtils;
+//import ua.goit.userssetting.SettingUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
             switch (inputQueryMessage) {
                 case ("current") -> {
-                    sendMessage.setText(SettingUtils.getCurrentData(options));
+//                    sendMessage.setText(SettingUtils.getCurrentData(options));
                     sendNextMessage(sendMessage);
                 }
                 case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
