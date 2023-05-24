@@ -9,23 +9,24 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.goit.ReminderTimer;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
-import ua.goit.banks.WorkingCurrency;
 import ua.goit.banks.BankFactory;
 import ua.goit.userssetting.ChatBotSettings;
+import ua.goit.userssetting.SettingUtils;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-
 
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings userSettings;
     private final ReminderTimer secondThreadAlertTime;
+    private final List<String> choicesCurrencies;
 
     public MyTelBot() {
+        choicesCurrencies = new ArrayList<>();
         userSettings = new ChatBotSettings();
         secondThreadAlertTime= new ReminderTimer(this);
+        choicesCurrencies.add(userSettings.getChoicesCurrencies().get(0).toString());
     }
 
     public ChatBotSettings getUserSettings() {
@@ -46,52 +47,58 @@ public class MyTelBot extends TelegramLongPollingBot {
             }
         } else if (update.hasCallbackQuery()) {
 //            Нужно убрать следующую строку перед финишем.
-            System.out.print("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
+            System.out.println("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
             String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
             SendMessage sendMessage = new SendMessage();
+
             sendMessage.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
 
             switch (inputQueryMessage) {
                 case ("current") -> {
-                    sendMessage.setText(getCurrentData());
+                    sendMessage.setText(SettingUtils.getCurrentData(options));
                     sendNextMessage(sendMessage);
                 }
                 case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
                 case ("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case ("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case ("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
-                case ("USD") -> {
-                    userSettings.setChoicesCurrencies(List.of(Currencies.USD));
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                case ("USD"), ("EUR") -> {
+                    if (choicesCurrencies.contains(inputQueryMessage)) {
+                        if (choicesCurrencies.size() > 1) {
+                            choicesCurrencies.remove(inputQueryMessage);
+                        }
+                    } else {
+                        choicesCurrencies.add(inputQueryMessage);
+                    }
                 }
-                case ("EUR") -> {
-                    userSettings.setChoicesCurrencies(List.of(Currencies.EUR));
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                case ("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
+                    List<Currencies> newCurrenciesList = new ArrayList<>();
+
+                    for (String currency : choicesCurrencies) {
+                        newCurrenciesList.add(Currencies.valueOf(currency));
+                    }
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
+                    SettingUtils.setChoicesCurrencies(newCurrenciesList);
                 }
-                case("two") -> {
-                    userSettings.setNumberOfDecimal(2);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case("three") -> {
-                    userSettings.setNumberOfDecimal(3);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                }
-                case("four") -> {
-                    userSettings.setNumberOfDecimal(4);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                case("2"), ("3"), ("4") -> {
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    SettingUtils.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
-                    userSettings.setBank(newBank);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage,inputQueryMessage));
+                    SettingUtils.setBank(newBank);
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    options.setAlertTime(Integer.parseInt(inputQueryMessage));
                     userSettings.setReminderStarted(true);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                     userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
                     secondThreadAlertTime.start();
                 }
+                case ("OffReminder") -> sendNextMessage(sendUpdatedSettingMessage(sendMessage,"false"));
                 case ("OffReminder") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                     userSettings.setReminderStarted(false);
@@ -157,7 +164,7 @@ public class MyTelBot extends TelegramLongPollingBot {
     private SendMessage sendChoiceBankMessage(SendMessage sendMessage) {
         InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard();
 
-        sendMessage.setText("Виберіть банк");
+        sendMessage.setText("Виберіть банк:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         return sendMessage;
     }
@@ -170,11 +177,23 @@ public class MyTelBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage) {
+    private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage, String inputQueryMessage) {
         InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
+        String bank = options.getBank().getName();
+        String numberOfDecimal = String.valueOf(options.getNumberOfDecimal());
+        String currencies = options.getChoicesCurrencies().toString();
+        String alertTime = String.valueOf(options.getAlertTime());
 
-        sendMessage.setText("Налаштування оновлені");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+
+        if (bank.equals(inputQueryMessage) || numberOfDecimal.equals(inputQueryMessage) ||
+                currencies.equals(inputQueryMessage) || alertTime.equals(inputQueryMessage)) {
+            sendMessage.setText("Ці налаштування вже встановлені.");
+
+            return sendMessage;
+        }
+        sendMessage.setText("Налаштування оновлені.");
+
         return sendMessage;
     }
 
@@ -226,21 +245,21 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("2");
-        inlineKeyboardButton1.setCallbackData("two");
+        inlineKeyboardButton1.setCallbackData("2");
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("3");
-        inlineKeyboardButton2.setCallbackData("three");
+        inlineKeyboardButton2.setCallbackData("3");
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
 
         InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("4");
-        inlineKeyboardButton3.setCallbackData("four");
+        inlineKeyboardButton3.setCallbackData("4");
         List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
         keyboardButtonsRow3.add(inlineKeyboardButton3);
 
@@ -250,10 +269,11 @@ public class MyTelBot extends TelegramLongPollingBot {
         rowList.add(keyboardButtonsRow3);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
+
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceOptionsKeyBoard(){
+    private InlineKeyboardMarkup getChoiceOptionsKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Знаки після коми");
@@ -286,22 +306,30 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
+    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
         inlineKeyboardButton1.setCallbackData("EUR");
+        inlineKeyboardButton1.setSwitchInlineQueryCurrentChat("+EUR"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Американський долар");
         inlineKeyboardButton2.setCallbackData("USD");
+        inlineKeyboardButton2.setSwitchInlineQueryCurrentChat("+USD"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
+
+        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("Підтвердити вибір");
+        inlineKeyboardButton3.setCallbackData("confirm");
+        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
+        keyboardButtonsRow3.add(inlineKeyboardButton3);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
+        rowList.add(keyboardButtonsRow3);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
@@ -361,37 +389,6 @@ public class MyTelBot extends TelegramLongPollingBot {
         return inlineKeyboardMarkup;
     }
 
-    public String getCurrentData() {
-        StringBuilder result = new StringBuilder();
-        int numberOfDecimal = userSettings.getNumberOfDecimal();
-
-        try {
-            userSettings.getBank().updateCurrentData();
-        } catch (IOException e) {
-            System.out.println("No bank connection");
-        }
-
-        result.append("Курс в ");
-        result.append(userSettings.getBank().getName());
-        result.append(": \n");
-
-        for (WorkingCurrency current : userSettings.getBank().getCurrencies()) {
-            if (!userSettings.getChoicesCurrencies().contains(current.getName())) {
-                continue;
-            }
-
-            result.append("\n");
-            result.append(current.getName());
-            result.append("/UAH\n");
-            result.append("   Продаж:");
-            result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencySellingRate()));
-            result.append("   Купівля:");
-            result.append(String.format("%." + numberOfDecimal + "f", current.getCurrencyBuyingRate()));
-        }
-
-        return result.toString();
-    }
-
     @Override
     public String getBotUsername() {
         return "BlackBot23_bot";
@@ -399,6 +396,6 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "5542489649:AAETFAJZ4_C9vNCiT71yp8ET5hohTHomiiw";
+        return "";
     }
 }
