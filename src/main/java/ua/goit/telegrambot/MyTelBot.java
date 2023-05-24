@@ -84,12 +84,17 @@ public class MyTelBot extends TelegramLongPollingBot {
                     secondThreadAlertTime.setTime(Integer.parseInt(inputQueryMessage));
                     secondThreadAlertTime.setBol(true);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                    secondThreadAlertTime.run();
+                    secondThreadAlertTime.start();
+                    options.setChatId(update.getMessage().getChatId());
                 }
                 case ("OffReminder") -> {
                     secondThreadAlertTime.setBol(false);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
-                    secondThreadAlertTime.run();
+                    try {
+                        secondThreadAlertTime.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 default -> {
                     sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
@@ -360,6 +365,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
 
         sendMessage.setText(getCurrentData());
+        sendMessage.setChatId(options.getChatId());
         sendNextMessage(sendMessage);
     }
 

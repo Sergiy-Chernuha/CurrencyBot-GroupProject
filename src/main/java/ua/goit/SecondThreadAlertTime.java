@@ -10,8 +10,9 @@ import java.util.Date;
 public class SecondThreadAlertTime extends Thread{
     private final ChatBotSettings options = new ChatBotSettings();
     private final MyTelBot myTelBot = new MyTelBot();
+    Thread thread = new Thread();
     boolean bol = true;
-    int time;
+    int time = 9;
     int hour;
     Date date = new Date();
 
@@ -27,32 +28,54 @@ public class SecondThreadAlertTime extends Thread{
         this.time = time;
     }
 
+
+//    public void run() {
+//             setHour(date.getHours());
+//
+//             System.out.print(hour + " ");
+//             System.out.print(time + " ");
+//             System.out.println(bol);
+//
+//        while (bol == true){
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//            if(time+4 == date.getHours()){
+//                myTelBot.sendMessageFromThread();
+//                setBol(false);
+//            }
+//        }
+//
+//    }
+
     @Override
     public void run() {
-             setHour(date.getHours());
+        setHour(date.getHours());
+
+        int countMinutes = 0;
+
+        while (bol == true){
 
              System.out.print(hour + " ");
              System.out.print(time + " ");
              System.out.println(bol);
 
-        while (bol == true){
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            if(time == date.getHours()){
+            countMinutes += 1;
+
+            if(time < hour){
+                if((time - hour) * 60 == countMinutes) myTelBot.sendMessageFromThread();
+            } else if (time > hour) {
+                if(((24 - time) + hour) * 60 == countMinutes) myTelBot.sendMessageFromThread();
+            } else if (time == hour) {
                 myTelBot.sendMessageFromThread();
-                setBol(false);
             }
-        }
-
-    }
-
-    public void runnble() throws InterruptedException {
-        while (true){
-            Thread.sleep(1000);
-            new SecondThreadAlertTime().run();
         }
     }
 }

@@ -13,6 +13,7 @@ public class ChatBotSettings {
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
     private int alertTime = 9;
     private boolean alerts = true;
+    private long chatId = 0;
 
     public int getNumberOfDecimal() {
         return numberOfDecimal;
@@ -52,5 +53,13 @@ public class ChatBotSettings {
 
     public void setAlerts(boolean alerts) {
         this.alerts = alerts;
+    }
+
+    public long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 }
