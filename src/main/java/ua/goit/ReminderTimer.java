@@ -2,6 +2,7 @@ package ua.goit;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ua.goit.telegrambot.MyTelBot;
+import ua.goit.userssetting.SettingUtils;
 
 import java.time.LocalTime;
 
@@ -40,7 +41,7 @@ public class ReminderTimer extends Thread {
         SendMessage sendMessage = new SendMessage();
 
         sendMessage.setChatId(String.valueOf(myTelBot.getUserSettings().getChatId()));
-        sendMessage.setText(myTelBot.getCurrentData());
+        sendMessage.setText(SettingUtils.getCurrentData(myTelBot.getUserSettings()));
         myTelBot.sendNextMessage(sendMessage);
     }
 }

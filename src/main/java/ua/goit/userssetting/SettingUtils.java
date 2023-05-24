@@ -9,22 +9,22 @@ public class SettingUtils {
     private SettingUtils() {
     }
 
-    public static String getCurrentData(ChatBotSettings options) {
+    public static String getCurrentData(ChatBotSettings userSettings) {
         StringBuilder result = new StringBuilder();
-        int numberOfDecimal = options.getNumberOfDecimal();
+        int numberOfDecimal = userSettings.getNumberOfDecimal();
 
         try {
-            options.getBank().updateCurrentData();
+            userSettings.getBank().updateCurrentData();
         } catch (IOException e) {
             System.out.println("No bank connection");
         }
 
         result.append("Курс в ");
-        result.append(options.getBank().getName());
+        result.append(userSettings.getBank().getName());
         result.append(": \n");
 
-        for (WorkingCurrency current : options.getBank().getCurrencies()) {
-            if (!options.getChoicesCurrencies().contains(current.getName())) {
+        for (WorkingCurrency current : userSettings.getBank().getCurrencies()) {
+            if (!userSettings.getChoicesCurrencies().contains(current.getName())) {
                 continue;
             }
 

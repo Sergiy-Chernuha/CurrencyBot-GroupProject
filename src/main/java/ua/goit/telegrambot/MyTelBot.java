@@ -19,13 +19,13 @@ import java.util.ArrayList;
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings userSettings;
-    private final ReminderTimer secondThreadAlertTime;
+    private final ReminderTimer secondThreadReminderTime;
     private final List<String> choicesCurrencies;
 
     public MyTelBot() {
         choicesCurrencies = new ArrayList<>();
         userSettings = new ChatBotSettings();
-        secondThreadAlertTime= new ReminderTimer(this);
+        secondThreadReminderTime = new ReminderTimer(this);
         choicesCurrencies.add(userSettings.getChoicesCurrencies().get(0).toString());
     }
 
@@ -55,7 +55,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
             switch (inputQueryMessage) {
                 case ("current") -> {
-                    sendMessage.setText(SettingUtils.getCurrentData(options));
+                    sendMessage.setText(SettingUtils.getCurrentData(userSettings));
                     sendNextMessage(sendMessage);
                 }
                 case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
@@ -78,29 +78,27 @@ public class MyTelBot extends TelegramLongPollingBot {
                         newCurrenciesList.add(Currencies.valueOf(currency));
                     }
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
-                    SettingUtils.setChoicesCurrencies(newCurrenciesList);
+                    userSettings.setChoicesCurrencies(newCurrenciesList);
                 }
                 case("2"), ("3"), ("4") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
-                    SettingUtils.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
+                    userSettings.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage,inputQueryMessage));
-                    SettingUtils.setBank(newBank);
+                    userSettings.setBank(newBank);
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
-                    options.setAlertTime(Integer.parseInt(inputQueryMessage));
+                    userSettings.setReminderTime(Integer.parseInt(inputQueryMessage));
                     userSettings.setReminderStarted(true);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
                     userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
-                    secondThreadAlertTime.start();
+                    secondThreadReminderTime.start();
                 }
-                case ("OffReminder") -> sendNextMessage(sendUpdatedSettingMessage(sendMessage,"false"));
                 case ("OffReminder") -> {
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage,"false"));
                     userSettings.setReminderStarted(false);
                 }
                 default -> {
@@ -179,15 +177,17 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage, String inputQueryMessage) {
         InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
-        String bank = options.getBank().getName();
-        String numberOfDecimal = String.valueOf(options.getNumberOfDecimal());
-        String currencies = options.getChoicesCurrencies().toString();
-        String alertTime = String.valueOf(options.getAlertTime());
+        String bank = userSettings.getBank().getName();
+        String numberOfDecimal = String.valueOf(userSettings.getNumberOfDecimal());
+        String currencies = userSettings.getChoicesCurrencies().toString();
+        String reminderTime = String.valueOf(userSettings.getReminderTime());
+        String reminderStarted = String.valueOf(userSettings.isReminderStarted());
 
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
         if (bank.equals(inputQueryMessage) || numberOfDecimal.equals(inputQueryMessage) ||
-                currencies.equals(inputQueryMessage) || alertTime.equals(inputQueryMessage)) {
+                currencies.equals(inputQueryMessage) || reminderTime.equals(inputQueryMessage)||
+                reminderStarted.equals(inputQueryMessage)) {
             sendMessage.setText("Ці налаштування вже встановлені.");
 
             return sendMessage;
