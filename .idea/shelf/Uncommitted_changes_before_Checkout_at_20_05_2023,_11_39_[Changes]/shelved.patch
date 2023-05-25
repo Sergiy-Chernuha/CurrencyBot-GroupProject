@@ -1,0 +1,253 @@
+Index: src/main/java/ua/goit/telegrambot/MyTelBot.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ua.goit.telegrambot;\n\nimport org.telegram.telegrambots.bots.TelegramLongPollingBot;\nimport org.telegram.telegrambots.meta.api.methods.send.SendMessage;\nimport org.telegram.telegrambots.meta.api.objects.Update;\nimport org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;\nimport org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;\nimport org.telegram.telegrambots.meta.exceptions.TelegramApiException;\nimport ua.goit.banks.Banks;\nimport ua.goit.banks.WorkingCurrency;\nimport ua.goit.banks.BankFactory;\nimport ua.goit.userssetting.ChatBotSettings;\n\nimport java.io.IOException;\nimport java.util.List;\nimport java.util.ArrayList;\n\npublic class MyTelBot extends TelegramLongPollingBot {\n\n    private final ChatBotSettings options;\n\n    public MyTelBot() {\n        options = new ChatBotSettings();\n    }\n\n    @Override\n    public void onUpdateReceived(Update update) {\n        if (update.hasMessage()) {\n            if (update.getMessage().hasText() && update.getMessage().getText().equals(\"/start\")) {\n                sendNextMessage(sendHelloMessage(update.getMessage().getChatId()));\n            }\n        } else if (update.hasCallbackQuery()) {\n            System.out.print(\"id user= \" + update.getCallbackQuery().getMessage().getChatId() + \"  \");\n            String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());\n            SendMessage sendMessage = new SendMessage();\n\n            sendMessage.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));\n\n            switch (inputQueryMessage) {\n                case (\"current\") -> {\n                    sendMessage.setText(getCurrentData());\n                    sendNextMessage(sendMessage);\n                }\n                case (\"options\") -> sendNextMessage(sendChoiceBankMessage(sendMessage));\n                case (\"NBUBank\"), (\"PrivatBank\"), (\"MonoBank\") -> {\n                    Banks newBank = BankFactory.getBank(inputQueryMessage);\n                    String one = options.getBank().getName();\n                    if (one.equals(inputQueryMessage)) {\n                        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();\n                        sendMessage.setText(\"Ці налаштування встановлені\");\n                        sendMessage.setReplyMarkup(inlineKeyboardMarkup);\n                        sendNextMessage(sendMessage);\n                        break;\n                    }\n\n                    options.setBank(newBank);\n                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));\n                }\n                default -> {\n                    sendMessage.setText(\"Тут може бути ваша реклама): \" + update.getCallbackQuery().getData());\n                    sendNextMessage(sendMessage);\n                }\n            }\n        }\n    }\n\n    private void sendNextMessage(SendMessage message) {\n        try {\n            execute(message);\n        } catch (TelegramApiException e) {\n            e.printStackTrace();\n        }\n    }\n\n    private SendMessage sendHelloMessage(long chatId) {\n        SendMessage sendMessage = new SendMessage();\n        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();\n\n        sendMessage.setChatId(String.valueOf(chatId));\n        sendMessage.setText(\"Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют\");\n        sendMessage.setReplyMarkup(inlineKeyboardMarkup);\n        return sendMessage;\n    }\n\n    private SendMessage sendChoiceBankMessage(SendMessage sendMessage) {\n        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard();\n\n        sendMessage.setText(\"Виберіть банк\");\n        sendMessage.setReplyMarkup(inlineKeyboardMarkup);\n        return sendMessage;\n    }\n\n    private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage) {\n        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();\n\n        sendMessage.setText(\"Налаштування оновлені\");\n        sendMessage.setReplyMarkup(inlineKeyboardMarkup);\n        return sendMessage;\n    }\n\n    private InlineKeyboardMarkup getDefaultKeyBoard() {\n        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();\n\n        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(\"Отримати інфо\");\n        inlineKeyboardButton1.setCallbackData(\"current\");\n        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();\n        keyboardButtonsRow1.add(inlineKeyboardButton1);\n\n        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(\"Налаштування\");\n        inlineKeyboardButton2.setCallbackData(\"options\");\n        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();\n        keyboardButtonsRow2.add(inlineKeyboardButton2);\n\n        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();\n        rowList.add(keyboardButtonsRow1);\n        rowList.add(keyboardButtonsRow2);\n\n        inlineKeyboardMarkup.setKeyboard(rowList);\n        return inlineKeyboardMarkup;\n    }\n\n    private InlineKeyboardMarkup getChoiceBankKeyBoard() {\n        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();\n\n        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(\"NBUBank\");\n        inlineKeyboardButton1.setCallbackData(\"NBUBank\");\n        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();\n        keyboardButtonsRow1.add(inlineKeyboardButton1);\n\n        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(\"Приват Банк\");\n        inlineKeyboardButton2.setCallbackData(\"PrivatBank\");\n        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();\n        keyboardButtonsRow2.add(inlineKeyboardButton2);\n\n        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton(\"МоноБанк\");\n        inlineKeyboardButton3.setCallbackData(\"MonoBank\");\n        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();\n        keyboardButtonsRow3.add(inlineKeyboardButton3);\n\n        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();\n        rowList.add(keyboardButtonsRow1);\n        rowList.add(keyboardButtonsRow2);\n        rowList.add(keyboardButtonsRow3);\n\n        inlineKeyboardMarkup.setKeyboard(rowList);\n        return inlineKeyboardMarkup;\n    }\n\n    private String getCurrentData() {\n        StringBuilder result = new StringBuilder();\n        int numberOfDecimal = options.getNumberOfDecimal();\n\n        try {\n            options.getBank().updateCurrentData();\n        } catch (IOException e) {\n            System.out.println(\"No bank connection\");\n        }\n\n        result.append(\"Курс в \");\n        result.append(options.getBank().getName());\n        result.append(\": \\n\");\n\n        for (WorkingCurrency current : options.getBank().getCurrencies()) {\n            if (!options.getChoicesCurrencies().contains(current.getName())) {\n                continue;\n            }\n\n            result.append(\"\\n\");\n            result.append(current.getName());\n            result.append(\"/UAH\\n\");\n            result.append(\"   Продаж:\");\n            result.append(String.format(\"%.\" + numberOfDecimal + \"f\\n\", current.getCurrencySellingRate()));\n            result.append(\"   Купівля:\");\n            result.append(String.format(\"%.\" + numberOfDecimal + \"f\", current.getCurrencyBuyingRate()));\n        }\n\n        return result.toString();\n    }\n\n    @Override\n    public String getBotUsername() {\n        return \"BlackBot23_bot\";\n    }\n\n    // добавить имя и токен своего бота, они не подлежат заливке в GitHub\n    @Override\n    public String getBotToken() {\n        return null;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ua/goit/telegrambot/MyTelBot.java b/src/main/java/ua/goit/telegrambot/MyTelBot.java
+--- a/src/main/java/ua/goit/telegrambot/MyTelBot.java	(revision 3f2cb4830ea59d0852a4bd4dd0855accb36baa71)
++++ b/src/main/java/ua/goit/telegrambot/MyTelBot.java	(date 1684575542310)
+@@ -7,6 +7,7 @@
+ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+ import ua.goit.banks.Banks;
++import ua.goit.banks.Currencies;
+ import ua.goit.banks.WorkingCurrency;
+ import ua.goit.banks.BankFactory;
+ import ua.goit.userssetting.ChatBotSettings;
+@@ -41,18 +42,32 @@
+                     sendMessage.setText(getCurrentData());
+                     sendNextMessage(sendMessage);
+                 }
+-                case ("options") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
++                case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
++                case("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
++                case("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
++                case("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
++                case("USD") -> {
++                    options.setChoicesCurrencies(List.of(Currencies.USD));
++                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
++                }
++                case("EUR") -> {
++                    options.setChoicesCurrencies(List.of(Currencies.EUR));
++                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
++                }
++                case("two") -> {
++                    options.setNumberOfDecimal(2);
++                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
++                }
++                case("three") -> {
++                    options.setNumberOfDecimal(3);
++                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
++                }
++                case("four") -> {
++                    options.setNumberOfDecimal(4);
++                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
++                }
+                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
+                     Banks newBank = BankFactory.getBank(inputQueryMessage);
+-                    String one = options.getBank().getName();
+-                    if (one.equals(inputQueryMessage)) {
+-                        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
+-                        sendMessage.setText("Ці налаштування встановлені");
+-                        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+-                        sendNextMessage(sendMessage);
+-                        break;
+-                    }
+-
+                     options.setBank(newBank);
+                     sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                 }
+@@ -82,6 +97,30 @@
+         return sendMessage;
+     }
+ 
++    private SendMessage sendChoiceOptionsMessage(SendMessage sendMessage) {
++        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceOptionsKeyBoard();
++
++        sendMessage.setText("Налаштування");
++        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
++        return sendMessage;
++    }
++
++    private SendMessage sendChoiceDecimalsMessage(SendMessage sendMessage) {
++        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceDecimalsKeyBoard();
++
++        sendMessage.setText("Виберіть кількість знаків після коми:");
++        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
++        return sendMessage;
++    }
++
++    private SendMessage sendChoiceCurrenciesMessage(SendMessage sendMessage) {
++        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceCurrenciesKeyBoard();
++
++        sendMessage.setText("Виберіть валюту:");
++        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
++        return sendMessage;
++    }
++
+     private SendMessage sendChoiceBankMessage(SendMessage sendMessage) {
+         InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard();
+ 
+@@ -122,7 +161,7 @@
+     private InlineKeyboardMarkup getChoiceBankKeyBoard() {
+         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+ 
+-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("NBUBank");
++        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Національний банк України");
+         inlineKeyboardButton1.setCallbackData("NBUBank");
+         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+         keyboardButtonsRow1.add(inlineKeyboardButton1);
+@@ -142,6 +181,87 @@
+         rowList.add(keyboardButtonsRow2);
+         rowList.add(keyboardButtonsRow3);
+ 
++        inlineKeyboardMarkup.setKeyboard(rowList);
++        return inlineKeyboardMarkup;
++    }
++
++    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
++        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
++
++        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("2");
++        inlineKeyboardButton1.setCallbackData("two");
++        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
++        keyboardButtonsRow1.add(inlineKeyboardButton1);
++
++        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("3");
++        inlineKeyboardButton2.setCallbackData("three");
++        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
++        keyboardButtonsRow2.add(inlineKeyboardButton2);
++
++        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("4");
++        inlineKeyboardButton3.setCallbackData("four");
++        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
++        keyboardButtonsRow3.add(inlineKeyboardButton3);
++
++        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
++        rowList.add(keyboardButtonsRow1);
++        rowList.add(keyboardButtonsRow2);
++        rowList.add(keyboardButtonsRow3);
++
++        inlineKeyboardMarkup.setKeyboard(rowList);
++        return inlineKeyboardMarkup;
++    }
++
++    private InlineKeyboardMarkup getChoiceOptionsKeyBoard(){
++        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
++
++        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Знаки після коми");
++        inlineKeyboardButton1.setCallbackData("decimals");
++        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
++        keyboardButtonsRow1.add(inlineKeyboardButton1);
++
++        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Банк");
++        inlineKeyboardButton2.setCallbackData("bank");
++        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
++        keyboardButtonsRow2.add(inlineKeyboardButton2);
++
++        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("Валюти");
++        inlineKeyboardButton3.setCallbackData("currencies");
++        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
++        keyboardButtonsRow3.add(inlineKeyboardButton3);
++
++        InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton("Час сповіщень");
++        inlineKeyboardButton4.setCallbackData("notifications");
++        List<InlineKeyboardButton> keyboardButtonsRow4 = new ArrayList<>();
++        keyboardButtonsRow4.add(inlineKeyboardButton4);
++
++        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
++        rowList.add(keyboardButtonsRow1);
++        rowList.add(keyboardButtonsRow2);
++        rowList.add(keyboardButtonsRow3);
++        rowList.add(keyboardButtonsRow4);
++
++        inlineKeyboardMarkup.setKeyboard(rowList);
++        return inlineKeyboardMarkup;
++    }
++
++    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
++        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
++
++        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
++        inlineKeyboardButton1.setCallbackData("EUR");
++        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
++        keyboardButtonsRow1.add(inlineKeyboardButton1);
++
++        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Американський долар");
++        inlineKeyboardButton2.setCallbackData("USD");
++        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
++        keyboardButtonsRow2.add(inlineKeyboardButton2);
++
++        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
++        rowList.add(keyboardButtonsRow1);
++        rowList.add(keyboardButtonsRow2);
++
+         inlineKeyboardMarkup.setKeyboard(rowList);
+         return inlineKeyboardMarkup;
+     }
+@@ -187,4 +307,4 @@
+     public String getBotToken() {
+         return null;
+     }
+-}
++}
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"047d9f92-58b8-43c2-9c58-2c36a96558ef\" name=\"Changes\" comment=\"\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Interface\" />\n        <option value=\"Enum\" />\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"PREVIOUS_COMMIT_AUTHORS\">\n      <list>\n        <option value=\"SergeiB\" />\n      </list>\n    </option>\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\n  \"lastFilter\": {\n    \"state\": \"OPEN\"\n  }\n}]]></component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"c4d25271-1a6c-434f-bf80-e3e906907a8c\" />\n        <option name=\"url\" value=\"https://github.com/Sergiy-Chernuha/CurrencyBot-GroupProject.git\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2PxNqPxJz99Z4J5S1TgLqGza08O\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RunManager\">\n    <configuration name=\"AppLauncher\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\n      <option name=\"MAIN_CLASS_NAME\" value=\"ua.goit.AppLauncher\" />\n      <module name=\"CurrencyBot-GroupProject\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"ua.goit.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"Application.AppLauncher\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"047d9f92-58b8-43c2-9c58-2c36a96558ef\" name=\"Changes\" comment=\"\" />\n      <created>1684394986460</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1684394986460</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Initial commit\">\n      <created>1684395758173</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1684395758173</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"Add first change in start branch\">\n      <created>1684397225817</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1684397225817</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"First com\">\n      <created>1684531761829</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1684531761829</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"First com\">\n      <created>1684531986233</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1684531986233</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"5\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State>\n              <option name=\"FILTERS\">\n                <map>\n                  <entry key=\"branch\">\n                    <value>\n                      <list>\n                        <option value=\"origin/SergeiB\" />\n                      </list>\n                    </value>\n                  </entry>\n                </map>\n              </option>\n            </State>\n          </value>\n        </entry>\n      </map>\n    </option>\n    <option name=\"RECENT_FILTERS\">\n      <map>\n        <entry key=\"Branch\">\n          <value>\n            <list>\n              <RecentGroup>\n                <option name=\"FILTER_VALUES\">\n                  <option value=\"origin/SergeiB\" />\n                </option>\n              </RecentGroup>\n              <RecentGroup>\n                <option name=\"FILTER_VALUES\">\n                  <option value=\"origin/master\" />\n                </option>\n              </RecentGroup>\n            </list>\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Initial commit\" />\n    <MESSAGE value=\"Add first change in start branch\" />\n    <MESSAGE value=\"Add part working features\" />\n    <MESSAGE value=\"First com\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"First com\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 3f2cb4830ea59d0852a4bd4dd0855accb36baa71)
++++ b/.idea/workspace.xml	(date 1684574888540)
+@@ -6,8 +6,7 @@
+   <component name="ChangeListManager">
+     <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -36,11 +35,11 @@
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+-  "lastFilter": {
+-    "state": "OPEN"
++  <component name="GitHubPullRequestSearchHistory">{
++  &quot;lastFilter&quot;: {
++    &quot;state&quot;: &quot;OPEN&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="GithubPullRequestsUISettings">
+     <option name="selectedUrlAndAccountId">
+       <UrlAndAccount>
+@@ -58,13 +57,14 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "last_opened_file_path": "/Users/sergejbas/IdeaProjects/CurrencyBot-GroupProject"
+   }
+-}</component>
++}]]></component>
+   <component name="RunManager">
+     <configuration name="AppLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="ua.goit.AppLauncher" />

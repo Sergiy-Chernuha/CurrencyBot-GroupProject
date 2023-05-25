@@ -11,7 +11,17 @@ public class ChatBotSettings {
     private int numberOfDecimal = 2;
     private Banks bank = new PrivatBank();
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
-    private String alertTime = "9.00";
+    private int reminderTime = 9;
+    private boolean reminderStarted = false;
+    private Long chatId ;
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
 
     public int getNumberOfDecimal() {
         return numberOfDecimal;
@@ -37,11 +47,19 @@ public class ChatBotSettings {
         this.choicesCurrencies = choicesCurrencies;
     }
 
-    public String getAlertTime() {
-        return alertTime;
+    public int getReminderTime() {
+        return reminderTime;
     }
 
-    public void setAlertTime(String alertTime) {
-        this.alertTime = alertTime;
+    public void setReminderTime(int reminderTime) {
+        this.reminderTime = reminderTime;
+    }
+
+    public boolean isReminderStarted() {
+            return reminderStarted;
+    }
+
+    public void setReminderStarted(boolean reminderStarted) {
+        this.reminderStarted = reminderStarted;
     }
 }
