@@ -6,8 +6,8 @@ import ua.goit.banks.privatbank.PrivatBank;
 
 public class BankFactory {
 
-    private BankFactory() {
-    }
+//    private BankFactory() {
+//    }
 
     public static Banks getBank(String bankName) {
         if (bankName.equals("PrivatBank")) {
