@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class MonoBank implements Banks {
 
     List<WorkingCurrency> currencies;
-    String name = "МоноБанк";
+    String name = "MonoBank";
 
     @Override
     public void updateCurrentData() throws IOException {

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class PrivatBank implements Banks {
 
     List<WorkingCurrency> currencies;
-    String name = "Приват Банк";
+    String name = "PrivatBank";
 
     @Override
     public void updateCurrentData() throws IOException {

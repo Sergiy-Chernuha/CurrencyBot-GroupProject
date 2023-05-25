@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class NBUBank implements Banks {
 
     List<WorkingCurrency> currencies;
-    String name = "Національний банк України";
+    String name = "NBUBank";
 
     @Override
     public void updateCurrentData() throws IOException {
