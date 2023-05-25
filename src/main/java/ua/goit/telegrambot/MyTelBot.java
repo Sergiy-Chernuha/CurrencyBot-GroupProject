@@ -39,29 +39,26 @@ public class MyTelBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
-//            ToDOOO
             Message message = update.getMessage();
-            if (update.getMessage().hasText()) {
-                if (update.getMessage().getText().equals("/start")) {
-                    sendNextMessage(sendHelloMessage(update.getMessage().getChatId()));
-                    userSettings.setChatId(update.getMessage().getChatId());
-                } else if (update.getMessage().getText().equals("/end")) {
-                    sendNextMessage(sendEndMessage(update.getMessage().getChatId()));
-                    System.exit(0);
-                }
-            }
-            else if(message.hasText()){
+            Long chatId = update.getMessage().getChatId();
+
+            if (message.hasText()) {
                 String text = message.getText();
-                if(text.equals("Отримати інфо")){
-                    SendMessage sendMessage = new SendMessage();
-                    sendMessage.setChatId(String.valueOf(message.getChatId()));
-                    sendMessage.setText(getCurrentData());
+                SendMessage sendMessage = new SendMessage();
+
+                sendMessage.setChatId(String.valueOf(chatId));
+
+                if (text.equals("/start")) {
+                    sendNextMessage(sendHelloMessage(chatId));
+                    userSettings.setChatId(chatId);
+                } else if (text.equals("Отримати інфо")) {
+                    sendMessage.setText(SettingUtils.getCurrentData(userSettings));
                     sendNextMessage(sendMessage);
-                }
-                else if(text.equals("Налаштування")){
-                    SendMessage sendMessage = new SendMessage();
-                    sendMessage.setChatId(String.valueOf(message.getChatId()));
+                } else if (text.equals("Налаштування")) {
                     sendNextMessage(sendChoiceOptionsMessage(sendMessage));
+                } else if (text.equals("/end")) {
+                    sendNextMessage(sendEndMessage(chatId));
+                    System.exit(0);
                 }
             }
 
@@ -74,11 +71,6 @@ public class MyTelBot extends TelegramLongPollingBot {
             sendMessage.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
 
             switch (inputQueryMessage) {
-//                case ("current") -> {
-//                    sendMessage.setText(SettingUtils.getCurrentData(userSettings));
-//                    sendNextMessage(sendMessage);
-//                }
-//                case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
                 case ("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case ("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case ("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
