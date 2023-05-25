@@ -374,11 +374,11 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "BlackBot23_bot";
+        return MyTelBotConst.MY_TEL_BOT_NAME;
     }
 
     @Override
     public String getBotToken() {
-        return "";
+        return MyTelBotConst.MY_TEL_BOT_TOKEN;
     }
 }
