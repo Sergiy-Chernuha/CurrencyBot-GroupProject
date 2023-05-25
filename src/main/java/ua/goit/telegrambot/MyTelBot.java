@@ -80,13 +80,13 @@ public class MyTelBot extends TelegramLongPollingBot {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
                     userSettings.setChoicesCurrencies(newCurrenciesList);
                 }
-                case("2"), ("3"), ("4") -> {
+                case ("2"), ("3"), ("4") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     userSettings.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage,inputQueryMessage));
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     userSettings.setBank(newBank);
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
@@ -98,7 +98,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     secondThreadReminderTime.start();
                 }
                 case ("OffReminder") -> {
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage,"false"));
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
                     userSettings.setReminderStarted(false);
                 }
                 default -> {
@@ -391,11 +391,11 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "BlackBot23_bot";
+        return MyTelBotConst.MY_TEL_BOT_NAME;
     }
 
     @Override
     public String getBotToken() {
-        return "";
+        return MyTelBotConst.MY_TEL_BOT_TOKEN;
     }
 }

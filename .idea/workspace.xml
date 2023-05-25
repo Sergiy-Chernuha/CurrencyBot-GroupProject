@@ -23,12 +23,12 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="Dima" />
+    <option name="BRANCH" value="master" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Dima" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -73,6 +73,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.AppLauncher" />
+        <item itemvalue="Application.AppLauncher" />
+        <item itemvalue="Application.AppLauncher" />
+        <item itemvalue="Application.AppLauncher" />
+        <item itemvalue="Application.AppLauncher" />
       </list>
     </recent_temporary>
   </component>
@@ -113,7 +117,21 @@
       <option name="project" value="LOCAL" />
       <updated>1684770553947</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="solution merge conflict">
+      <created>1684967369238</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1684967369238</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Create a SettingUtils class. And display in it the formation of a message with the exchange rate">
+      <created>1685000690222</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1685000690222</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -144,6 +162,7 @@
     <MESSAGE value="Add first change in start branch" />
     <MESSAGE value="Add part working features" />
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
+    <MESSAGE value="Create a SettingUtils class. And display in it the formation of a message with the exchange rate" />
     <MESSAGE value="do part of second thread" />
     <MESSAGE value="finished ReminderTimer class" />
     <option name="LAST_COMMIT_MESSAGE" value="finished ReminderTimer class" />
