@@ -17,13 +17,19 @@ import java.util.ArrayList;
 
 public class MyTelBot extends TelegramLongPollingBot {
 
-    private final ChatBotSettings options;
+    private final ChatBotSettings userSettings;
+    private final ReminderTimer secondThreadReminderTime;
     private final List<String> choicesCurrencies;
 
     public MyTelBot() {
-        options = new ChatBotSettings();
         choicesCurrencies = new ArrayList<>();
-        choicesCurrencies.add(options.getChoicesCurrencies().get(0).toString());
+        userSettings = new ChatBotSettings();
+        secondThreadReminderTime = new ReminderTimer(this);
+        choicesCurrencies.add(userSettings.getChoicesCurrencies().get(0).toString());
+    }
+
+    public ChatBotSettings getUserSettings() {
+        return userSettings;
     }
 
     @Override
@@ -32,12 +38,14 @@ public class MyTelBot extends TelegramLongPollingBot {
             if (update.getMessage().hasText()) {
                 if (update.getMessage().getText().equals("/start")) {
                     sendNextMessage(sendHelloMessage(update.getMessage().getChatId()));
+                    userSettings.setChatId(update.getMessage().getChatId());
                 } else if (update.getMessage().getText().equals("/end")) {
                     sendNextMessage(sendEndMessage(update.getMessage().getChatId()));
                     System.exit(0);
                 }
             }
         } else if (update.hasCallbackQuery()) {
+//            Нужно убрать следующую строку перед финишем.
             System.out.println("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
             String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
             SendMessage sendMessage = new SendMessage();
@@ -46,7 +54,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
             switch (inputQueryMessage) {
                 case ("current") -> {
-                    sendMessage.setText(SettingUtils.getCurrentData(options));
+                    sendMessage.setText(SettingUtils.getCurrentData(userSettings));
                     sendNextMessage(sendMessage);
                 }
                 case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
@@ -69,32 +77,38 @@ public class MyTelBot extends TelegramLongPollingBot {
                         newCurrenciesList.add(Currencies.valueOf(currency));
                     }
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
-                    options.setChoicesCurrencies(newCurrenciesList);
+                    userSettings.setChoicesCurrencies(newCurrenciesList);
                 }
                 case ("2"), ("3"), ("4") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
-                    options.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
+                    userSettings.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
-                    options.setBank(newBank);
+                    userSettings.setBank(newBank);
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
-                    options.setAlertTime(Integer.parseInt(inputQueryMessage));
+                    userSettings.setReminderTime(Integer.parseInt(inputQueryMessage));
+                    userSettings.setReminderStarted(true);
+                    userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
+                    secondThreadReminderTime.start();
                 }
-                case ("OffReminder") -> sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
+                case ("OffReminder") -> {
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
+                    userSettings.setReminderStarted(false);
+                }
                 default -> {
-                    sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
+                    sendMessage.setText("Немає обробки цієї кнопки: " + update.getCallbackQuery().getData());
                     sendNextMessage(sendMessage);
                 }
             }
         }
     }
 
-    private void sendNextMessage(SendMessage message) {
+    public void sendNextMessage(SendMessage message) {
         try {
             execute(message);
         } catch (TelegramApiException e) {
@@ -162,15 +176,17 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage, String inputQueryMessage) {
         InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
-        String bank = options.getBank().getName();
-        String numberOfDecimal = String.valueOf(options.getNumberOfDecimal());
-        String currencies = options.getChoicesCurrencies().toString();
-        String alertTime = String.valueOf(options.getAlertTime());
+        String bank = userSettings.getBank().getName();
+        String numberOfDecimal = String.valueOf(userSettings.getNumberOfDecimal());
+        String currencies = userSettings.getChoicesCurrencies().toString();
+        String reminderTime = String.valueOf(userSettings.getReminderTime());
+        String reminderStarted = String.valueOf(userSettings.isReminderStarted());
 
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
         if (bank.equals(inputQueryMessage) || numberOfDecimal.equals(inputQueryMessage) ||
-                currencies.equals(inputQueryMessage) || alertTime.equals(inputQueryMessage)) {
+                currencies.equals(inputQueryMessage) || reminderTime.equals(inputQueryMessage) ||
+                reminderStarted.equals(inputQueryMessage)) {
             sendMessage.setText("Ці налаштування вже встановлені.");
 
             return sendMessage;

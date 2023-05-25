@@ -6,37 +6,37 @@ import java.io.IOException;
 
 public class SettingUtils {
 
-   private SettingUtils() {
-   }
+    private SettingUtils() {
+    }
 
-   public static String getCurrentData(ChatBotSettings options) {
-       StringBuilder result = new StringBuilder();
-       int numberOfDecimal = options.getNumberOfDecimal();
+    public static String getCurrentData(ChatBotSettings userSettings) {
+        StringBuilder result = new StringBuilder();
+        int numberOfDecimal = userSettings.getNumberOfDecimal();
 
-       try {
-           options.getBank().updateCurrentData();
-       } catch (IOException e) {
-           System.out.println("No bank connection");
-       }
+        try {
+            userSettings.getBank().updateCurrentData();
+        } catch (IOException e) {
+            System.out.println("No bank connection");
+        }
 
-       result.append("Курс в ");
-       result.append(options.getBank().getName());
-       result.append(": \n");
+        result.append("Курс в ");
+        result.append(userSettings.getBank().getName());
+        result.append(": \n");
 
-       for (WorkingCurrency current : options.getBank().getCurrencies()) {
-           if (!options.getChoicesCurrencies().contains(current.getName())) {
-               continue;
-           }
+        for (WorkingCurrency current : userSettings.getBank().getCurrencies()) {
+            if (!userSettings.getChoicesCurrencies().contains(current.getName())) {
+                continue;
+            }
 
-           result.append("\n");
-           result.append(current.getName());
-           result.append("/UAH\n");
-           result.append("   Продаж:");
-           result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencySellingRate()));
-           result.append("   Купівля:");
-           result.append(String.format("%." + numberOfDecimal + "f", current.getCurrencyBuyingRate()));
-       }
+            result.append("\n");
+            result.append(current.getName());
+            result.append("/UAH\n");
+            result.append("   Продаж:");
+            result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencySellingRate()));
+            result.append("   Купівля:");
+            result.append(String.format("%." + numberOfDecimal + "f", current.getCurrencyBuyingRate()));
+        }
 
-       return result.toString();
-   }
+        return result.toString();
+    }
 }
