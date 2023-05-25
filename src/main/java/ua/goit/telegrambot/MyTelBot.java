@@ -10,7 +10,7 @@ import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.BankFactory;
 import ua.goit.userssetting.ChatBotSettings;
-//import ua.goit.userssetting.SettingUtils;
+import ua.goit.userssetting.SettingUtils;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
             switch (inputQueryMessage) {
                 case ("current") -> {
-//                    sendMessage.setText(SettingUtils.getCurrentData(options));
+                    sendMessage.setText(SettingUtils.getCurrentData(options));
                     sendNextMessage(sendMessage);
                 }
                 case ("options") -> sendNextMessage(sendChoiceOptionsMessage(sendMessage));
@@ -71,13 +71,13 @@ public class MyTelBot extends TelegramLongPollingBot {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
                     options.setChoicesCurrencies(newCurrenciesList);
                 }
-                case("2"), ("3"), ("4") -> {
+                case ("2"), ("3"), ("4") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     options.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage,inputQueryMessage));
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     options.setBank(newBank);
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
@@ -85,7 +85,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     options.setAlertTime(Integer.parseInt(inputQueryMessage));
                 }
-                case ("OffReminder") -> sendNextMessage(sendUpdatedSettingMessage(sendMessage,"false"));
+                case ("OffReminder") -> sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
                 default -> {
                     sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
                     sendNextMessage(sendMessage);

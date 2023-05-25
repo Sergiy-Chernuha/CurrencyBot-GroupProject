@@ -1,42 +1,42 @@
 package ua.goit.userssetting;
 
-//import ua.goit.banks.WorkingCurrency;
-//
-//import java.io.IOException;
+import ua.goit.banks.WorkingCurrency;
+
+import java.io.IOException;
 
 public class SettingUtils {
 
-//    private SettingUtils() {
-//    }
-//
-//    public static String getCurrentData(ChatBotSettings options) {
-//        StringBuilder result = new StringBuilder();
-//        int numberOfDecimal = options.getNumberOfDecimal();
-//
-//        try {
-//            options.getBank().updateCurrentData();
-//        } catch (IOException e) {
-//            System.out.println("No bank connection");
-//        }
-//
-//        result.append("Курс в ");
-//        result.append(options.getBank().getName());
-//        result.append(": \n");
-//
-//        for (WorkingCurrency current : options.getBank().getCurrencies()) {
-//            if (!options.getChoicesCurrencies().contains(current.getName())) {
-//                continue;
-//            }
-//
-//            result.append("\n");
-//            result.append(current.getName());
-//            result.append("/UAH\n");
-//            result.append("   Продаж:");
-//            result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencySellingRate()));
-//            result.append("   Купівля:");
-//            result.append(String.format("%." + numberOfDecimal + "f", current.getCurrencyBuyingRate()));
-//        }
-//
-//        return result.toString();
-//    }
+   private SettingUtils() {
+   }
+
+   public static String getCurrentData(ChatBotSettings options) {
+       StringBuilder result = new StringBuilder();
+       int numberOfDecimal = options.getNumberOfDecimal();
+
+       try {
+           options.getBank().updateCurrentData();
+       } catch (IOException e) {
+           System.out.println("No bank connection");
+       }
+
+       result.append("Курс в ");
+       result.append(options.getBank().getName());
+       result.append(": \n");
+
+       for (WorkingCurrency current : options.getBank().getCurrencies()) {
+           if (!options.getChoicesCurrencies().contains(current.getName())) {
+               continue;
+           }
+
+           result.append("\n");
+           result.append(current.getName());
+           result.append("/UAH\n");
+           result.append("   Продаж:");
+           result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencySellingRate()));
+           result.append("   Купівля:");
+           result.append(String.format("%." + numberOfDecimal + "f", current.getCurrencyBuyingRate()));
+       }
+
+       return result.toString();
+   }
 }
