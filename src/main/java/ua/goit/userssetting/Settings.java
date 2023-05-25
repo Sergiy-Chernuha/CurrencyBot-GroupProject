@@ -1,10 +1,11 @@
 package ua.goit.userssetting;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
+
 public interface Settings {
     boolean contains (long chatId);
     void add (long chatId, Client client);
     Client getClient (long chatId);
-    List<Client>  getListOfClients () throws IOException;
+    Map<Long, Client> getListOfClients () throws IOException;
 }

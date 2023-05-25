@@ -7,50 +7,39 @@ import lombok.Data;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Data
 public class SettingsUser implements Settings{
 
-    private List<Client> clients;
+    private Map<Long, Client> clients;
 
     public SettingsUser() {
-        this.clients = new ArrayList<>();
+        this.clients = new HashMap<>();
     }
 
     @Override
     public boolean contains(long chatId) {
-        return clients.stream().anyMatch(client1 -> client1.getChatId() == chatId);
+        return clients.containsKey(chatId);
     }
 
     @Override
     public void add(long chatId, Client client) {
-        for (int i = 0; i < clients.size(); i++) {
-            if (clients.get(i).getChatId() == chatId) {
-                clients.set(i, client);
-                return;
-            }
-        }
-        clients.add(client);
+        clients.put(chatId, client);
     }
 
     @Override
     public Client getClient(long chatId) {
-        for (Client client : clients) {
-            if (client.getChatId() == chatId) {
-                return client;
-            }
-        }
-        return null;
+        return clients.get(chatId);
     }
 
     @Override
-    public List<Client> getListOfClients() throws IOException {
-        List.copyOf(clients);
+    public Map<Long, Client> getListOfClients() throws IOException {
+        Map.copyOf(clients);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/users.json"));
+        JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/users.json", false));
         String json = gson.toJson(clients);
         jsonWriter.jsonValue(json);
         jsonWriter.close();
