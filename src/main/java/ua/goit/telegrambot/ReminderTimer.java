@@ -1,7 +1,6 @@
-package ua.goit;
+package ua.goit.telegrambot;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import ua.goit.telegrambot.MyTelBot;
 import ua.goit.userssetting.SettingUtils;
 
 import java.time.LocalTime;
@@ -25,9 +24,9 @@ public class ReminderTimer extends Thread {
 
             if (LocalTime.now().getHour() == myTelBot.getUserSettings().getReminderTime()
                     && LocalTime.now().getMinute() == 0) {
-//                if (LocalTime.now().getMinute() == 43) {
-//                SettingUtils
+
                 sendReminderMessage();
+
                 try {
                     sleep(60000);
                 } catch (InterruptedException e) {

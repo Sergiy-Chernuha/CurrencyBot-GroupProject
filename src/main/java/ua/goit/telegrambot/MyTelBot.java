@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ua.goit.ReminderTimer;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.BankFactory;
@@ -186,7 +185,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
         if (bank.equals(inputQueryMessage) || numberOfDecimal.equals(inputQueryMessage) ||
-                currencies.equals(inputQueryMessage) || reminderTime.equals(inputQueryMessage)||
+                currencies.equals(inputQueryMessage) || reminderTime.equals(inputQueryMessage) ||
                 reminderStarted.equals(inputQueryMessage)) {
             sendMessage.setText("Ці налаштування вже встановлені.");
 

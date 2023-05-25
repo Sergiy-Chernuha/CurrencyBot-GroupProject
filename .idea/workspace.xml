@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0d7db63f-899b-4d92-b2f5-a0325d5769fc" name="Changes" comment="add some comments">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    <list default="true" id="0d7db63f-899b-4d92-b2f5-a0325d5769fc" name="Changes" comment="del some comment">
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,12 +57,12 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="AppLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="ua.goit.AppLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ua.goit.AppLauncher" />
       <module name="CurrencyBot-GroupProject" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ua.goit.*" />
+          <option name="PATTERN" value="ua.goit.telegrambot.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -72,11 +72,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.AppLauncher" />
-        <item itemvalue="Application.AppLauncher" />
-        <item itemvalue="Application.AppLauncher" />
-        <item itemvalue="Application.AppLauncher" />
-        <item itemvalue="Application.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
       </list>
     </recent_temporary>
   </component>
@@ -131,7 +131,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685000690222</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="add UTF-8 to POM">
+      <created>1685006615702</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685006615702</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -165,6 +172,8 @@
     <MESSAGE value="Create a SettingUtils class. And display in it the formation of a message with the exchange rate" />
     <MESSAGE value="do part of second thread" />
     <MESSAGE value="finished ReminderTimer class" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished ReminderTimer class" />
+    <MESSAGE value="add UTF-8 to POM" />
+    <MESSAGE value="del some comment" />
+    <option name="LAST_COMMIT_MESSAGE" value="del some comment" />
   </component>
 </project>
