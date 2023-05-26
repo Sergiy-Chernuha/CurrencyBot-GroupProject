@@ -4,8 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="Add part working features">
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="-Changed default buttons to keyboard markup">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_05_2023__11_39__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_05_2023__11_39__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_14_39__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_14_39__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_17_14__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_17_14__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_05__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_05__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_20__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023__21_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023__21_20__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__10_29__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__10_29__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__10_41__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__10_41__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__11_52__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_22_05_2023__11_52__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_23_05_2023__21_52__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_23_05_2023__21_52__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_20_05_2023__11_46__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_20_05_2023__11_46__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,13 +34,23 @@
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="master" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="khylyk" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubProjectSettings">
+    <option name="branchProtectionPatterns">
+      <list>
+        <option value="main" />
+      </list>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -46,12 +69,12 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="AppLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="ua.goit.AppLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ua.goit.AppLauncher" />
       <module name="CurrencyBot-GroupProject" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="ua.goit.*" />
+          <option name="PATTERN" value="ua.goit.telegrambot.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -61,7 +84,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
+        <item itemvalue="Application.ua.goit.AppLauncher" />
       </list>
     </recent_temporary>
   </component>
@@ -88,7 +115,42 @@
       <option name="project" value="LOCAL" />
       <updated>1684397225817</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="-Added ability to choose both EUR and USD&#10;-Added confirm button for this">
+      <created>1684770418382</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1684770418382</updated>
+    </task>
+    <task id="LOCAL-00004" summary="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)">
+      <created>1684770553947</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1684770553947</updated>
+    </task>
+    <task id="LOCAL-00005" summary="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)&#10;moved variable choicesCurrencies above constructor">
+      <created>1684771729888</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1684771729888</updated>
+    </task>
+    <task id="LOCAL-00006" summary="-Changed default buttons to keyboard markup">
+      <created>1684835526155</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1684835526155</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add UTF-8 to POM">
+      <created>1685006615702</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685006615702</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -102,7 +164,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/khylyk" />
+                        <option value="AlertsSergBSecond" />
                       </list>
                     </value>
                   </entry>
@@ -118,6 +180,16 @@
     <MESSAGE value="Initial commit" />
     <MESSAGE value="Add first change in start branch" />
     <MESSAGE value="Add part working features" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add part working features" />
+    <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
+    <MESSAGE value="Create a SettingUtils class. And display in it the formation of a message with the exchange rate" />
+    <MESSAGE value="do part of second thread" />
+    <MESSAGE value="finished ReminderTimer class" />
+    <MESSAGE value="add UTF-8 to POM" />
+    <MESSAGE value="del some comment" />
+    <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
+    <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)" />
+    <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)&#10;moved variable choicesCurrencies above constructor" />
+    <MESSAGE value="-Changed default buttons to keyboard markup" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Changed default buttons to keyboard markup" />
   </component>
 </project>
