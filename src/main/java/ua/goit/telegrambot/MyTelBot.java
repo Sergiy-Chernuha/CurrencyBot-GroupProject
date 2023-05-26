@@ -2,6 +2,7 @@ package ua.goit.telegrambot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -24,6 +25,9 @@ public class MyTelBot extends TelegramLongPollingBot {
     private final ChatBotSettings userSettings;
     private final ReminderTimer secondThreadReminderTime;
     private final List<String> choicesCurrencies;
+    private boolean nBUCheckMark, monobankCheckMark, threeDecimalsCheckMark, fourDecimalsCheckMark, eURCheckMark, offReminder = false;
+    private boolean twoDecimalsCheckMark, privatCheckMark, uSDCheckMark = true;
+    private int currentNotifications = 9;
 
     public MyTelBot() {
         choicesCurrencies = new ArrayList<>();
@@ -81,7 +85,26 @@ public class MyTelBot extends TelegramLongPollingBot {
                         }
                     } else {
                         choicesCurrencies.add(inputQueryMessage);
+
                     }
+                    if(inputQueryMessage.equals("USD")){
+                        uSDCheckMark = !uSDCheckMark;
+                    }
+                    else{
+                        eURCheckMark = !eURCheckMark;
+                    }
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceCurrenciesKeyBoard();
+                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
+                    editMarkup.setChatId(update.getCallbackQuery().getMessage().getChatId());
+                    editMarkup.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                    editMarkup.setReplyMarkup(keyboardMarkup);
+
+                    try {
+                        execute(editMarkup);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
                 }
                 case ("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
                     List<Currencies> newCurrenciesList = new ArrayList<>();
@@ -95,11 +118,83 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("2"), ("3"), ("4") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     userSettings.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
+                    if(inputQueryMessage.equals("2")){
+                        if(twoDecimalsCheckMark) twoDecimalsCheckMark = false;
+                        else{
+                            twoDecimalsCheckMark = true;
+                            threeDecimalsCheckMark = false;
+                            fourDecimalsCheckMark = false;
+                        }
+                    }
+                    else if(inputQueryMessage.equals("3")){
+                        if(threeDecimalsCheckMark) threeDecimalsCheckMark = false;
+                        else{
+                            twoDecimalsCheckMark = false;
+                            threeDecimalsCheckMark = true;
+                            fourDecimalsCheckMark = false;
+                        }
+                    }
+                    else{
+                        if(fourDecimalsCheckMark) fourDecimalsCheckMark = false;
+                        else{
+                            twoDecimalsCheckMark = false;
+                            threeDecimalsCheckMark = false;
+                            fourDecimalsCheckMark = true;
+                        }
+                    }
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceDecimalsKeyBoard();
+                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
+                    editMarkup.setChatId(update.getCallbackQuery().getMessage().getChatId());
+                    editMarkup.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                    editMarkup.setReplyMarkup(keyboardMarkup);
+
+                    try {
+                        execute(editMarkup);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     userSettings.setBank(newBank);
+                    if(inputQueryMessage.equals("NBUBank")) {
+                        if(nBUCheckMark) nBUCheckMark = false;
+                        else{
+                            nBUCheckMark = true;
+                            privatCheckMark = false;
+                            monobankCheckMark = false;
+                        }
+                    }
+                    else if(inputQueryMessage.equals("PrivatBank")){
+                        if(privatCheckMark) privatCheckMark = false;
+                        else{
+                            nBUCheckMark = false;
+                            privatCheckMark = true;
+                            monobankCheckMark = false;
+                        }
+                    }
+                    else{
+                        if(monobankCheckMark) monobankCheckMark = false;
+                        else{
+                            nBUCheckMark = false;
+                            privatCheckMark = false;
+                            monobankCheckMark = true;
+                        }
+                    }
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceBankKeyBoard();
+                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
+                    editMarkup.setChatId(update.getCallbackQuery().getMessage().getChatId());
+                    editMarkup.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                    editMarkup.setReplyMarkup(keyboardMarkup);
+
+                    try {
+                        execute(editMarkup);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
@@ -108,10 +203,37 @@ public class MyTelBot extends TelegramLongPollingBot {
                     userSettings.setReminderStarted(true);
                     userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
                     secondThreadReminderTime.start();
+                    currentNotifications = Integer.parseInt(inputQueryMessage);
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceReminderKeyBoard();
+                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
+                    editMarkup.setChatId(update.getCallbackQuery().getMessage().getChatId());
+                    editMarkup.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                    editMarkup.setReplyMarkup(keyboardMarkup);
+
+                    try {
+                        execute(editMarkup);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
                 }
                 case ("OffReminder") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
                     userSettings.setReminderStarted(false);
+                    offReminder = !offReminder;
+                    currentNotifications = 0;
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceReminderKeyBoard();
+                    EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
+                    editMarkup.setChatId(update.getCallbackQuery().getMessage().getChatId());
+                    editMarkup.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                    editMarkup.setReplyMarkup(keyboardMarkup);
+
+                    try {
+                        execute(editMarkup);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
                 }
                 default -> {
                     sendMessage.setText("Немає обробки цієї кнопки: " + update.getCallbackQuery().getData());
@@ -233,17 +355,20 @@ public class MyTelBot extends TelegramLongPollingBot {
     private InlineKeyboardMarkup getChoiceBankKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Національний банк України");
+        String button1Name = nBUCheckMark ? "✅ Національний банк України" : "Національний банк України";
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(button1Name);
         inlineKeyboardButton1.setCallbackData("NBUBank");
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Приват Банк");
+        String button2Name = privatCheckMark ? "✅ Приват Банк" : "Приват Банк";
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(button2Name);
         inlineKeyboardButton2.setCallbackData("PrivatBank");
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
 
-        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("МоноБанк");
+        String button3Name = monobankCheckMark ? "✅ МоноБанк" : "МоноБанк";
+        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton(button3Name);
         inlineKeyboardButton3.setCallbackData("MonoBank");
         List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
         keyboardButtonsRow3.add(inlineKeyboardButton3);
@@ -260,17 +385,20 @@ public class MyTelBot extends TelegramLongPollingBot {
     private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("2");
+        String button1Name = twoDecimalsCheckMark ? "✅ 2" : "2";
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(button1Name);
         inlineKeyboardButton1.setCallbackData("2");
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("3");
+        String button2Name = threeDecimalsCheckMark ? "✅ 3" : "3";
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(button2Name);
         inlineKeyboardButton2.setCallbackData("3");
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
 
-        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("4");
+        String button3Name = fourDecimalsCheckMark ? "✅ 4" : "4";
+        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton(button3Name);
         inlineKeyboardButton3.setCallbackData("4");
         List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
         keyboardButtonsRow3.add(inlineKeyboardButton3);
@@ -321,13 +449,15 @@ public class MyTelBot extends TelegramLongPollingBot {
     private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Євро");
+        String button1Name = eURCheckMark ? "✅ Євро" : "Євро";
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(button1Name);
         inlineKeyboardButton1.setCallbackData("EUR");
         inlineKeyboardButton1.setSwitchInlineQueryCurrentChat("+EUR"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Американський долар");
+        String button2Name = uSDCheckMark ? "✅ Американський долар" : "Американський долар";
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(button2Name);
         inlineKeyboardButton2.setCallbackData("USD");
         inlineKeyboardButton2.setSwitchInlineQueryCurrentChat("+USD"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
@@ -350,42 +480,53 @@ public class MyTelBot extends TelegramLongPollingBot {
     private InlineKeyboardMarkup getChoiceReminderKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("9:00");
+        String button1Name = currentNotifications == 9 ? "✅ 9:00" : "9:00";
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(button1Name);
         inlineKeyboardButton1.setCallbackData("9");
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("10:00");
+        String button2Name = currentNotifications == 10 ? "✅ 10:00" : "10:00";
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(button2Name);
         inlineKeyboardButton2.setCallbackData("10");
-        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("11:00");
+        String button3Name = currentNotifications == 11 ? "✅ 11:00" : "11:00";
+        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton(button3Name);
         inlineKeyboardButton3.setCallbackData("11");
         List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
         keyboardButtonsRow3.add(inlineKeyboardButton1);
         keyboardButtonsRow3.add(inlineKeyboardButton2);
         keyboardButtonsRow3.add(inlineKeyboardButton3);
 
-        InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton("12:00");
+        String button4Name = currentNotifications == 12 ? "✅ 12:00" : "12:00";
+        InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton(button4Name);
         inlineKeyboardButton4.setCallbackData("12");
-        InlineKeyboardButton inlineKeyboardButton5 = new InlineKeyboardButton("13:00");
+        String button5Name = currentNotifications == 13 ? "✅ 13:00" : "13:00";
+        InlineKeyboardButton inlineKeyboardButton5 = new InlineKeyboardButton(button5Name);
         inlineKeyboardButton5.setCallbackData("13");
-        InlineKeyboardButton inlineKeyboardButton6 = new InlineKeyboardButton("14:00");
+        String button6Name = currentNotifications == 14 ? "✅ 14:00" : "14:00";
+        InlineKeyboardButton inlineKeyboardButton6 = new InlineKeyboardButton(button6Name);
         inlineKeyboardButton6.setCallbackData("14");
         List<InlineKeyboardButton> keyboardButtonsRow6 = new ArrayList<>();
         keyboardButtonsRow6.add(inlineKeyboardButton4);
         keyboardButtonsRow6.add(inlineKeyboardButton5);
         keyboardButtonsRow6.add(inlineKeyboardButton6);
 
-        InlineKeyboardButton inlineKeyboardButton7 = new InlineKeyboardButton("15:00");
+        String button7Name = currentNotifications == 15 ? "✅ 15:00" : "15:00";
+        InlineKeyboardButton inlineKeyboardButton7 = new InlineKeyboardButton(button7Name);
         inlineKeyboardButton7.setCallbackData("15");
-        InlineKeyboardButton inlineKeyboardButton8 = new InlineKeyboardButton("16:00");
+        String button8Name = currentNotifications == 16 ? "✅ 16:00" : "16:00";
+        InlineKeyboardButton inlineKeyboardButton8 = new InlineKeyboardButton(button8Name);
         inlineKeyboardButton8.setCallbackData("16");
-        InlineKeyboardButton inlineKeyboardButton9 = new InlineKeyboardButton("17:00");
+        String button9Name = currentNotifications == 17 ? "✅ 17:00" : "17:00";
+        InlineKeyboardButton inlineKeyboardButton9 = new InlineKeyboardButton(button9Name);
         inlineKeyboardButton9.setCallbackData("17");
         List<InlineKeyboardButton> keyboardButtonsRow9 = new ArrayList<>();
         keyboardButtonsRow9.add(inlineKeyboardButton7);
         keyboardButtonsRow9.add(inlineKeyboardButton8);
         keyboardButtonsRow9.add(inlineKeyboardButton9);
 
-        InlineKeyboardButton inlineKeyboardButton10 = new InlineKeyboardButton("18:00");
+        String button10Name = currentNotifications == 18 ? "✅ 18:00" : "18:00";
+        InlineKeyboardButton inlineKeyboardButton10 = new InlineKeyboardButton(button10Name);
         inlineKeyboardButton10.setCallbackData("18");
-        InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton("Вимкнути сповіщення");
+        String button11Name = offReminder ? "✅ Вимкнути сповіщення" : "Вимкнути сповіщення";
+        InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton(button11Name);
         inlineKeyboardButton.setCallbackData("OffReminder");
         List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
         keyboardButtonsRow.add(inlineKeyboardButton10);
