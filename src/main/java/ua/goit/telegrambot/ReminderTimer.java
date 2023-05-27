@@ -23,21 +23,17 @@ public class ReminderTimer extends Thread {
         while (myTelBot.getUserSettings().isReminderStarted()) {
 
             try {
-                sleep(1000);
+                sleep(900);
             } catch (InterruptedException e) {
                 System.out.println("SecondThreadAlertTime is abort");
             }
 
-            if (LocalTime.now().getHour() == myTelBot.getUserSettings().getReminderTime()
-                    && LocalTime.now().getMinute() == 0) {
+            LocalTime now = LocalTime.now();
+            if (now.getHour() == myTelBot.getUserSettings().getReminderTime()
+                    && now.getMinute() == 0
+                    && now.getSecond() == 1) {
 
                 sendReminderMessage();
-
-                try {
-                    sleep(60000);
-                } catch (InterruptedException e) {
-                    System.out.println("SecondThreadAlertTime is abort");
-                }
             }
         }
     }
