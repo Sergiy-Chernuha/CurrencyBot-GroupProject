@@ -30,8 +30,10 @@ public class KeyboardBuilder {
           for (int i = 0; i < 4; i++) {
               List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
                     for (int j = 0; j < 3; j++) {
+                        if(count<names.length){
                         keyboardButtonsRow.add(getButton(names[count],keys[count]));
                         count++;
+                        }
                     }
               rowList.add(keyboardButtonsRow);
           }

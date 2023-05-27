@@ -31,7 +31,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         userSettings = new ChatBotSettings();
         secondThreadReminderTime = new ReminderTimer(this);
         choicesCurrencies.add(userSettings.getChoicesCurrencies().get(0).toString());
-        }
+    }
 
     public ChatBotSettings getUserSettings() {
         return userSettings;
@@ -221,35 +221,40 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         return replyKeyboardMarkup;
     }
-    private InlineKeyboardMarkup getChoiceOptionsKeyBoard(){
+
+    private InlineKeyboardMarkup getChoiceOptionsKeyBoard() {
         String[] names = new String[]{"Знаки після коми", "Банк", "Валюти", "Час сповіщень"};
         String[] keys = new String[]{"decimals", "bank", "currencies", "reminders"};
 
-        return getSimpleKeyboard(names, keys);
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
-    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
+
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
         String[] names = new String[]{"2", "3", "4"};
         String[] keys = new String[]{"2", "3", "4"};
 
-        return getSimpleKeyboard(names, keys);
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
+
     private InlineKeyboardMarkup getChoiceBankKeyBoard() {
         String[] names = new String[]{"Національний банк України", "Приват банк", "mono bank"};
         String[] keys = new String[]{"NBUBank", "PrivatBank", "MonoBank"};
 
-        return getSimpleKeyboard(names, keys);
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
-    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
+
+    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
         String[] names = new String[]{"Євро", "Американський долар"};
         String[] keys = new String[]{"EUR", "USD"};
 
-        return getSimpleKeyboard(names, keys);
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
-    private InlineKeyboardMarkup getChoiceReminderKeyBoard(){
-        String[] names = new String[]{"9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","Вимкнути сповіщення"};
+
+    private InlineKeyboardMarkup getChoiceReminderKeyBoard() {
+        String[] names = new String[]{"9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "Вимкнути сповіщення"};
         String[] keys = new String[]{"9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "OffReminder"};
 
-        return getReminderKeyboard(names, keys);
+        return KeyboardBuilder.getReminderKeyboard(names, keys);
     }
 
     @Override
