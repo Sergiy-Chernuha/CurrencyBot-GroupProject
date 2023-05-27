@@ -21,14 +21,14 @@ public class SettingUtils {
 
         result.append("Курс в ");
         result.append(userSettings.getBank().getName());
-        result.append(": \n");
+        result.append(": ");
 
         for (WorkingCurrency current : userSettings.getBank().getCurrencies()) {
             if (!userSettings.getChoicesCurrencies().contains(current.getName())) {
                 continue;
             }
 
-            result.append("\n");
+            result.append("\n\n");
             result.append(current.getName());
             result.append("/UAH\n");
             result.append("   Продаж:");
