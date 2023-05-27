@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings userSettings;
-    private final ReminderTimer secondThreadReminderTime;
+    private ReminderTimer secondThreadReminderTime;
 
     public MyTelBot() {
         userSettings = new ChatBotSettings();
@@ -127,17 +127,13 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
-                    System.out.println("456");
                     userSettings.setReminderTime(Integer.parseInt(inputQueryMessage));
-                    System.out.println("147");
                     userSettings.setReminderStarted(true);
-                    System.out.println("321");
                     userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
 
-                    if(secondThreadReminderTime.isTimerOff()) {
+                    if (secondThreadReminderTime.isTimerOff()) {
                         secondThreadReminderTime.start();
                     }
-                    System.out.println("789");
 
                     InlineKeyboardMarkup keyboardMarkup = getChoiceReminderKeyBoard();
                     EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
@@ -150,6 +146,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("OffReminder") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
                     userSettings.setReminderStarted(false);
+                    secondThreadReminderTime = new ReminderTimer(this);
 
                     InlineKeyboardMarkup keyboardMarkup = getChoiceReminderKeyBoard();
                     EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
@@ -472,11 +469,11 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "BlackBot23_bot";
+        return MyTelBotConst.MY_TEL_BOT_NAME;
     }
 
     @Override
     public String getBotToken() {
-        return "5542489649:AAETFAJZ4_C9vNCiT71yp8ET5hohTHomiiw";
+        return MyTelBotConst.MY_TEL_BOT_TOKEN;
     }
 }

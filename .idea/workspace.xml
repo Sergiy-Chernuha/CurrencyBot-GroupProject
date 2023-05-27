@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="sergio">
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="Little nearer to markup  solution">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
@@ -153,7 +153,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/SergB1" />
+                        <option value="checkMark2" />
                       </list>
                     </value>
                   </entry>
@@ -179,6 +179,7 @@
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)" />
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this&#10;(fixed bot return token)&#10;moved variable choicesCurrencies above constructor" />
     <MESSAGE value="-Changed default buttons to keyboard markup" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Changed default buttons to keyboard markup" />
+    <MESSAGE value="Little nearer to markup  solution" />
+    <option name="LAST_COMMIT_MESSAGE" value="Little nearer to markup  solution" />
   </component>
 </project>
