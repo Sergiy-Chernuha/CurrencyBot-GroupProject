@@ -7,16 +7,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.goit.banks.Banks;
-import ua.goit.banks.Currencies;
 import ua.goit.banks.BankFactory;
-import ua.goit.banks.monobank.MonoBank;
-import ua.goit.banks.nbubank.NBUBank;
-import ua.goit.banks.privatbank.PrivatBank;
 import ua.goit.userssetting.ChatBotSettings;
 import ua.goit.userssetting.SettingUtils;
 
@@ -86,6 +81,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     } else {
                         choicesCurrenciesNow.add(newCurrency);
                     }
+                }
 
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, choicesCurrenciesNow.toString()));
                     userSettings.setChoicesCurrencies(choicesCurrenciesNow);
@@ -280,7 +276,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         return replyKeyboardMarkup;
     }
-
+//1111
     private InlineKeyboardMarkup getChoiceBankKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         boolean isPrivatBank = userSettings.getBank().getClass() == PrivatBank.class;
@@ -344,40 +340,28 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         return inlineKeyboardMarkup;
     }
-
+//111
     private InlineKeyboardMarkup getChoiceOptionsKeyBoard() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        String[] names = new String[]{"Знаки після коми", "Банк", "Валюти", "Час сповіщень"};
+        String[] keys = new String[]{"decimals", "bank", "currencies", "reminders"};
 
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Знаки після коми");
-        inlineKeyboardButton1.setCallbackData("decimals");
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(inlineKeyboardButton1);
-
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Банк");
-        inlineKeyboardButton2.setCallbackData("bank");
-        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow2.add(inlineKeyboardButton2);
-
-        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("Валюти");
-        inlineKeyboardButton3.setCallbackData("currencies");
-        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
-        keyboardButtonsRow3.add(inlineKeyboardButton3);
-
-        InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton("Час сповіщень");
-        inlineKeyboardButton4.setCallbackData("reminders");
-        List<InlineKeyboardButton> keyboardButtonsRow4 = new ArrayList<>();
-        keyboardButtonsRow4.add(inlineKeyboardButton4);
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-        rowList.add(keyboardButtonsRow2);
-        rowList.add(keyboardButtonsRow3);
-        rowList.add(keyboardButtonsRow4);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-        return inlineKeyboardMarkup;
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
 
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
+        String[] names = new String[]{"2", "3", "4"};
+        String[] keys = new String[]{"2", "3", "4"};
+
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
+    }
+
+    private InlineKeyboardMarkup getChoiceBankKeyBoard() {
+        String[] names = new String[]{"Національний банк України", "Приват банк", "mono bank"};
+        String[] keys = new String[]{"NBUBank", "PrivatBank", "MonoBank"};
+
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
+    }
+//222
     private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<Currencies> choicesCurrenciesNow = userSettings.getChoicesCurrencies();
@@ -400,8 +384,14 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
-    }
+//      222a
+        String[] names = new String[]{"Євро", "Американський долар"};
+        String[] keys = new String[]{"EUR", "USD"};
 
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
+    }
+//222
+//    3333
     private InlineKeyboardMarkup getChoiceReminderKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
@@ -418,7 +408,11 @@ public class MyTelBot extends TelegramLongPollingBot {
         keyboardButtonsRow3.add(inlineKeyboardButton1);
         keyboardButtonsRow3.add(inlineKeyboardButton2);
         keyboardButtonsRow3.add(inlineKeyboardButton3);
-
+//       333a
+        String[] names = new String[]{"9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "Вимкнути сповіщення"};
+        String[] keys = new String[]{"9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "OffReminder"};
+//333
+//        444
         String button4Name = (userSettings.getReminderTime() == 12 && userSettings.isReminderStarted()) ? "✅ 12:00" : "12:00";
         InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton(button4Name);
         inlineKeyboardButton4.setCallbackData("12");
@@ -465,8 +459,10 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
+//       444a
+        return KeyboardBuilder.getReminderKeyboard(names, keys);
     }
-
+//4444
     @Override
     public String getBotUsername() {
         return MyTelBotConst.MY_TEL_BOT_NAME;
