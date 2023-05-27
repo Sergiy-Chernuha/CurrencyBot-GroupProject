@@ -6,12 +6,10 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.goit.banks.Banks;
-import ua.goit.banks.Currencies;
 import ua.goit.banks.BankFactory;
 import ua.goit.userssetting.ChatBotSettings;
 import ua.goit.userssetting.SettingUtils;
@@ -19,7 +17,7 @@ import ua.goit.userssetting.SettingUtils;
 import java.util.List;
 import java.util.ArrayList;
 
-import static ua.goit.telegrambot.KeyboardBuilder.*;
+import static ua.goit.telegrambot.KeyboardBuilder.getSimpleKeyboard;
 
 public class MyTelBot extends TelegramLongPollingBot {
 
@@ -84,15 +82,6 @@ public class MyTelBot extends TelegramLongPollingBot {
                     } else {
                         choicesCurrencies.add(inputQueryMessage);
                     }
-                }
-                case ("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
-                    List<Currencies> newCurrenciesList = new ArrayList<>();
-
-                    for (String currency : choicesCurrencies) {
-                        newCurrenciesList.add(Currencies.valueOf(currency));
-                    }
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
-                    userSettings.setChoicesCurrencies(newCurrenciesList);
                 }
                 case ("2"), ("3"), ("4") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
@@ -231,33 +220,35 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         return replyKeyboardMarkup;
     }
-    static InlineKeyboardMarkup getChoiceBankKeyBoard() {
-        InlineKeyboardMarkup inlineKeyboardMarkup= KeyboardBuilder.getCho("Національний банк України","NBUBank","Національний банк України","NBUBank","Національний банк України","NBUBank"); ;
+    private InlineKeyboardMarkup getChoiceOptionsKeyBoard(){
+        String[] names = new String[]{"Знаки після коми", "Банк", "Валюти", "Час сповіщень"};
+        String[] keys = new String[]{"decimals", "bank", "currencies", "reminders"};
 
-//        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Національний банк України");
-//        inlineKeyboardButton1.setCallbackData("NBUBank");
-//        KeyboardBuilder.getCho("Національний банк України","NBUBank");
-//
-//        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-//        keyboardButtonsRow1.add(inlineKeyboardButton1);
-//
-//        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Приват Банк");
-//        inlineKeyboardButton2.setCallbackData("PrivatBank");
-//        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-//        keyboardButtonsRow2.add(inlineKeyboardButton2);
-//
-//        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("МоноБанк");
-//        inlineKeyboardButton3.setCallbackData("MonoBank");
-//        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
-//        keyboardButtonsRow3.add(inlineKeyboardButton3);
-//
-//        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-//        rowList.add(keyboardButtonsRow1);
-//        rowList.add(keyboardButtonsRow2);
-//        rowList.add(keyboardButtonsRow3);
-//
-//        inlineKeyboardMarkup.setKeyboard(rowList);
-        return inlineKeyboardMarkup;
+        return getSimpleKeyboard(names, keys, "simple");
+    }
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
+        String[] names = new String[]{"2", "3", "4"};
+        String[] keys = new String[]{"2", "3", "4"};
+
+        return getSimpleKeyboard(names, keys, "simple");
+    }
+    private InlineKeyboardMarkup getChoiceBankKeyBoard() {
+        String[] names = new String[]{"Національний банк України", "Приват банк", "mono bank"};
+        String[] keys = new String[]{"NBU", "Privat", "mono"};
+
+        return getSimpleKeyboard(names, keys, "simple");
+    }
+    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
+        String[] names = new String[]{"Євро", "Американський долар"};
+        String[] keys = new String[]{"EUR", "USD"};
+
+        return getSimpleKeyboard(names, keys, "simple");
+    }
+    private InlineKeyboardMarkup getChoiceReminderKeyBoard(){
+        String[] names = new String[]{"9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","Вимкнути сповіщення"};
+        String[] keys = new String[]{"9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "OffReminder"};
+
+        return getSimpleKeyboard(names, keys, "reminder");
     }
 
     @Override
