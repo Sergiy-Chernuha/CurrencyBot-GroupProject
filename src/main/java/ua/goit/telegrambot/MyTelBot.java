@@ -2,6 +2,7 @@ package ua.goit.telegrambot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -9,28 +10,27 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 import ua.goit.banks.Banks;
 import ua.goit.banks.BankFactory;
+import ua.goit.banks.Currencies;
+import ua.goit.banks.monobank.MonoBank;
+import ua.goit.banks.nbubank.NBUBank;
+import ua.goit.banks.privatbank.PrivatBank;
 import ua.goit.userssetting.ChatBotSettings;
 import ua.goit.userssetting.SettingUtils;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import static ua.goit.telegrambot.KeyboardBuilder.getReminderKeyboard;
-import static ua.goit.telegrambot.KeyboardBuilder.getSimpleKeyboard;
-
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings userSettings;
-    private final ReminderTimer secondThreadReminderTime;
-    private final List<String> choicesCurrencies;
+    private ReminderTimer secondThreadReminderTime;
 
     public MyTelBot() {
-        choicesCurrencies = new ArrayList<>();
         userSettings = new ChatBotSettings();
         secondThreadReminderTime = new ReminderTimer(this);
-        choicesCurrencies.add(userSettings.getChoicesCurrencies().get(0).toString());
     }
 
     public ChatBotSettings getUserSettings() {
@@ -64,46 +64,88 @@ public class MyTelBot extends TelegramLongPollingBot {
             }
 
         } else if (update.hasCallbackQuery()) {
-//            Нужно убрать следующую строку перед финишем.
-            System.out.println("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
-            String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
-            SendMessage sendMessage = new SendMessage();
+            final Long chatId = update.getCallbackQuery().getMessage().getChatId();
+            final Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
-            sendMessage.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
+            //            Нужно убрать следующую строку перед финишем.
+            System.out.println("id user= " + chatId + "  ");
+            String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
+
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(chatId);
+
+            EditMessageReplyMarkup editMessage = new EditMessageReplyMarkup();
+            editMessage.setChatId(chatId);
+            editMessage.setMessageId(messageId);
 
             switch (inputQueryMessage) {
                 case ("bank") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
                 case ("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case ("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
                 case ("USD"), ("EUR") -> {
-                    if (choicesCurrencies.contains(inputQueryMessage)) {
-                        if (choicesCurrencies.size() > 1) {
-                            choicesCurrencies.remove(inputQueryMessage);
+                    List<Currencies> choicesCurrenciesNow = new ArrayList<>(userSettings.getChoicesCurrencies());
+                    Currencies newCurrency = Currencies.valueOf(inputQueryMessage);
+
+                    if (choicesCurrenciesNow.contains(newCurrency)) {
+                        if (choicesCurrenciesNow.size() > 1) {
+                            choicesCurrenciesNow.remove(newCurrency);
                         }
                     } else {
-                        choicesCurrencies.add(inputQueryMessage);
+                        choicesCurrenciesNow.add(newCurrency);
                     }
+
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, choicesCurrenciesNow.toString()));
+                    userSettings.setChoicesCurrencies(choicesCurrenciesNow);
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceCurrenciesKeyBoard();
+
+                    editMessage.setReplyMarkup(keyboardMarkup);
+                    sendNextEditMessage(editMessage);
                 }
                 case ("2"), ("3"), ("4") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     userSettings.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceDecimalsKeyBoard();
+
+                    editMessage.setReplyMarkup(keyboardMarkup);
+                    sendNextEditMessage(editMessage);
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     userSettings.setBank(newBank);
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceBankKeyBoard();
+
+                    editMessage.setReplyMarkup(keyboardMarkup);
+                    sendNextEditMessage(editMessage);
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     userSettings.setReminderTime(Integer.parseInt(inputQueryMessage));
                     userSettings.setReminderStarted(true);
-                    userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
-                    secondThreadReminderTime.start();
+                    userSettings.setChatId(chatId);
+
+                    if (secondThreadReminderTime.isTimerOff()) {
+                        secondThreadReminderTime.start();
+                    }
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceReminderKeyBoard();
+
+                    editMessage.setReplyMarkup(keyboardMarkup);
+                    sendNextEditMessage(editMessage);
                 }
                 case ("OffReminder") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
                     userSettings.setReminderStarted(false);
+                    secondThreadReminderTime = new ReminderTimer(this);
+
+                    InlineKeyboardMarkup keyboardMarkup = getChoiceReminderKeyBoard();
+
+                    editMessage.setReplyMarkup(keyboardMarkup);
+                    sendNextEditMessage(editMessage);
                 }
                 default -> {
                     sendMessage.setText("Немає обробки цієї кнопки: " + update.getCallbackQuery().getData());
@@ -116,6 +158,14 @@ public class MyTelBot extends TelegramLongPollingBot {
     public void sendNextMessage(SendMessage message) {
         try {
             execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendNextEditMessage(EditMessageReplyMarkup editMessage) {
+        try {
+            execute(editMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -222,6 +272,42 @@ public class MyTelBot extends TelegramLongPollingBot {
         return replyKeyboardMarkup;
     }
 
+    private InlineKeyboardMarkup getChoiceBankKeyBoard() {
+        boolean isPrivatBank = userSettings.getBank() instanceof PrivatBank;
+        boolean isNBU = userSettings.getBank() instanceof NBUBank;
+        boolean isMonoBank = userSettings.getBank() instanceof MonoBank;
+
+        String button1Name = isNBU ? "✅ Національний банк України" : "Національний банк України";
+        String callback1 = "NBUBank";
+
+        String button2Name = isPrivatBank ? "✅ Приват Банк" : "Приват Банк";
+        String callback2 = "PrivatBank";
+
+        String button3Name = isMonoBank ? "✅ МоноБанк" : "МоноБанк";
+        String callback3 = "MonoBank";
+
+        String[] names = new String[]{button1Name, button2Name, button3Name};
+        String[] keys = new String[]{callback1, callback2, callback3};
+
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
+    }
+
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
+        String button1Name = (userSettings.getNumberOfDecimal() == 2) ? "✅ 2" : "2";
+        String Callback1 = "2";
+
+        String button2Name = (userSettings.getNumberOfDecimal() == 3) ? "✅ 3" : "3";
+        String Callback2 = "3";
+
+        String button3Name = (userSettings.getNumberOfDecimal() == 4) ? "✅ 4" : "4";
+        String Callback3 = "4";
+
+        String[] names = new String[]{button1Name, button2Name, button3Name};
+        String[] keys = new String[]{Callback1, Callback2, Callback3};
+
+        return KeyboardBuilder.getSimpleKeyboard(names, keys);
+    }
+
     private InlineKeyboardMarkup getChoiceOptionsKeyBoard() {
         String[] names = new String[]{"Знаки після коми", "Банк", "Валюти", "Час сповіщень"};
         String[] keys = new String[]{"decimals", "bank", "currencies", "reminders"};
@@ -229,30 +315,52 @@ public class MyTelBot extends TelegramLongPollingBot {
         return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
 
-    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
-        String[] names = new String[]{"2", "3", "4"};
-        String[] keys = new String[]{"2", "3", "4"};
-
-        return KeyboardBuilder.getSimpleKeyboard(names, keys);
-    }
-
-    private InlineKeyboardMarkup getChoiceBankKeyBoard() {
-        String[] names = new String[]{"Національний банк України", "Приват банк", "mono bank"};
-        String[] keys = new String[]{"NBUBank", "PrivatBank", "MonoBank"};
-
-        return KeyboardBuilder.getSimpleKeyboard(names, keys);
-    }
-
     private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
-        String[] names = new String[]{"Євро", "Американський долар"};
-        String[] keys = new String[]{"EUR", "USD"};
+        List<Currencies> choicesCurrenciesNow = userSettings.getChoicesCurrencies();
+
+        String button1Name = (choicesCurrenciesNow.contains(Currencies.EUR)) ? "✅ Євро" : "Євро";
+        String Callback1 = "EUR";
+
+        String button2Name = (choicesCurrenciesNow.contains(Currencies.USD)) ? "✅ Американський долар" : "Американський долар";
+        String Callback2 = "USD";
+
+        String[] names = new String[]{button1Name, button2Name};
+        String[] keys = new String[]{Callback1, Callback2};
 
         return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
 
     private InlineKeyboardMarkup getChoiceReminderKeyBoard() {
-        String[] names = new String[]{"9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "Вимкнути сповіщення"};
-        String[] keys = new String[]{"9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "OffReminder"};
+        String button1Name = (userSettings.getReminderTime() == 9 && userSettings.isReminderStarted()) ? "✅ 9:00" : "9:00";
+        String Callback1 = "9";
+        String button2Name = (userSettings.getReminderTime() == 10 && userSettings.isReminderStarted()) ? "✅ 10:00" : "10:00";
+        String Callback2 = "10";
+        String button3Name = (userSettings.getReminderTime() == 11 && userSettings.isReminderStarted()) ? "✅ 11:00" : "11:00";
+        String Callback3 = "11";
+
+        String button4Name = (userSettings.getReminderTime() == 12 && userSettings.isReminderStarted()) ? "✅ 12:00" : "12:00";
+        String Callback4 = "12";
+        String button5Name = (userSettings.getReminderTime() == 13 && userSettings.isReminderStarted()) ? "✅ 13:00" : "13:00";
+        String Callback5 = "13";
+        String button6Name = (userSettings.getReminderTime() == 14 && userSettings.isReminderStarted()) ? "✅ 14:00" : "14:00";
+        String Callback6 = "14";
+
+        String button7Name = (userSettings.getReminderTime() == 15 && userSettings.isReminderStarted()) ? "✅ 15:00" : "15:00";
+        String Callback7 = "15";
+        String button8Name = (userSettings.getReminderTime() == 16 && userSettings.isReminderStarted()) ? "✅ 16:00" : "16:00";
+        String Callback8 = "16";
+        String button9Name = (userSettings.getReminderTime() == 17 && userSettings.isReminderStarted()) ? "✅ 17:00" : "17:00";
+        String Callback9 = "17";
+
+        String button10Name = (userSettings.getReminderTime() == 18 && userSettings.isReminderStarted()) ? "✅ 18:00" : "18:00";
+        String Callback10 = "18";
+        String button11Name = !userSettings.isReminderStarted() ? "✅ Вимкнути сповіщення" : "Вимкнути сповіщення";
+        String Callback11 = "OffReminder";
+
+        String[] names = new String[]{button1Name, button2Name, button3Name, button4Name, button5Name, button6Name
+                , button7Name, button8Name, button9Name, button10Name, button11Name};
+        String[] keys = new String[]{Callback1, Callback2, Callback3, Callback4, Callback5, Callback6
+                , Callback7, Callback8, Callback9, Callback10, Callback11};
 
         return KeyboardBuilder.getReminderKeyboard(names, keys);
     }
