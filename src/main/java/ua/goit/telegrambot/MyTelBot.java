@@ -1,7 +1,9 @@
 package ua.goit.telegrambot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -89,28 +91,37 @@ public class MyTelBot extends TelegramLongPollingBot {
                     for (String currency : choicesCurrencies) {
                         newCurrenciesList.add(Currencies.valueOf(currency));
                     }
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
+                    AnswerCallbackQuery answerCallbackQuery = sendUpdatedSettingMessage(new AnswerCallbackQuery(), newCurrenciesList.toString());
+                    sendNextQuery(this, answerCallbackQuery);
                     userSettings.setChoicesCurrencies(newCurrenciesList);
                 }
                 case ("2"), ("3"), ("4") -> {
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    AnswerCallbackQuery answerCallbackQuery = sendUpdatedSettingMessage(new AnswerCallbackQuery(), inputQueryMessage);
+                    //sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    sendNextQuery(this, answerCallbackQuery);
                     userSettings.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    AnswerCallbackQuery answerCallbackQuery = sendUpdatedSettingMessage(new AnswerCallbackQuery(), inputQueryMessage);
+                    //sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    sendNextQuery(this, answerCallbackQuery);
                     userSettings.setBank(newBank);
                 }
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    AnswerCallbackQuery answerCallbackQuery = sendUpdatedSettingMessage(new AnswerCallbackQuery(), inputQueryMessage);
+                    sendNextQuery(this, answerCallbackQuery);
+                    //sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
                     userSettings.setReminderTime(Integer.parseInt(inputQueryMessage));
                     userSettings.setReminderStarted(true);
                     userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
                     secondThreadReminderTime.start();
                 }
                 case ("OffReminder") -> {
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
+                    AnswerCallbackQuery answerCallbackQuery = sendUpdatedSettingMessage(new AnswerCallbackQuery(), "false");
+                    sendNextQuery(this, answerCallbackQuery);
+                    //sendNextMessage(sendUpdatedSettingMessage(sendMessage, "false"));
                     userSettings.setReminderStarted(false);
                 }
                 default -> {
@@ -124,6 +135,14 @@ public class MyTelBot extends TelegramLongPollingBot {
     public void sendNextMessage(SendMessage message) {
         try {
             execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendNextQuery(MyTelBot bot, AnswerCallbackQuery answerCallbackQuery){
+        try{
+            bot.execute(answerCallbackQuery);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -187,7 +206,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         return sendMessage;
     }
 
-    private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage, String inputQueryMessage) {
+    private AnswerCallbackQuery sendUpdatedSettingMessage(AnswerCallbackQuery answerCallbackQuery, String inputQueryMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = getDefaultKeyBoard();
         String bank = userSettings.getBank().getName();
         String numberOfDecimal = String.valueOf(userSettings.getNumberOfDecimal());
@@ -195,20 +214,44 @@ public class MyTelBot extends TelegramLongPollingBot {
         String reminderTime = String.valueOf(userSettings.getReminderTime());
         String reminderStarted = String.valueOf(userSettings.isReminderStarted());
 
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        answerCallbackQuery.setShowAlert(false);
 
         if (bank.equals(inputQueryMessage) || numberOfDecimal.equals(inputQueryMessage) ||
                 currencies.equals(inputQueryMessage) || reminderTime.equals(inputQueryMessage) ||
                 reminderStarted.equals(inputQueryMessage)) {
-            sendMessage.setText("Ці налаштування вже встановлені.");
+            answerCallbackQuery.setText("Ці налаштування вже встановлені.");
 
-            return sendMessage;
+            return answerCallbackQuery;
         }
-        sendMessage.setText("Налаштування оновлені.");
 
-        return sendMessage;
+        answerCallbackQuery.setText("Налаштування оновлені.");
+        answerCallbackQuery.setShowAlert(true);
+        answerCallbackQuery.setCacheTime(2);
+
+        return answerCallbackQuery;
     }
 
+//    private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage, String inputQueryMessage) {
+//        ReplyKeyboardMarkup replyKeyboardMarkup = getDefaultKeyBoard();
+//        String bank = userSettings.getBank().getName();
+//        String numberOfDecimal = String.valueOf(userSettings.getNumberOfDecimal());
+//        String currencies = userSettings.getChoicesCurrencies().toString();
+//        String reminderTime = String.valueOf(userSettings.getReminderTime());
+//        String reminderStarted = String.valueOf(userSettings.isReminderStarted());
+//
+//        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+//
+//        if (bank.equals(inputQueryMessage) || numberOfDecimal.equals(inputQueryMessage) ||
+//                currencies.equals(inputQueryMessage) || reminderTime.equals(inputQueryMessage) ||
+//                reminderStarted.equals(inputQueryMessage)) {
+//            sendMessage.setText("Ці налаштування вже встановлені.");
+//
+//            return sendMessage;
+//        }
+//        sendMessage.setText("Налаштування оновлені.");
+//
+//        return sendMessage;
+//    }
     private ReplyKeyboardMarkup getDefaultKeyBoard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setResizeKeyboard(true);
