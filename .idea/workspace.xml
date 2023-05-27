@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0d7db63f-899b-4d92-b2f5-a0325d5769fc" name="Changes" comment="">
+    <list default="true" id="0d7db63f-899b-4d92-b2f5-a0325d5769fc" name="Changes" comment=" solution merge conflict">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_05_2023__12_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_05_2023__12_20__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/KeyboardBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/KeyboardBuilder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,11 +42,11 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="recentNewPullRequestHead">
       <RepoCoordinatesHolder>
@@ -179,6 +181,7 @@
     <MESSAGE value="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
     <MESSAGE value="new branch" />
     <MESSAGE value="Little nearer to markup  solution" />
-    <option name="LAST_COMMIT_MESSAGE" value="Little nearer to markup  solution" />
+    <MESSAGE value=" solution merge conflict" />
+    <option name="LAST_COMMIT_MESSAGE" value=" solution merge conflict" />
   </component>
 </project>
