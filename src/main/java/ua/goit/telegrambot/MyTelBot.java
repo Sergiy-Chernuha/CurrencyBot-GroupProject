@@ -27,16 +27,10 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings userSettings;
     private final ReminderTimer secondThreadReminderTime;
-    private final List<String> choicesCurrencies;
-//    private boolean nBUCheckMark, monobankCheckMark, threeDecimalsCheckMark, fourDecimalsCheckMark, eURCheckMark, offReminder = false;
-//    private boolean twoDecimalsCheckMark, privatCheckMark, uSDCheckMark = true;
-//    private int currentNotifications = 9;
 
     public MyTelBot() {
-        choicesCurrencies = new ArrayList<>();
         userSettings = new ChatBotSettings();
         secondThreadReminderTime = new ReminderTimer(this);
-        choicesCurrencies.add(userSettings.getChoicesCurrencies().get(0).toString());
     }
 
     public ChatBotSettings getUserSettings() {
@@ -82,14 +76,19 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("decimals") -> sendNextMessage(sendChoiceDecimalsMessage(sendMessage));
                 case ("currencies") -> sendNextMessage(sendChoiceCurrenciesMessage(sendMessage));
                 case ("USD"), ("EUR") -> {
-                    if (choicesCurrencies.contains(inputQueryMessage)) {
-                        if (choicesCurrencies.size() > 1) {
-                            choicesCurrencies.remove(inputQueryMessage);
+                    List<Currencies> choicesCurrenciesNow = new ArrayList<>(userSettings.getChoicesCurrencies());
+                    Currencies newCurrency = Currencies.valueOf(inputQueryMessage);
+
+                    if (choicesCurrenciesNow.contains(newCurrency)) {
+                        if (choicesCurrenciesNow.size() > 1) {
+                            choicesCurrenciesNow.remove(newCurrency);
                         }
                     } else {
-                        choicesCurrencies.add(inputQueryMessage);
-
+                        choicesCurrenciesNow.add(newCurrency);
                     }
+
+                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, choicesCurrenciesNow.toString()));
+                    userSettings.setChoicesCurrencies(choicesCurrenciesNow);
 
                     InlineKeyboardMarkup keyboardMarkup = getChoiceCurrenciesKeyBoard();
                     EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
@@ -99,15 +98,6 @@ public class MyTelBot extends TelegramLongPollingBot {
                     editMarkup.setReplyMarkup(keyboardMarkup);
                     sendNextEditMessage(editMarkup);
 
-                }
-                case ("confirm") -> { //в этом блоке добавляем сохраненные валюты (1 или 2) в настройки
-                    List<Currencies> newCurrenciesList = new ArrayList<>();
-
-                    for (String currency : choicesCurrencies) {
-                        newCurrenciesList.add(Currencies.valueOf(currency));
-                    }
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage, newCurrenciesList.toString()));
-                    userSettings.setChoicesCurrencies(newCurrenciesList);
                 }
                 case ("2"), ("3"), ("4") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
@@ -137,10 +127,17 @@ public class MyTelBot extends TelegramLongPollingBot {
                 case ("reminders") -> sendNextMessage(sendChoiceReminderMessage(sendMessage));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     sendNextMessage(sendUpdatedSettingMessage(sendMessage, inputQueryMessage));
+                    System.out.println("456");
                     userSettings.setReminderTime(Integer.parseInt(inputQueryMessage));
+                    System.out.println("147");
                     userSettings.setReminderStarted(true);
+                    System.out.println("321");
                     userSettings.setChatId(update.getCallbackQuery().getMessage().getChatId());
-                    secondThreadReminderTime.start();
+
+                    if(secondThreadReminderTime.isTimerOff()) {
+                        secondThreadReminderTime.start();
+                    }
+                    System.out.println("789");
 
                     InlineKeyboardMarkup keyboardMarkup = getChoiceReminderKeyBoard();
                     EditMessageReplyMarkup editMarkup = new EditMessageReplyMarkup();
@@ -177,7 +174,8 @@ public class MyTelBot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-  public void sendNextEditMessage(EditMessageReplyMarkup editMessage) {
+
+    public void sendNextEditMessage(EditMessageReplyMarkup editMessage) {
         try {
             execute(editMessage);
         } catch (TelegramApiException e) {
@@ -288,9 +286,9 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     private InlineKeyboardMarkup getChoiceBankKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        boolean isPrivatBank=userSettings.getBank().getClass()== PrivatBank.class;
-        boolean isNBU=userSettings.getBank().getClass()== NBUBank.class;
-        boolean isMonoBank=userSettings.getBank().getClass()== MonoBank.class;
+        boolean isPrivatBank = userSettings.getBank().getClass() == PrivatBank.class;
+        boolean isNBU = userSettings.getBank().getClass() == NBUBank.class;
+        boolean isMonoBank = userSettings.getBank().getClass() == MonoBank.class;
 
         String button1Name = isNBU ? "✅ Національний банк України" : "Національний банк України";
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(button1Name);
@@ -322,19 +320,19 @@ public class MyTelBot extends TelegramLongPollingBot {
     private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        String button1Name = (userSettings.getNumberOfDecimal()==2) ? "✅ 2" : "2";
+        String button1Name = (userSettings.getNumberOfDecimal() == 2) ? "✅ 2" : "2";
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(button1Name);
         inlineKeyboardButton1.setCallbackData("2");
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
-        String button2Name = (userSettings.getNumberOfDecimal()==3) ? "✅ 3" : "3";
+        String button2Name = (userSettings.getNumberOfDecimal() == 3) ? "✅ 3" : "3";
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(button2Name);
         inlineKeyboardButton2.setCallbackData("3");
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
 
-        String button3Name = (userSettings.getNumberOfDecimal()==4) ? "✅ 4" : "4";
+        String button3Name = (userSettings.getNumberOfDecimal() == 4) ? "✅ 4" : "4";
         InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton(button3Name);
         inlineKeyboardButton3.setCallbackData("4");
         List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
@@ -385,30 +383,23 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<Currencies> choicesCurrenciesNow = userSettings.getChoicesCurrencies();
 
-        String button1Name = (containOfCurrencies(Currencies.EUR)) ? "✅ Євро" : "Євро";
+        String button1Name = (choicesCurrenciesNow.contains(Currencies.EUR)) ? "✅ Євро" : "Євро";
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(button1Name);
         inlineKeyboardButton1.setCallbackData("EUR");
-        inlineKeyboardButton1.setSwitchInlineQueryCurrentChat("+EUR"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
         keyboardButtonsRow1.add(inlineKeyboardButton1);
 
-        String button2Name = (containOfCurrencies(Currencies.USD)) ? "✅ Американський долар" : "Американський долар";
+        String button2Name = (choicesCurrenciesNow.contains(Currencies.USD)) ? "✅ Американський долар" : "Американський долар";
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(button2Name);
         inlineKeyboardButton2.setCallbackData("USD");
-        inlineKeyboardButton2.setSwitchInlineQueryCurrentChat("+USD"); //позволяет выбирать не только этот вариант
         List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
         keyboardButtonsRow2.add(inlineKeyboardButton2);
-
-        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("Підтвердити вибір");
-        inlineKeyboardButton3.setCallbackData("confirm");
-        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
-        keyboardButtonsRow3.add(inlineKeyboardButton3);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(keyboardButtonsRow1);
         rowList.add(keyboardButtonsRow2);
-        rowList.add(keyboardButtonsRow3);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
@@ -417,13 +408,13 @@ public class MyTelBot extends TelegramLongPollingBot {
     private InlineKeyboardMarkup getChoiceReminderKeyBoard() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        String button1Name = (userSettings.getReminderTime()== 9&&userSettings.isReminderStarted())  ? "✅ 9:00" : "9:00";
+        String button1Name = (userSettings.getReminderTime() == 9 && userSettings.isReminderStarted()) ? "✅ 9:00" : "9:00";
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton(button1Name);
         inlineKeyboardButton1.setCallbackData("9");
-        String button2Name = (userSettings.getReminderTime()== 10&&userSettings.isReminderStarted())  ? "✅ 10:00" : "10:00";
+        String button2Name = (userSettings.getReminderTime() == 10 && userSettings.isReminderStarted()) ? "✅ 10:00" : "10:00";
         InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton(button2Name);
         inlineKeyboardButton2.setCallbackData("10");
-        String button3Name = (userSettings.getReminderTime()== 11&&userSettings.isReminderStarted())  ? "✅ 11:00" : "11:00";
+        String button3Name = (userSettings.getReminderTime() == 11 && userSettings.isReminderStarted()) ? "✅ 11:00" : "11:00";
         InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton(button3Name);
         inlineKeyboardButton3.setCallbackData("11");
         List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
@@ -431,13 +422,13 @@ public class MyTelBot extends TelegramLongPollingBot {
         keyboardButtonsRow3.add(inlineKeyboardButton2);
         keyboardButtonsRow3.add(inlineKeyboardButton3);
 
-        String button4Name = (userSettings.getReminderTime()== 12&&userSettings.isReminderStarted())  ? "✅ 12:00" : "12:00";
+        String button4Name = (userSettings.getReminderTime() == 12 && userSettings.isReminderStarted()) ? "✅ 12:00" : "12:00";
         InlineKeyboardButton inlineKeyboardButton4 = new InlineKeyboardButton(button4Name);
         inlineKeyboardButton4.setCallbackData("12");
-        String button5Name = (userSettings.getReminderTime()== 13&&userSettings.isReminderStarted())  ? "✅ 13:00" : "13:00";
+        String button5Name = (userSettings.getReminderTime() == 13 && userSettings.isReminderStarted()) ? "✅ 13:00" : "13:00";
         InlineKeyboardButton inlineKeyboardButton5 = new InlineKeyboardButton(button5Name);
         inlineKeyboardButton5.setCallbackData("13");
-        String button6Name = (userSettings.getReminderTime()== 14&&userSettings.isReminderStarted())  ? "✅ 14:00" : "14:00";
+        String button6Name = (userSettings.getReminderTime() == 14 && userSettings.isReminderStarted()) ? "✅ 14:00" : "14:00";
         InlineKeyboardButton inlineKeyboardButton6 = new InlineKeyboardButton(button6Name);
         inlineKeyboardButton6.setCallbackData("14");
         List<InlineKeyboardButton> keyboardButtonsRow6 = new ArrayList<>();
@@ -445,13 +436,13 @@ public class MyTelBot extends TelegramLongPollingBot {
         keyboardButtonsRow6.add(inlineKeyboardButton5);
         keyboardButtonsRow6.add(inlineKeyboardButton6);
 
-        String button7Name = (userSettings.getReminderTime()== 15&&userSettings.isReminderStarted())  ? "✅ 15:00" : "15:00";
+        String button7Name = (userSettings.getReminderTime() == 15 && userSettings.isReminderStarted()) ? "✅ 15:00" : "15:00";
         InlineKeyboardButton inlineKeyboardButton7 = new InlineKeyboardButton(button7Name);
         inlineKeyboardButton7.setCallbackData("15");
-        String button8Name = (userSettings.getReminderTime()== 16&&userSettings.isReminderStarted())  ? "✅ 16:00" : "16:00";
+        String button8Name = (userSettings.getReminderTime() == 16 && userSettings.isReminderStarted()) ? "✅ 16:00" : "16:00";
         InlineKeyboardButton inlineKeyboardButton8 = new InlineKeyboardButton(button8Name);
         inlineKeyboardButton8.setCallbackData("16");
-        String button9Name = (userSettings.getReminderTime()== 17&&userSettings.isReminderStarted())  ? "✅ 17:00" : "17:00";
+        String button9Name = (userSettings.getReminderTime() == 17 && userSettings.isReminderStarted()) ? "✅ 17:00" : "17:00";
         InlineKeyboardButton inlineKeyboardButton9 = new InlineKeyboardButton(button9Name);
         inlineKeyboardButton9.setCallbackData("17");
         List<InlineKeyboardButton> keyboardButtonsRow9 = new ArrayList<>();
@@ -459,7 +450,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         keyboardButtonsRow9.add(inlineKeyboardButton8);
         keyboardButtonsRow9.add(inlineKeyboardButton9);
 
-        String button10Name = (userSettings.getReminderTime()== 18&&userSettings.isReminderStarted())  ? "✅ 18:00" : "18:00";
+        String button10Name = (userSettings.getReminderTime() == 18 && userSettings.isReminderStarted()) ? "✅ 18:00" : "18:00";
         InlineKeyboardButton inlineKeyboardButton10 = new InlineKeyboardButton(button10Name);
         inlineKeyboardButton10.setCallbackData("18");
         String button11Name = !userSettings.isReminderStarted() ? "✅ Вимкнути сповіщення" : "Вимкнути сповіщення";
@@ -477,18 +468,6 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
-    }
-
-    private boolean containOfCurrencies(Currencies inputCurrency){
-        List<Currencies> choicesCurrenciesNow = userSettings.getChoicesCurrencies();
-
-        for (Currencies currency : choicesCurrenciesNow) {
-            if (currency.equals(inputCurrency)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     @Override

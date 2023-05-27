@@ -7,13 +7,19 @@ import java.time.LocalTime;
 
 public class ReminderTimer extends Thread {
     private final MyTelBot myTelBot;
+    private  boolean timerOff=true;
 
     public ReminderTimer(MyTelBot myTelBot) {
         this.myTelBot = myTelBot;
     }
 
+    public boolean isTimerOff() {
+        return timerOff;
+    }
+
     @Override
     public void run() {
+        timerOff=false;
         while (myTelBot.getUserSettings().isReminderStarted()) {
 
             try {
@@ -34,6 +40,8 @@ public class ReminderTimer extends Thread {
                 }
             }
         }
+
+        timerOff=true;
     }
 
     private void sendReminderMessage() {
