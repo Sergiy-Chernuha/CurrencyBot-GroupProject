@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -229,6 +230,34 @@ public class MyTelBot extends TelegramLongPollingBot {
         replyKeyboardMarkup.setKeyboard(keyboard);
 
         return replyKeyboardMarkup;
+    }
+    static InlineKeyboardMarkup getChoiceBankKeyBoard() {
+        InlineKeyboardMarkup inlineKeyboardMarkup= KeyboardBuilder.getCho("Національний банк України","NBUBank","Національний банк України","NBUBank","Національний банк України","NBUBank"); ;
+
+//        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Національний банк України");
+//        inlineKeyboardButton1.setCallbackData("NBUBank");
+//        KeyboardBuilder.getCho("Національний банк України","NBUBank");
+//
+//        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+//        keyboardButtonsRow1.add(inlineKeyboardButton1);
+//
+//        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Приват Банк");
+//        inlineKeyboardButton2.setCallbackData("PrivatBank");
+//        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+//        keyboardButtonsRow2.add(inlineKeyboardButton2);
+//
+//        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("МоноБанк");
+//        inlineKeyboardButton3.setCallbackData("MonoBank");
+//        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
+//        keyboardButtonsRow3.add(inlineKeyboardButton3);
+//
+//        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+//        rowList.add(keyboardButtonsRow1);
+//        rowList.add(keyboardButtonsRow2);
+//        rowList.add(keyboardButtonsRow3);
+//
+//        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
     }
 
     @Override

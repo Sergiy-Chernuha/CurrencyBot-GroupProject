@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KeyboardBuilder {
-      static InlineKeyboardMarkup getChoiceBankKeyBoard() {
+
+      static InlineKeyboardMarkup getCho(String first , String second ) {
+          first.split();
+
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Національний банк України");
@@ -159,9 +162,9 @@ public class KeyboardBuilder {
         keyboardButtonsRow9.add(inlineKeyboardButton7);
         keyboardButtonsRow9.add(inlineKeyboardButton8);
         keyboardButtonsRow9.add(inlineKeyboardButton9);
-
-        InlineKeyboardButton inlineKeyboardButton10 = new InlineKeyboardButton("18:00");
-        inlineKeyboardButton10.setCallbackData("18");
+        getButt("18:00","18")
+//        InlineKeyboardButton inlineKeyboardButton10 = new InlineKeyboardButton("18:00");
+//        inlineKeyboardButton10.setCallbackData("18");
         InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton("Вимкнути сповіщення");
         inlineKeyboardButton.setCallbackData("OffReminder");
         List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
@@ -177,4 +180,12 @@ public class KeyboardBuilder {
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
     }
+
+    public  InlineKeyboardButton getButt(String fer, String fer2){
+        InlineKeyboardButton inlineKeyboardButton10 = new InlineKeyboardButton("18:00");
+        inlineKeyboardButton10.setCallbackData("18");
+
+        return inlineKeyboardButton10;
+    }
+
 }
