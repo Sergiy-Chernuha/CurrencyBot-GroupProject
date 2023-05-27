@@ -17,6 +17,7 @@ import ua.goit.userssetting.SettingUtils;
 import java.util.List;
 import java.util.ArrayList;
 
+import static ua.goit.telegrambot.KeyboardBuilder.getReminderKeyboard;
 import static ua.goit.telegrambot.KeyboardBuilder.getSimpleKeyboard;
 
 public class MyTelBot extends TelegramLongPollingBot {
@@ -224,31 +225,31 @@ public class MyTelBot extends TelegramLongPollingBot {
         String[] names = new String[]{"Знаки після коми", "Банк", "Валюти", "Час сповіщень"};
         String[] keys = new String[]{"decimals", "bank", "currencies", "reminders"};
 
-        return getSimpleKeyboard(names, keys, "simple");
+        return getSimpleKeyboard(names, keys);
     }
     private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(){
         String[] names = new String[]{"2", "3", "4"};
         String[] keys = new String[]{"2", "3", "4"};
 
-        return getSimpleKeyboard(names, keys, "simple");
+        return getSimpleKeyboard(names, keys);
     }
     private InlineKeyboardMarkup getChoiceBankKeyBoard() {
         String[] names = new String[]{"Національний банк України", "Приват банк", "mono bank"};
-        String[] keys = new String[]{"NBU", "Privat", "mono"};
+        String[] keys = new String[]{"NBUBank", "PrivatBank", "MonoBank"};
 
-        return getSimpleKeyboard(names, keys, "simple");
+        return getSimpleKeyboard(names, keys);
     }
     private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(){
         String[] names = new String[]{"Євро", "Американський долар"};
         String[] keys = new String[]{"EUR", "USD"};
 
-        return getSimpleKeyboard(names, keys, "simple");
+        return getSimpleKeyboard(names, keys);
     }
     private InlineKeyboardMarkup getChoiceReminderKeyBoard(){
         String[] names = new String[]{"9:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","Вимкнути сповіщення"};
         String[] keys = new String[]{"9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "OffReminder"};
 
-        return getSimpleKeyboard(names, keys, "reminder");
+        return getReminderKeyboard(names, keys);
     }
 
     @Override
