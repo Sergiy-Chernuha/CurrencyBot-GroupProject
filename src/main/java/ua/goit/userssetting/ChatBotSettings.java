@@ -3,6 +3,7 @@ package ua.goit.userssetting;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.privatbank.PrivatBank;
+import ua.goit.telegrambot.ReminderTimer;
 
 import java.util.List;
 
@@ -14,6 +15,15 @@ public class ChatBotSettings {
     private int reminderTime = 9;
     private boolean reminderStarted = false;
     private Long chatId ;
+    private ReminderTimer secondThreadReminderTime;
+
+    public void setSecondThreadReminderTime(ReminderTimer secondThreadReminderTime) {
+        this.secondThreadReminderTime = secondThreadReminderTime;
+    }
+
+    public ReminderTimer getSecondThreadReminderTime() {
+        return secondThreadReminderTime;
+    }
 
     public Long getChatId() {
         return chatId;
