@@ -1,0 +1,26 @@
+{
+  "969527119": {
+    "numberOfDecimal": 4,
+    "bank": {
+      "currencies": [
+        {
+          "name": "USD",
+          "currencySellingRate": 37.4406,
+          "currencyBuyingRate": 36.65
+        },
+        {
+          "name": "EUR",
+          "currencySellingRate": 40.5006,
+          "currencyBuyingRate": 39.28
+        }
+      ],
+      "name": "MonoBank"
+    },
+    "choicesCurrencies": [
+      "USD"
+    ],
+    "reminderTime": 14,
+    "reminderStarted": true,
+    "chatId": 969527119
+  }
+}

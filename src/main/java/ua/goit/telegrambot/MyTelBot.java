@@ -10,26 +10,33 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ua.goit.banks.BankFactory;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
-import ua.goit.banks.BankFactory;
 import ua.goit.userssetting.ChatBotSettings;
 import ua.goit.userssetting.SettingUtils;
+import ua.goit.userssetting.Settings;
+import ua.goit.userssetting.SettingsUser;
 
-import java.util.List;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings userSettings;
     private final ReminderTimer secondThreadReminderTime;
     private final List<String> choicesCurrencies;
+    public final Settings settings;
 
-    public MyTelBot() {
+    public MyTelBot(Settings settings) {
         choicesCurrencies = new ArrayList<>();
         userSettings = new ChatBotSettings();
         secondThreadReminderTime = new ReminderTimer(this);
         choicesCurrencies.add(userSettings.getChoicesCurrencies().get(0).toString());
+        this.settings = settings;
     }
 
     public ChatBotSettings getUserSettings() {
@@ -51,11 +58,37 @@ public class MyTelBot extends TelegramLongPollingBot {
                 if (text.equals("/start")) {
                     sendNextMessage(sendHelloMessage(chatId));
                     userSettings.setChatId(chatId);
+                    SettingsUser settingsUser = new SettingsUser();
+                    settingsUser.add(chatId, userSettings);
+                    try { Map<Long, ChatBotSettings> clientMap =
+                            settingsUser.getWriterListOfClients();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        settingsUser.getObtainingClientSettings();
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else if (text.equals("Отримати інфо")) {
                     sendMessage.setText(SettingUtils.getCurrentData(userSettings));
                     sendNextMessage(sendMessage);
+                    SettingsUser settingsUser = new SettingsUser();
+                    settingsUser.add(chatId, userSettings);
+                    try { Map<Long, ChatBotSettings> clientMap =
+                            settingsUser.getWriterListOfClients();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else if (text.equals("Налаштування")) {
                     sendNextMessage(sendChoiceOptionsMessage(sendMessage));
+                    SettingsUser settingsUser = new SettingsUser();
+                    settingsUser.add(chatId, userSettings);
+                    try { Map<Long, ChatBotSettings> clientMap =
+                            settingsUser.getWriterListOfClients();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 } else if (text.equals("/end")) {
                     sendNextMessage(sendEndMessage(chatId));
                     System.exit(0);

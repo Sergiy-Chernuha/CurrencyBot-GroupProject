@@ -5,16 +5,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 import lombok.Data;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 
 @Data
-public class SettingsUser implements Settings{
-
-    private Map<Long, Client> clients;
+public class SettingsUser implements Settings {
+    private Map<Long, ChatBotSettings> clients;
 
     public SettingsUser() {
         this.clients = new HashMap<>();
@@ -26,24 +24,33 @@ public class SettingsUser implements Settings{
     }
 
     @Override
-    public void add(long chatId, Client client) {
+    public void add(long chatId, ChatBotSettings client) {
         clients.put(chatId, client);
     }
 
     @Override
-    public Client getClient(long chatId) {
+    public ChatBotSettings getClient(long chatId) {
         return clients.get(chatId);
     }
 
     @Override
-    public Map<Long, Client> getListOfClients() throws IOException {
+    public Map<Long, ChatBotSettings> getWriterListOfClients() throws IOException {
         Map.copyOf(clients);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/users.json", false));
+        JsonWriter jsonWriter = new JsonWriter(new FileWriter("src/main/resources/users.json" + clients.keySet(), false));
         String json = gson.toJson(clients);
         jsonWriter.jsonValue(json);
         jsonWriter.close();
         return clients;
+    }
+
+    public Map<Long, ChatBotSettings> getObtainingClientSettings() throws FileNotFoundException {
+        ChatBotSettings client = new Gson().fromJson("src/main/resources/users.json" + clients.keySet(), ChatBotSettings.class);
+        System.out.println("client = " + client);
+
+        return clients;
+
+
     }
 
 }
