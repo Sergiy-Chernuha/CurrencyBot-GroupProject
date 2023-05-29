@@ -22,7 +22,6 @@ import ua.goit.userssetting.SettingUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MyTelBot extends TelegramLongPollingBot {
 
@@ -54,30 +53,30 @@ public class MyTelBot extends TelegramLongPollingBot {
                         sendNextMessage(sendHelloMessage(chatId));
                         userSettings.setChatId(chatId);
 
-                        SettingUtils settingsUser = new SettingUtils();
-                        settingsUser.add(chatId, userSettings);
-
-                        Map<Long, ChatBotSettings> clientMap =
-                                settingsUser.getWriterListOfClients();
-                        settingsUser.getObtainingClientSettings();
+//                        SettingUtils settingsUser = new SettingUtils();
+//                        settingsUser.add(chatId, userSettings);
+//
+//                        Map<Long, ChatBotSettings> clientMap =
+//                                settingsUser.getWriterListOfClients();
+//                        settingsUser.getObtainingClientSettings();
 
                     }
                     case "Отримати інфо" -> {
                         sendMessage.setText(SettingUtils.getCurrentData(userSettings));
                         sendNextMessage(sendMessage);
 
-                        SettingUtils settingsUser = new SettingUtils();
-                        settingsUser.add(chatId, userSettings);
-                        Map<Long, ChatBotSettings> clientMap =
-                                settingsUser.getWriterListOfClients();
+//                        SettingUtils settingsUser = new SettingUtils();
+//                        settingsUser.add(chatId, userSettings);
+//                        Map<Long, ChatBotSettings> clientMap =
+//                                settingsUser.getWriterListOfClients();
                     }
                     case "Налаштування" -> {
                         sendChoiceOptionsMessage(sendMessage);
 
-                        SettingUtils settingsUser = new SettingUtils();
-                        settingsUser.add(chatId, userSettings);
-                        Map<Long, ChatBotSettings> clientMap =
-                                settingsUser.getWriterListOfClients();
+//                        SettingUtils settingsUser = new SettingUtils();
+//                        settingsUser.add(chatId, userSettings);
+//                        Map<Long, ChatBotSettings> clientMap =
+//                                settingsUser.getWriterListOfClients();
                     }
                     case "/end" -> {
                         sendNextMessage(sendEndMessage(chatId));
