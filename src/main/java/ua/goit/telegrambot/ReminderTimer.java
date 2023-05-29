@@ -7,10 +7,12 @@ import java.time.LocalTime;
 
 public class ReminderTimer extends Thread {
     private final MyTelBot myTelBot;
+    private final Long chatId;
     private boolean timerOff = true;
 
-    public ReminderTimer(MyTelBot myTelBot) {
+    public ReminderTimer(MyTelBot myTelBot,Long chatId) {
         this.myTelBot = myTelBot;
+        this.chatId = chatId;
     }
 
     public boolean isTimerOff() {
@@ -20,7 +22,7 @@ public class ReminderTimer extends Thread {
     @Override
     public void run() {
         timerOff = false;
-        while (myTelBot.getUserSettings().isReminderStarted()) {
+        while (myTelBot.getUserSettings(chatId).isReminderStarted()) {
 
             try {
                 sleep(900);
@@ -29,7 +31,7 @@ public class ReminderTimer extends Thread {
             }
 
             LocalTime now = LocalTime.now();
-            if (now.getHour() == myTelBot.getUserSettings().getReminderTime()
+            if (now.getHour() == myTelBot.getUserSettings(chatId).getReminderTime()
                     && now.getMinute() == 0
                     && now.getSecond() == 1) {
 
@@ -41,8 +43,8 @@ public class ReminderTimer extends Thread {
     private void sendReminderMessage() {
         SendMessage sendMessage = new SendMessage();
 
-        sendMessage.setChatId(String.valueOf(myTelBot.getUserSettings().getChatId()));
-        sendMessage.setText(SettingUtils.getCurrentData(myTelBot.getUserSettings()));
+        sendMessage.setChatId(String.valueOf(chatId));
+        sendMessage.setText(SettingUtils.getCurrentData(myTelBot.getUserSettings(chatId)));
         myTelBot.sendNextMessage(sendMessage);
     }
 }
