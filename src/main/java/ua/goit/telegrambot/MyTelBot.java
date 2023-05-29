@@ -148,7 +148,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                         }
                     }
 
-                    String cronExpression = "41 " + inputQueryMessage + " * * *";
+                    String cronExpression = "0 0/1 21 * * ?";
                     secondThreadReminderTime = new ReminderTimer(this);
                     try {
                         secondThreadReminderTime.startTimer(cronExpression);
