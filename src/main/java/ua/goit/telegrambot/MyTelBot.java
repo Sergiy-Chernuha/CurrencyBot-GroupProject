@@ -1,5 +1,6 @@
 package ua.goit.telegrambot;
 
+import org.quartz.SchedulerException;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -31,7 +32,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     public MyTelBot() {
         userSettings = new ChatBotSettings();
-        secondThreadReminderTime = new ReminderTimer(this);
+        //secondThreadReminderTime = new ReminderTimer(this, "0 9 * * *");
     }
 
     public ChatBotSettings getUserSettings() {
@@ -139,26 +140,66 @@ public class MyTelBot extends TelegramLongPollingBot {
                     userSettings.setReminderStarted(true);
                     userSettings.setChatId(chatId);
 
-                    if (secondThreadReminderTime.isTimerOff()) {
-                        secondThreadReminderTime.start();
+                    if (secondThreadReminderTime != null) {
+                        try {
+                            secondThreadReminderTime.stopTimer();
+                        } catch (SchedulerException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+
+                    String cronExpression = "41 " + inputQueryMessage + " * * *";
+                    secondThreadReminderTime = new ReminderTimer(this);
+                    try {
+                        secondThreadReminderTime.startTimer(cronExpression);
+                    } catch (SchedulerException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println(userSettings.getReminderTime());
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard());
                         sendNextEditMessage(editMessage);
                     }
+
+//                    if (secondThreadReminderTime.isTimerOff()) {
+//                        secondThreadReminderTime.start();
+//                    }
+//                    ReminderTimer reminderTimer = new ReminderTimer(this);
+//                    String cronExpression = "0 " + inputQueryMessage + " * * *";
+//                    reminderTimer.startTimer(cronExpression);
+//                    ReminderTimer reminderTimer = new ReminderTimer(this, "0 " + inputQueryMessage + " * * *");
+//                    reminderTimer.startTimer();
+//
+//                    if (isNewSetting) {
+//                        editMessage.setReplyMarkup(getChoiceReminderKeyBoard());
+//                        sendNextEditMessage(editMessage);
+//                    }
                 }
                 case ("OffReminder") -> {
                     boolean isNewSetting = isThisNewSetting("false");
 
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     userSettings.setReminderStarted(false);
-                    secondThreadReminderTime = new ReminderTimer(this);
+
+                    if (secondThreadReminderTime != null) {
+                        try {
+                            secondThreadReminderTime.stopTimer();
+                        } catch (SchedulerException e) {
+                            throw new RuntimeException(e);
+                        }
+                        secondThreadReminderTime = null;
+                    }
+                    //secondThreadReminderTime = new ReminderTimer(this, "0 9 * * *");
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard());
                         sendNextEditMessage(editMessage);
                     }
+
+//                    if (secondThreadReminderTime != null) {
+//                        secondThreadReminderTime.stopTimer();
+//                    }
                 }
                 default -> {
                     sendMessage.setText("Немає обробки цієї кнопки: " + update.getCallbackQuery().getData());
