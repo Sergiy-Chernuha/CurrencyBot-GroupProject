@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class MyTelBot extends TelegramLongPollingBot {
 
     private final ChatBotSettings userSettings;
-    private ReminderTimer secondThreadReminderTime;
+    private ReminderTimer reminderTimer;
 
     public MyTelBot() {
         userSettings = new ChatBotSettings();
@@ -138,15 +138,15 @@ public class MyTelBot extends TelegramLongPollingBot {
                     userSettings.setReminderStarted(true);
                     userSettings.setChatId(chatId);
 
-                    if (secondThreadReminderTime != null) {
+                    if (reminderTimer != null) {
 
-                            secondThreadReminderTime.stopTimer();
+                            reminderTimer.stopTimer();
                     }
 
                     String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
-                    secondThreadReminderTime = new ReminderTimer(this);
+                    reminderTimer = new ReminderTimer(this);
 
-                        secondThreadReminderTime.startTimer(cronExpression);
+                        reminderTimer.startTimer(cronExpression);
                     System.out.println(userSettings.getReminderTime());
 
                     if (isNewSetting) {
@@ -160,10 +160,10 @@ public class MyTelBot extends TelegramLongPollingBot {
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     userSettings.setReminderStarted(false);
 
-                    if (secondThreadReminderTime != null) {
+                    if (reminderTimer != null) {
 
-                            secondThreadReminderTime.stopTimer();
-                        secondThreadReminderTime = null;
+                            reminderTimer.stopTimer();
+                        reminderTimer = null;
                     }
 
                     if (isNewSetting) {

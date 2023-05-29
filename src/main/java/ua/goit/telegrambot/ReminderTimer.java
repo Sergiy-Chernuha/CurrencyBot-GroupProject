@@ -1,4 +1,4 @@
-package ua.goit.telegrambot;//package ua.goit.telegrambot;
+package ua.goit.telegrambot;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
