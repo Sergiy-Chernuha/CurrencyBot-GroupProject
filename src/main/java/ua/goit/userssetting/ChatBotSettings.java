@@ -3,7 +3,6 @@ package ua.goit.userssetting;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.privatbank.PrivatBank;
-import ua.goit.telegrambot.ReminderTimer;
 
 import java.util.List;
 
@@ -12,25 +11,16 @@ public class ChatBotSettings {
     private int numberOfDecimal = 2;
     private Banks bank = new PrivatBank();
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
-    private int reminderTime = 9;
+    private int reminderTime = 0;
     private boolean reminderStarted = false;
-    private Long chatId ;
-    private ReminderTimer secondThreadReminderTime;
+    private final Long chatId ;
 
-    public void setSecondThreadReminderTime(ReminderTimer secondThreadReminderTime) {
-        this.secondThreadReminderTime = secondThreadReminderTime;
-    }
-
-    public ReminderTimer getSecondThreadReminderTime() {
-        return secondThreadReminderTime;
+    public ChatBotSettings(Long chatId) {
+        this.chatId = chatId;
     }
 
     public Long getChatId() {
         return chatId;
-    }
-
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
     }
 
     public int getNumberOfDecimal() {

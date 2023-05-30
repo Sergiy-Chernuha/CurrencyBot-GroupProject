@@ -7,10 +7,12 @@ import ua.goit.userssetting.SettingUtils;
 
 public class ReminderTimer {
     private final MyTelBot myTelBot;
+    private final Long chatId;
     private Scheduler scheduler;
 
-    public ReminderTimer(MyTelBot myTelBot) {
+    public ReminderTimer(MyTelBot myTelBot, Long chatId) {
         this.myTelBot = myTelBot;
+        this.chatId = chatId;
     }
 
     public void startTimer(String cronExpression) {
@@ -24,6 +26,7 @@ public class ReminderTimer {
                     .build();
 
             job.getJobDataMap().put("myTelBot", myTelBot);
+            job.getJobDataMap().put("chatId", chatId);
 
             CronTrigger trigger = TriggerBuilder.newTrigger()
                     .withIdentity("reminderTrigger", "reminderGroup")
@@ -33,10 +36,9 @@ public class ReminderTimer {
             scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             scheduler.scheduleJob(job, trigger);
-        } catch(SchedulerException e){
-            throw new RuntimeException(e);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
         }
-
     }
 
     public void stopTimer() {
@@ -44,69 +46,21 @@ public class ReminderTimer {
             if (scheduler != null && !scheduler.isShutdown()) {
                 scheduler.shutdown();
             }
-        } catch(SchedulerException e){
-            throw new RuntimeException(e);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
         }
-
     }
 
     public static class ReminderJob implements Job {
         @Override
         public void execute(JobExecutionContext context) {
             MyTelBot myTelBot = (MyTelBot) context.getJobDetail().getJobDataMap().get("myTelBot");
-            sendReminderMessage(myTelBot);
-        }
-
-        private void sendReminderMessage(MyTelBot myTelBot) {
+            Long chatId = (Long) context.getJobDetail().getJobDataMap().get("chatId");
             SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(String.valueOf(myTelBot.getUserSettings().getChatId()));
-            sendMessage.setText(SettingUtils.getCurrentData(myTelBot.getUserSettings()));
-            myTelBot.sendNextMessage(sendMessage);
+
+            sendMessage.setChatId(chatId);
+            sendMessage.setText(SettingUtils.getCurrentData(myTelBot.getUserSetting(chatId)));
+            new MyTelBot().sendNextMessage(sendMessage);
         }
     }
-import java.time.LocalTime;
-
-public class ReminderTimer extends Thread {
-//    private final MyTelBot myTelBot;
-//    private final Long chatId;
-//    private boolean timerOff = true;
-//
-//    public ReminderTimer(MyTelBot myTelBot,Long chatId) {
-//        this.myTelBot = myTelBot;
-//        this.chatId = chatId;
-//    }
-//
-//    public boolean isTimerOff() {
-//        return timerOff;
-//    }
-//
-//    @Override
-//    public void run() {
-//        timerOff = false;
-//        while (myTelBot.getUserSettings(chatId).isReminderStarted()) {
-//
-//            try {
-//                sleep(900);
-//            } catch (InterruptedException e) {
-//                System.out.println("SecondThreadAlertTime is abort");
-//            }
-//
-//            LocalTime now = LocalTime.now();
-//            if (now.getHour() == myTelBot.getUserSettings(chatId).getReminderTime()
-//                    && now.getMinute() == 0
-//                    && now.getSecond() == 1) {
-//
-//                sendReminderMessage();
-//            }
-//        }
-//    }
-//
-//    private void sendReminderMessage() {
-//        SendMessage sendMessage = new SendMessage();
-//
-//        sendMessage.setChatId(String.valueOf(chatId));
-//        sendMessage.setText(SettingUtils.getCurrentData(myTelBot.getUserSettings(chatId)));
-//        myTelBot.sendNextMessage(sendMessage);
-//    }
 }
-

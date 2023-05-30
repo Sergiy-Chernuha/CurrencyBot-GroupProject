@@ -29,12 +29,12 @@ import java.util.Map;
 public class MyTelBot extends TelegramLongPollingBot {
 
     Map<Long, ChatBotSettings> settings = new HashMap<>();
-    private ReminderTimer reminderTimer;
+    Map<Long, ReminderTimer> timers = new HashMap<>();
 
     public MyTelBot() {
     }
 
-    public ChatBotSettings getUserSettings(Long chatId) {
+    public ChatBotSettings getUserSetting(Long chatId) {
         return settings.get(chatId);
     }
 
@@ -54,7 +54,6 @@ public class MyTelBot extends TelegramLongPollingBot {
                 switch (text) {
                     case "/start" -> {
                         sendNextMessage(sendHelloMessage(chatId));
-                        settings.get(chatId).setChatId(chatId);
                     }
                     case "Отримати інфо" -> {
                         sendMessage.setText(SettingUtils.getCurrentData(settings.get(chatId)));
@@ -70,6 +69,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         } else if (update.hasCallbackQuery()) {
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
             Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
+
             updateSettings(chatId);
             //            Нужно убрать следующую строку перед финишем.
             System.out.println("id user= " + chatId + "  ");
@@ -133,23 +133,24 @@ public class MyTelBot extends TelegramLongPollingBot {
                 }
                 case ("reminders") -> sendChoiceReminderMessage(sendMessage, chatId);
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
+                    if (settings.get(chatId).isReminderStarted()) {
+
+                        timers.get(chatId).stopTimer();
+                    }
+
+//                    String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
+                    String cronExpression = "0/" + inputQueryMessage + " * * * * ?";
+                    timers.put(chatId, new ReminderTimer(this, chatId));
+
+                    timers.get(chatId).startTimer(cronExpression);
+//
+                    System.out.println(settings.get(chatId).getReminderTime());
+
                     boolean isNewSetting = isThisNewSetting(inputQueryMessage, chatId);
 
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setReminderTime(Integer.parseInt(inputQueryMessage));
                     settings.get(chatId).setReminderStarted(true);
-                    settings.get(chatId).setChatId(chatId);
-
-                    if (reminderTimer != null) {
-
-                            reminderTimer.stopTimer();
-                    }
-
-                    String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
-                    reminderTimer = new ReminderTimer(this);
-
-                        reminderTimer.startTimer(cronExpression);
-                    System.out.println(userSettings.getReminderTime());
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
@@ -157,16 +158,14 @@ public class MyTelBot extends TelegramLongPollingBot {
                     }
                 }
                 case ("OffReminder") -> {
+                    if (settings.get(chatId).isReminderStarted()) {
+                        timers.get(chatId).stopTimer();
+                        timers.remove(chatId);
+                    }
                     boolean isNewSetting = isThisNewSetting("false", chatId);
 
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setReminderStarted(false);
-
-                    if (reminderTimer != null) {
-
-                            reminderTimer.stopTimer();
-                        reminderTimer = null;
-                    }
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
@@ -400,22 +399,19 @@ public class MyTelBot extends TelegramLongPollingBot {
     }
 
     private void updateSettings(Long chatId) {
-//1 проверка, нет ли єтого в мепе.
+//1 проверка, нет ли этого userSetting в мепе.
         if (!settings.containsKey(chatId)) {
-
+ //2 проверка нет ли в сохраненных файлах
 //        if (hasInResource) {
-//            read from resourse;
+//            read from resource;
 //            put to map
+//            check timerStarted? and update timerMap
+//3 создание нового сетинга
 //        }else{
             System.out.println("make new user");
 
-            settings.put(chatId, new ChatBotSettings());
-//            settings.get(chatId).setSecondThreadReminderTime(new ReminderTimer(this, chatId));
+            settings.put(chatId, new ChatBotSettings(chatId));
         }
-//    }
-        //2 проверка нет ли в сохраненных файлах
-        //3 создание нового сетинга
-//
     }
 
     @Override
