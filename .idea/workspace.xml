@@ -7,8 +7,9 @@
     <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="Working version mix MapSetting and NewTimer">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBotConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBotConst.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/ChatBotSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/ChatBotSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +36,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="RefactorSevingUserSettings" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -213,5 +214,12 @@
     <MESSAGE value="-remindertimer with QuarzScheduler" />
     <MESSAGE value="Working version mix MapSetting and NewTimer" />
     <option name="LAST_COMMIT_MESSAGE" value="Working version mix MapSetting and NewTimer" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="gson" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

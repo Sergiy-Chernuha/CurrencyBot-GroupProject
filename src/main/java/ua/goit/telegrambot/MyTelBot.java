@@ -54,6 +54,11 @@ public class MyTelBot extends TelegramLongPollingBot {
                 switch (text) {
                     case "/start" -> {
                         sendNextMessage(sendHelloMessage(chatId));
+//                        System.out.println(settings);
+                        System.out.println(settings.get(chatId));
+                        SettingUtils.writeUserSettings(settings,chatId);
+                        ChatBotSettings newChatBotSettings = SettingUtils.readUserSetting(chatId);
+                        System.out.println(newChatBotSettings.getNumberOfDecimal());
                     }
                     case "Отримати інфо" -> {
                         sendMessage.setText(SettingUtils.getCurrentData(settings.get(chatId)));

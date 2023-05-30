@@ -62,4 +62,16 @@ public class ChatBotSettings {
     public void setReminderStarted(boolean reminderStarted) {
         this.reminderStarted = reminderStarted;
     }
+
+    @Override
+    public String toString() {
+        return "ChatBotSettings{" +
+                "numberOfDecimal=" + numberOfDecimal +
+                ", bank=" + bank +
+                ", choicesCurrencies=" + choicesCurrencies +
+                ", reminderTime=" + reminderTime +
+                ", reminderStarted=" + reminderStarted +
+                ", chatId=" + chatId +
+                '}';
+    }
 }
