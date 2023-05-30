@@ -11,16 +11,16 @@ public class ChatBotSettings {
     private int numberOfDecimal = 2;
     private Banks bank = new PrivatBank();
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
-    private int reminderTime = 9;
+    private int reminderTime = 0;
     private boolean reminderStarted = false;
-    private Long chatId ;
+    private final Long chatId ;
+
+    public ChatBotSettings(Long chatId) {
+        this.chatId = chatId;
+    }
 
     public Long getChatId() {
         return chatId;
-    }
-
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
     }
 
     public int getNumberOfDecimal() {

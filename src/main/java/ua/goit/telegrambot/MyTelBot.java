@@ -21,20 +21,21 @@ import ua.goit.banks.privatbank.PrivatBank;
 import ua.goit.userssetting.ChatBotSettings;
 import ua.goit.userssetting.SettingUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MyTelBot extends TelegramLongPollingBot {
 
-    private final ChatBotSettings userSettings;
-    private ReminderTimer reminderTimer;
+    Map<Long, ChatBotSettings> settings = new HashMap<>();
+    Map<Long, ReminderTimer> timers = new HashMap<>();
 
     public MyTelBot() {
-        userSettings = new ChatBotSettings();
     }
 
-    public ChatBotSettings getUserSettings() {
-        return userSettings;
+    public ChatBotSettings getUserSetting(Long chatId) {
+        return settings.get(chatId);
     }
 
     @Override
@@ -42,6 +43,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             Message message = update.getMessage();
             Long chatId = update.getMessage().getChatId();
+            updateSettings(chatId);
 
             if (message.hasText()) {
                 String text = message.getText();
@@ -52,10 +54,9 @@ public class MyTelBot extends TelegramLongPollingBot {
                 switch (text) {
                     case "/start" -> {
                         sendNextMessage(sendHelloMessage(chatId));
-                        userSettings.setChatId(chatId);
                     }
                     case "Отримати інфо" -> {
-                        sendMessage.setText(SettingUtils.getCurrentData(userSettings));
+                        sendMessage.setText(SettingUtils.getCurrentData(settings.get(chatId)));
                         sendNextMessage(sendMessage);
                     }
                     case "Налаштування" -> sendChoiceOptionsMessage(sendMessage);
@@ -66,9 +67,10 @@ public class MyTelBot extends TelegramLongPollingBot {
                 }
             }
         } else if (update.hasCallbackQuery()) {
-            final Long chatId = update.getCallbackQuery().getMessage().getChatId();
-            final Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
+            Long chatId = update.getCallbackQuery().getMessage().getChatId();
+            Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
+            updateSettings(chatId);
             //            Нужно убрать следующую строку перед финишем.
             System.out.println("id user= " + chatId + "  ");
             String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
@@ -83,11 +85,11 @@ public class MyTelBot extends TelegramLongPollingBot {
             AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(update.getCallbackQuery().getId());
 
             switch (inputQueryMessage) {
-                case ("bank") -> sendChoiceBankMessage(sendMessage);
-                case ("decimals") -> sendChoiceDecimalsMessage(sendMessage);
-                case ("currencies") -> sendChoiceCurrenciesMessage(sendMessage);
+                case ("bank") -> sendChoiceBankMessage(sendMessage, chatId);
+                case ("decimals") -> sendChoiceDecimalsMessage(sendMessage, chatId);
+                case ("currencies") -> sendChoiceCurrenciesMessage(sendMessage, chatId);
                 case ("USD"), ("EUR") -> {
-                    List<Currencies> choicesCurrenciesNow = new ArrayList<>(userSettings.getChoicesCurrencies());
+                    List<Currencies> choicesCurrenciesNow = new ArrayList<>(settings.get(chatId).getChoicesCurrencies());
                     Currencies newCurrency = Currencies.valueOf(inputQueryMessage);
 
                     if (choicesCurrenciesNow.contains(newCurrency)) {
@@ -98,76 +100,75 @@ public class MyTelBot extends TelegramLongPollingBot {
                         choicesCurrenciesNow.add(newCurrency);
                     }
 
-                    boolean isNewSetting = isThisNewSetting(choicesCurrenciesNow.toString());
+                    boolean isNewSetting = isThisNewSetting(choicesCurrenciesNow.toString(), chatId);
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
-                    userSettings.setChoicesCurrencies(choicesCurrenciesNow);
+                    settings.get(chatId).setChoicesCurrencies(choicesCurrenciesNow);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(getChoiceCurrenciesKeyBoard());
+                        editMessage.setReplyMarkup(getChoiceCurrenciesKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                     }
                 }
                 case ("2"), ("3"), ("4") -> {
-                    boolean isNewSetting = isThisNewSetting(inputQueryMessage);
+                    boolean isNewSetting = isThisNewSetting(inputQueryMessage, chatId);
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
-                    userSettings.setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
+                    settings.get(chatId).setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(getChoiceDecimalsKeyBoard());
+                        editMessage.setReplyMarkup(getChoiceDecimalsKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                     }
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
                     Banks newBank = BankFactory.getBank(inputQueryMessage);
-                    boolean isNewSetting = isThisNewSetting(inputQueryMessage);
+                    boolean isNewSetting = isThisNewSetting(inputQueryMessage, chatId);
 
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
-                    userSettings.setBank(newBank);
+                    settings.get(chatId).setBank(newBank);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(getChoiceBankKeyBoard());
+                        editMessage.setReplyMarkup(getChoiceBankKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                     }
                 }
-                case ("reminders") -> sendChoiceReminderMessage(sendMessage);
+                case ("reminders") -> sendChoiceReminderMessage(sendMessage, chatId);
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
-                    boolean isNewSetting = isThisNewSetting(inputQueryMessage);
+                    if (settings.get(chatId).isReminderStarted()) {
 
-                    sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
-                    userSettings.setReminderTime(Integer.parseInt(inputQueryMessage));
-                    userSettings.setReminderStarted(true);
-                    userSettings.setChatId(chatId);
-
-                    if (reminderTimer != null) {
-
-                            reminderTimer.stopTimer();
+                        timers.get(chatId).stopTimer();
                     }
 
-                    String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
-                    reminderTimer = new ReminderTimer(this);
+//                    String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
+                    String cronExpression = "0/" + inputQueryMessage + " * * * * ?";
+                    timers.put(chatId, new ReminderTimer(this, chatId));
 
-                        reminderTimer.startTimer(cronExpression);
-                    System.out.println(userSettings.getReminderTime());
+                    timers.get(chatId).startTimer(cronExpression);
+//
+                    System.out.println(settings.get(chatId).getReminderTime());
+
+                    boolean isNewSetting = isThisNewSetting(inputQueryMessage, chatId);
+
+                    sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
+                    settings.get(chatId).setReminderTime(Integer.parseInt(inputQueryMessage));
+                    settings.get(chatId).setReminderStarted(true);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(getChoiceReminderKeyBoard());
+                        editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                     }
                 }
                 case ("OffReminder") -> {
-                    boolean isNewSetting = isThisNewSetting("false");
+                    if (settings.get(chatId).isReminderStarted()) {
+                        timers.get(chatId).stopTimer();
+                        timers.remove(chatId);
+                    }
+                    boolean isNewSetting = isThisNewSetting("false", chatId);
 
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
-                    userSettings.setReminderStarted(false);
-
-                    if (reminderTimer != null) {
-
-                            reminderTimer.stopTimer();
-                        reminderTimer = null;
-                    }
+                    settings.get(chatId).setReminderStarted(false);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(getChoiceReminderKeyBoard());
+                        editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                     }
                 }
@@ -207,7 +208,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         ReplyKeyboardMarkup replyKeyboardMarkup = getDefaultKeyBoard();
 
-        sendMessage.setChatId(String.valueOf(chatId));
+        sendMessage.setChatId(chatId);
         sendMessage.setText("Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют");
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         return sendMessage;
@@ -215,7 +216,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
     private SendMessage sendEndMessage(long chatId) {
         SendMessage sendEndMessage = new SendMessage();
-        sendEndMessage.setChatId(String.valueOf(chatId));
+        sendEndMessage.setChatId(chatId);
         sendEndMessage.setText("До зустрічі!");
 
         return sendEndMessage;
@@ -229,44 +230,44 @@ public class MyTelBot extends TelegramLongPollingBot {
         sendNextMessage(sendMessage);
     }
 
-    private void sendChoiceDecimalsMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceDecimalsKeyBoard();
+    private void sendChoiceDecimalsMessage(SendMessage sendMessage, Long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceDecimalsKeyBoard(chatId);
 
         sendMessage.setText("Виберіть кількість знаків після коми:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendNextMessage(sendMessage);
     }
 
-    private void sendChoiceCurrenciesMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceCurrenciesKeyBoard();
+    private void sendChoiceCurrenciesMessage(SendMessage sendMessage, Long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceCurrenciesKeyBoard(chatId);
 
         sendMessage.setText("Виберіть валюту:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendNextMessage(sendMessage);
     }
 
-    private void sendChoiceBankMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard();
+    private void sendChoiceBankMessage(SendMessage sendMessage, Long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard(chatId);
 
         sendMessage.setText("Виберіть банк:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendNextMessage(sendMessage);
     }
 
-    private void sendChoiceReminderMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard();
+    private void sendChoiceReminderMessage(SendMessage sendMessage, Long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceReminderKeyBoard(chatId);
 
         sendMessage.setText("Оберіть час сповіщення:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendNextMessage(sendMessage);
     }
 
-    private boolean isThisNewSetting(String inputQueryMessage) {
-        String bank = userSettings.getBank().getName();
-        String numberOfDecimal = String.valueOf(userSettings.getNumberOfDecimal());
-        String currencies = userSettings.getChoicesCurrencies().toString();
-        String reminderTime = String.valueOf(userSettings.getReminderTime());
-        String reminderStarted = String.valueOf(userSettings.isReminderStarted());
+    private boolean isThisNewSetting(String inputQueryMessage, Long chatId) {
+        String bank = settings.get(chatId).getBank().getName();
+        String numberOfDecimal = String.valueOf(settings.get(chatId).getNumberOfDecimal());
+        String currencies = settings.get(chatId).getChoicesCurrencies().toString();
+        String reminderTime = String.valueOf(settings.get(chatId).getReminderTime());
+        String reminderStarted = String.valueOf(settings.get(chatId).isReminderStarted());
 
         return !bank.equals(inputQueryMessage) && !numberOfDecimal.equals(inputQueryMessage) &&
                 !currencies.equals(inputQueryMessage) && !reminderTime.equals(inputQueryMessage) &&
@@ -278,7 +279,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
         answerCallbackQuery.setText(callBackAnswer);
         answerCallbackQuery.setShowAlert(false);
-        answerCallbackQuery.setCacheTime(1);
+        answerCallbackQuery.setCacheTime(0);
 
         sendNextQuery(answerCallbackQuery);
     }
@@ -304,10 +305,10 @@ public class MyTelBot extends TelegramLongPollingBot {
         return replyKeyboardMarkup;
     }
 
-    private InlineKeyboardMarkup getChoiceBankKeyBoard() {
-        boolean isPrivatBank = userSettings.getBank() instanceof PrivatBank;
-        boolean isNBU = userSettings.getBank() instanceof NBUBank;
-        boolean isMonoBank = userSettings.getBank() instanceof MonoBank;
+    private InlineKeyboardMarkup getChoiceBankKeyBoard(Long chatId) {
+        boolean isPrivatBank = settings.get(chatId).getBank() instanceof PrivatBank;
+        boolean isNBU = settings.get(chatId).getBank() instanceof NBUBank;
+        boolean isMonoBank = settings.get(chatId).getBank() instanceof MonoBank;
 
         String button1Name = isNBU ? "✅ Національний банк України" : "Національний банк України";
         String callback1 = "NBUBank";
@@ -324,14 +325,14 @@ public class MyTelBot extends TelegramLongPollingBot {
         return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
 
-    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard() {
-        String button1Name = (userSettings.getNumberOfDecimal() == 2) ? "✅ 2" : "2";
+    private InlineKeyboardMarkup getChoiceDecimalsKeyBoard(Long chatId) {
+        String button1Name = (settings.get(chatId).getNumberOfDecimal() == 2) ? "✅ 2" : "2";
         String Callback1 = "2";
 
-        String button2Name = (userSettings.getNumberOfDecimal() == 3) ? "✅ 3" : "3";
+        String button2Name = (settings.get(chatId).getNumberOfDecimal() == 3) ? "✅ 3" : "3";
         String Callback2 = "3";
 
-        String button3Name = (userSettings.getNumberOfDecimal() == 4) ? "✅ 4" : "4";
+        String button3Name = (settings.get(chatId).getNumberOfDecimal() == 4) ? "✅ 4" : "4";
         String Callback3 = "4";
 
         String[] names = new String[]{button1Name, button2Name, button3Name};
@@ -347,8 +348,8 @@ public class MyTelBot extends TelegramLongPollingBot {
         return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
 
-    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard() {
-        List<Currencies> choicesCurrenciesNow = userSettings.getChoicesCurrencies();
+    private InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(Long chatId) {
+        List<Currencies> choicesCurrenciesNow = settings.get(chatId).getChoicesCurrencies();
 
         String button1Name = (choicesCurrenciesNow.contains(Currencies.EUR)) ? "✅ Євро" : "Євро";
         String Callback1 = "EUR";
@@ -362,31 +363,31 @@ public class MyTelBot extends TelegramLongPollingBot {
         return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
 
-    private InlineKeyboardMarkup getChoiceReminderKeyBoard() {
-        String button1Name = (userSettings.getReminderTime() == 9 && userSettings.isReminderStarted()) ? "✅ 9:00" : "9:00";
+    private InlineKeyboardMarkup getChoiceReminderKeyBoard(Long chatId) {
+        String button1Name = (settings.get(chatId).getReminderTime() == 9 && settings.get(chatId).isReminderStarted()) ? "✅ 9:00" : "9:00";
         String Callback1 = "9";
-        String button2Name = (userSettings.getReminderTime() == 10 && userSettings.isReminderStarted()) ? "✅ 10:00" : "10:00";
+        String button2Name = (settings.get(chatId).getReminderTime() == 10 && settings.get(chatId).isReminderStarted()) ? "✅ 10:00" : "10:00";
         String Callback2 = "10";
-        String button3Name = (userSettings.getReminderTime() == 11 && userSettings.isReminderStarted()) ? "✅ 11:00" : "11:00";
+        String button3Name = (settings.get(chatId).getReminderTime() == 11 && settings.get(chatId).isReminderStarted()) ? "✅ 11:00" : "11:00";
         String Callback3 = "11";
 
-        String button4Name = (userSettings.getReminderTime() == 12 && userSettings.isReminderStarted()) ? "✅ 12:00" : "12:00";
+        String button4Name = (settings.get(chatId).getReminderTime() == 12 && settings.get(chatId).isReminderStarted()) ? "✅ 12:00" : "12:00";
         String Callback4 = "12";
-        String button5Name = (userSettings.getReminderTime() == 13 && userSettings.isReminderStarted()) ? "✅ 13:00" : "13:00";
+        String button5Name = (settings.get(chatId).getReminderTime() == 13 && settings.get(chatId).isReminderStarted()) ? "✅ 13:00" : "13:00";
         String Callback5 = "13";
-        String button6Name = (userSettings.getReminderTime() == 14 && userSettings.isReminderStarted()) ? "✅ 14:00" : "14:00";
+        String button6Name = (settings.get(chatId).getReminderTime() == 14 && settings.get(chatId).isReminderStarted()) ? "✅ 14:00" : "14:00";
         String Callback6 = "14";
 
-        String button7Name = (userSettings.getReminderTime() == 15 && userSettings.isReminderStarted()) ? "✅ 15:00" : "15:00";
+        String button7Name = (settings.get(chatId).getReminderTime() == 15 && settings.get(chatId).isReminderStarted()) ? "✅ 15:00" : "15:00";
         String Callback7 = "15";
-        String button8Name = (userSettings.getReminderTime() == 16 && userSettings.isReminderStarted()) ? "✅ 16:00" : "16:00";
+        String button8Name = (settings.get(chatId).getReminderTime() == 16 && settings.get(chatId).isReminderStarted()) ? "✅ 16:00" : "16:00";
         String Callback8 = "16";
-        String button9Name = (userSettings.getReminderTime() == 17 && userSettings.isReminderStarted()) ? "✅ 17:00" : "17:00";
+        String button9Name = (settings.get(chatId).getReminderTime() == 17 && settings.get(chatId).isReminderStarted()) ? "✅ 17:00" : "17:00";
         String Callback9 = "17";
 
-        String button10Name = (userSettings.getReminderTime() == 18 && userSettings.isReminderStarted()) ? "✅ 18:00" : "18:00";
+        String button10Name = (settings.get(chatId).getReminderTime() == 18 && settings.get(chatId).isReminderStarted()) ? "✅ 18:00" : "18:00";
         String Callback10 = "18";
-        String button11Name = !userSettings.isReminderStarted() ? "✅ Вимкнути сповіщення" : "Вимкнути сповіщення";
+        String button11Name = !settings.get(chatId).isReminderStarted() ? "✅ Вимкнути сповіщення" : "Вимкнути сповіщення";
         String Callback11 = "OffReminder";
 
         String[] names = new String[]{button1Name, button2Name, button3Name, button4Name, button5Name, button6Name
@@ -395,6 +396,22 @@ public class MyTelBot extends TelegramLongPollingBot {
                 , Callback7, Callback8, Callback9, Callback10, Callback11};
 
         return KeyboardBuilder.getReminderKeyboard(names, keys);
+    }
+
+    private void updateSettings(Long chatId) {
+//1 проверка, нет ли этого userSetting в мепе.
+        if (!settings.containsKey(chatId)) {
+ //2 проверка нет ли в сохраненных файлах
+//        if (hasInResource) {
+//            read from resource;
+//            put to map
+//            check timerStarted? and update timerMap
+//3 создание нового сетинга
+//        }else{
+            System.out.println("make new user");
+
+            settings.put(chatId, new ChatBotSettings(chatId));
+        }
     }
 
     @Override
