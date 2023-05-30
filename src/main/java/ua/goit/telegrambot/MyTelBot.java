@@ -29,6 +29,7 @@ import java.util.Map;
 public class MyTelBot extends TelegramLongPollingBot {
 
     Map<Long, ChatBotSettings> settings = new HashMap<>();
+    private ReminderTimer reminderTimer;
 
     public MyTelBot() {
     }
@@ -139,6 +140,16 @@ public class MyTelBot extends TelegramLongPollingBot {
                     settings.get(chatId).setReminderStarted(true);
                     settings.get(chatId).setChatId(chatId);
 
+                    if (reminderTimer != null) {
+
+                            reminderTimer.stopTimer();
+                    }
+
+                    String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
+                    reminderTimer = new ReminderTimer(this);
+
+                        reminderTimer.startTimer(cronExpression);
+                    System.out.println(userSettings.getReminderTime());
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
@@ -151,6 +162,11 @@ public class MyTelBot extends TelegramLongPollingBot {
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setReminderStarted(false);
 
+                    if (reminderTimer != null) {
+
+                            reminderTimer.stopTimer();
+                        reminderTimer = null;
+                    }
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));

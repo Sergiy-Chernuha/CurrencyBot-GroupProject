@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment=" merge conflict solution">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" afterDir="false" />
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="-remindertimer with QuarzScheduler">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
+     <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" afterDir="false" />
       </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +105,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0d7db63f-899b-4d92-b2f5-a0325d5769fc" name="Changes" comment="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
+      <changelist id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment=" merge conflict solution" />
       <created>1684394986460</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -150,7 +153,28 @@
       <option name="project" value="LOCAL" />
       <updated>1685190907497</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="-added alerts that aren't working">
+      <created>1685283843357</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685283843357</updated>
+    </task>
+    <task id="LOCAL-00008" summary="-remindertimer with QuarzScheduler">
+      <created>1685371725105</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1685371725105</updated>
+    </task>
+    <task id="LOCAL-00009" summary="-remindertimer with QuarzScheduler">
+      <created>1685387459924</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1685387459924</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -184,6 +208,8 @@
     <MESSAGE value="new branch" />
     <MESSAGE value="Little nearer to markup  solution" />
     <MESSAGE value=" solution merge conflict" />
-    <option name="LAST_COMMIT_MESSAGE" value=" solution merge conflict" />
+    <MESSAGE value="-added alerts that aren't working" />
+    <MESSAGE value="-remindertimer with QuarzScheduler" />
+    <option name="LAST_COMMIT_MESSAGE" value="-remindertimer with QuarzScheduler" />
   </component>
 </project>
