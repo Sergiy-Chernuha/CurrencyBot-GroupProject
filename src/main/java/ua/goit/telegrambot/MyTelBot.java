@@ -29,13 +29,8 @@ import java.util.Map;
 public class MyTelBot extends TelegramLongPollingBot {
 
     Map<Long, ChatBotSettings> settings = new HashMap<>();
-    //    private ChatBotSettings settings.get(chatId);
-//    private ReminderTimer secondThreadReminderTime;
-
 
     public MyTelBot() {
-//        settings.get(chatId) = new ChatBotSettings();
-//        secondThreadReminderTime = new ReminderTimer(this);
     }
 
     public ChatBotSettings getUserSettings(Long chatId) {
@@ -144,9 +139,6 @@ public class MyTelBot extends TelegramLongPollingBot {
                     settings.get(chatId).setReminderStarted(true);
                     settings.get(chatId).setChatId(chatId);
 
-                    if (settings.get(chatId).getSecondThreadReminderTime().isTimerOff()) {
-                        settings.get(chatId).getSecondThreadReminderTime().start();
-                    }
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
@@ -158,7 +150,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setReminderStarted(false);
-                    settings.get(chatId).setSecondThreadReminderTime(new ReminderTimer(this, chatId));
+
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
@@ -402,7 +394,7 @@ public class MyTelBot extends TelegramLongPollingBot {
             System.out.println("make new user");
 
             settings.put(chatId, new ChatBotSettings());
-            settings.get(chatId).setSecondThreadReminderTime(new ReminderTimer(this, chatId));
+//            settings.get(chatId).setSecondThreadReminderTime(new ReminderTimer(this, chatId));
         }
 //    }
         //2 проверка нет ли в сохраненных файлах
