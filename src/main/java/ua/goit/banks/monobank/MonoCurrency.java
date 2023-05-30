@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MonoCurrency {
-    private  final int currencyCodeA;
+    private final int currencyCodeA;
     private final int currencyCodeB;
     private final int date;
     private final float rateSell;

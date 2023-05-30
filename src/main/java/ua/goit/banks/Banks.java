@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface Banks {
     String getName();
+
     List<WorkingCurrency> getCurrencies();
+
     void updateCurrentData() throws IOException;
 }
