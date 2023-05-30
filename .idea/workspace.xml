@@ -4,16 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="Refactor2 write/read classes">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_05_2023_21_28__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_05_2023_21_28__Changes_.xml" afterDir="false" />
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="Finish work">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/Banks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/Banks.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoCurrency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoCurrency.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/nbubank/NBUBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/nbubank/NBUBank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/ChatBotSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/ChatBotSettings.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +32,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="ClearanceCode" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -180,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685387459924</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Finish work">
+      <created>1685474093740</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1685474093740</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -194,7 +193,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/master" />
+                        <option value="master" />
                       </list>
                     </value>
                   </entry>
@@ -217,6 +216,7 @@
     <MESSAGE value="-added alerts that aren't working" />
     <MESSAGE value="-remindertimer with QuarzScheduler" />
     <MESSAGE value="Working version mix MapSetting and NewTimer" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working version mix MapSetting and NewTimer" />
+    <MESSAGE value="Finish work" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finish work" />
   </component>
 </project>
