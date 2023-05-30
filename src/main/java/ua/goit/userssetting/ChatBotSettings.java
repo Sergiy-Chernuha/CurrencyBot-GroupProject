@@ -1,15 +1,13 @@
 package ua.goit.userssetting;
 
-import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
-import ua.goit.banks.privatbank.PrivatBank;
 
 import java.util.List;
 
 public class ChatBotSettings {
 
     private int numberOfDecimal = 2;
-    private Banks bank = new PrivatBank();
+    private String bank = "PrivatBank";
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
     private int reminderTime = 0;
     private boolean reminderStarted = false;
@@ -31,11 +29,11 @@ public class ChatBotSettings {
         this.numberOfDecimal = numberOfDecimal;
     }
 
-    public Banks getBank() {
+    public String getBank() {
         return bank;
     }
 
-    public void setBank(Banks bank) {
+    public void setBank(String bank) {
         this.bank = bank;
     }
 

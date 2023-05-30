@@ -37,7 +37,5 @@ public class PrivatBank implements Banks {
         currencies = privateCurrencies.stream().filter(x -> Currencies.contains(x.getCcy()))
                 .map(x -> new WorkingCurrency(Currencies.valueOf(x.getCcy()), x.getSale(), x.getBuy()))
                 .collect(Collectors.toList());
-
-        System.out.println(name + " " + currencies.get(0).getName());
     }
 }

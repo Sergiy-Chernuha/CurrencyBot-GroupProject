@@ -34,7 +34,6 @@ public class MonoBank implements Banks {
         Type type = TypeToken.getParameterized(List.class, MonoCurrency.class).getType();
         List<MonoCurrency> monoCurrencies = new Gson().fromJson(json, type);
 
-//		_____change for working with other currencies
         currencies =
                 monoCurrencies.stream()
                         .filter(x -> x.getCurrencyCodeA() == 840 || x.getCurrencyCodeA() == 978)
@@ -43,8 +42,6 @@ public class MonoBank implements Banks {
                                 , x.getRateSell()
                                 , x.getRateBuy()))
                         .collect(Collectors.toList());
-
-        System.out.println(name + " " + currencies.get(0).getName());
     }
 
     private String parseIsoToCurrency(int code) {

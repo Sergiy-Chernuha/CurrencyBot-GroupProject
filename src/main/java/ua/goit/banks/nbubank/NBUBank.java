@@ -34,11 +34,8 @@ public class NBUBank implements Banks {
         Type type = TypeToken.getParameterized(List.class, NBUCurrent.class).getType();
         List<NBUCurrent> monoCurrencies = new Gson().fromJson(json, type);
 
-//		_____change for working with other currencies
         currencies = monoCurrencies.stream().filter(x -> x.getR030() == 840 || x.getR030() == 978)
                 .map(x -> new WorkingCurrency(Currencies.valueOf(x.getCc()), x.getRate(), x.getRate()))
                 .collect(Collectors.toList());
-
-        System.out.println(name + " " + currencies.get(0).getName());
     }
 }

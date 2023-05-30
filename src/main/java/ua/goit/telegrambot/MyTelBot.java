@@ -12,12 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import ua.goit.banks.Banks;
-import ua.goit.banks.BankFactory;
 import ua.goit.banks.Currencies;
-import ua.goit.banks.monobank.MonoBank;
-import ua.goit.banks.nbubank.NBUBank;
-import ua.goit.banks.privatbank.PrivatBank;
 import ua.goit.userssetting.ChatBotSettings;
 import ua.goit.userssetting.SettingUtils;
 
@@ -54,11 +49,11 @@ public class MyTelBot extends TelegramLongPollingBot {
                 switch (text) {
                     case "/start" -> {
                         sendNextMessage(sendHelloMessage(chatId));
-//                        System.out.println(settings);
+
                         System.out.println(settings.get(chatId));
-                        SettingUtils.writeUserSettings(settings,chatId);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
                         ChatBotSettings newChatBotSettings = SettingUtils.readUserSetting(chatId);
-                        System.out.println(newChatBotSettings.getNumberOfDecimal());
+                        System.out.println(newChatBotSettings.getBank());
                     }
                     case "Отримати інфо" -> {
                         sendMessage.setText(SettingUtils.getCurrentData(settings.get(chatId)));
@@ -125,11 +120,11 @@ public class MyTelBot extends TelegramLongPollingBot {
                     }
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
-                    Banks newBank = BankFactory.getBank(inputQueryMessage);
+//                    Banks newBank = BankFactory.getBank(inputQueryMessage);
                     boolean isNewSetting = isThisNewSetting(inputQueryMessage, chatId);
 
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
-                    settings.get(chatId).setBank(newBank);
+                    settings.get(chatId).setBank(inputQueryMessage);
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceBankKeyBoard(chatId));
@@ -268,7 +263,7 @@ public class MyTelBot extends TelegramLongPollingBot {
     }
 
     private boolean isThisNewSetting(String inputQueryMessage, Long chatId) {
-        String bank = settings.get(chatId).getBank().getName();
+        String bank = settings.get(chatId).getBank();
         String numberOfDecimal = String.valueOf(settings.get(chatId).getNumberOfDecimal());
         String currencies = settings.get(chatId).getChoicesCurrencies().toString();
         String reminderTime = String.valueOf(settings.get(chatId).getReminderTime());
@@ -311,17 +306,15 @@ public class MyTelBot extends TelegramLongPollingBot {
     }
 
     private InlineKeyboardMarkup getChoiceBankKeyBoard(Long chatId) {
-        boolean isPrivatBank = settings.get(chatId).getBank() instanceof PrivatBank;
-        boolean isNBU = settings.get(chatId).getBank() instanceof NBUBank;
-        boolean isMonoBank = settings.get(chatId).getBank() instanceof MonoBank;
+        String bankNow = settings.get(chatId).getBank();
 
-        String button1Name = isNBU ? "✅ Національний банк України" : "Національний банк України";
+        String button1Name = (bankNow.equals("NBUBank")) ? "✅ Національний банк України" : "Національний банк України";
         String callback1 = "NBUBank";
 
-        String button2Name = isPrivatBank ? "✅ Приват Банк" : "Приват Банк";
+        String button2Name = (bankNow.equals("PrivatBank")) ? "✅ Приват Банк" : "Приват Банк";
         String callback2 = "PrivatBank";
 
-        String button3Name = isMonoBank ? "✅ МоноБанк" : "МоноБанк";
+        String button3Name = (bankNow.equals("MonoBank")) ? "✅ МоноБанк" : "МоноБанк";
         String callback3 = "MonoBank";
 
         String[] names = new String[]{button1Name, button2Name, button3Name};
