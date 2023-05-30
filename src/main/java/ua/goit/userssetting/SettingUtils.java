@@ -48,40 +48,40 @@ public class SettingUtils {
     }
 
     public static void writeUserSettings(ChatBotSettings userSetting) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String fileName = "src/main/resources/Users/User" + userSetting.getChatId() + ".json";
-
-        try (JsonWriter jsonWriter = new JsonWriter(new FileWriter(fileName, false))) {
-            String json = gson.toJson(userSetting);
-
-            jsonWriter.jsonValue(json);
-            jsonWriter.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        String fileName = "src/main/resources/Users/User" + userSetting.getChatId() + ".json";
+//
+//        try (JsonWriter jsonWriter = new JsonWriter(new FileWriter(fileName, false))) {
+//            String json = gson.toJson(userSetting);
+//
+//            jsonWriter.jsonValue(json);
+//            jsonWriter.flush();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public static ChatBotSettings readUserSetting(Long chatId) {
-        ChatBotSettings newUserSetting = new ChatBotSettings(chatId);
-        String fileName = "src/main/resources/Users/User" + chatId + ".json";
-        Gson gson = new GsonBuilder().create();
-        StringBuilder stringBuilder = new StringBuilder();
-
-        try (FileReader in = new FileReader(fileName)) {
-            Scanner scanner = new Scanner(in);
-
-            while (scanner.hasNext()) {
-                stringBuilder.append(scanner.nextLine());
-                if (scanner.hasNext()) {
-                    stringBuilder.append("\n");
-                }
-            }
-
-            newUserSetting = gson.fromJson(stringBuilder.toString(), ChatBotSettings.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return newUserSetting;
+//        ChatBotSettings newUserSetting = new ChatBotSettings(chatId);
+//        String fileName = "src/main/resources/Users/User" + chatId + ".json";
+//        Gson gson = new GsonBuilder().create();
+//        StringBuilder stringBuilder = new StringBuilder();
+//
+//        try (FileReader in = new FileReader(fileName)) {
+//            Scanner scanner = new Scanner(in);
+//
+//            while (scanner.hasNext()) {
+//                stringBuilder.append(scanner.nextLine());
+//                if (scanner.hasNext()) {
+//                    stringBuilder.append("\n");
+//                }
+//            }
+//
+//            newUserSetting = gson.fromJson(stringBuilder.toString(), ChatBotSettings.class);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return newUserSetting;
     }
 }

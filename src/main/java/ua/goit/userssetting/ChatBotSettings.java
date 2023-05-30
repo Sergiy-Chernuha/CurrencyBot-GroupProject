@@ -6,12 +6,12 @@ import java.util.List;
 
 public class ChatBotSettings {
 
+    private final Long chatId;
     private int numberOfDecimal = 2;
     private String bank = "PrivatBank";
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
     private int reminderTime = 0;
     private boolean reminderStarted = false;
-    private final Long chatId ;
 
     public ChatBotSettings(Long chatId) {
         this.chatId = chatId;
@@ -54,22 +54,10 @@ public class ChatBotSettings {
     }
 
     public boolean isReminderStarted() {
-            return reminderStarted;
+        return reminderStarted;
     }
 
     public void setReminderStarted(boolean reminderStarted) {
         this.reminderStarted = reminderStarted;
-    }
-
-    @Override
-    public String toString() {
-        return "ChatBotSettings{" +
-                "numberOfDecimal=" + numberOfDecimal +
-                ", bank=" + bank +
-                ", choicesCurrencies=" + choicesCurrencies +
-                ", reminderTime=" + reminderTime +
-                ", reminderStarted=" + reminderStarted +
-                ", chatId=" + chatId +
-                '}';
     }
 }
