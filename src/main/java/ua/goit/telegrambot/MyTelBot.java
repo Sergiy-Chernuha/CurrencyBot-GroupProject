@@ -16,6 +16,7 @@ import ua.goit.banks.Currencies;
 import ua.goit.userssetting.ChatBotSettings;
 import ua.goit.userssetting.SettingUtils;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -47,19 +48,13 @@ public class MyTelBot extends TelegramLongPollingBot {
                 sendMessage.setChatId(String.valueOf(chatId));
 
                 switch (text) {
-                    case "/start" -> {
-                        sendNextMessage(sendHelloMessage(chatId));
-
-                        System.out.println(settings.get(chatId));
-                        SettingUtils.writeUserSettings(settings.get(chatId));
-                        ChatBotSettings newChatBotSettings = SettingUtils.readUserSetting(chatId);
-                        System.out.println(newChatBotSettings.getBank());
-                    }
+                    case "/start" -> sendNextMessage(sendHelloMessage(chatId));
                     case "Отримати інфо" -> {
                         sendMessage.setText(SettingUtils.getCurrentData(settings.get(chatId)));
                         sendNextMessage(sendMessage);
                     }
                     case "Налаштування" -> sendChoiceOptionsMessage(sendMessage);
+//                    DELETE
                     case "/end" -> {
                         sendNextMessage(sendEndMessage(chatId));
                         System.exit(0);
@@ -107,6 +102,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceCurrenciesKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
                 case ("2"), ("3"), ("4") -> {
@@ -117,6 +113,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceDecimalsKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
@@ -129,12 +126,12 @@ public class MyTelBot extends TelegramLongPollingBot {
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceBankKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
                 case ("reminders") -> sendChoiceReminderMessage(sendMessage, chatId);
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     if (settings.get(chatId).isReminderStarted()) {
-
                         timers.get(chatId).stopTimer();
                     }
 
@@ -155,6 +152,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
                 case ("OffReminder") -> {
@@ -170,6 +168,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
                 default -> {
@@ -397,18 +396,33 @@ public class MyTelBot extends TelegramLongPollingBot {
     }
 
     private void updateSettings(Long chatId) {
-//1 проверка, нет ли этого userSetting в мепе.
         if (!settings.containsKey(chatId)) {
- //2 проверка нет ли в сохраненных файлах
-//        if (hasInResource) {
-//            read from resource;
-//            put to map
-//            check timerStarted? and update timerMap
-//3 создание нового сетинга
-//        }else{
-            System.out.println("make new user");
+            URL url = MyTelBot.class.getResource("/Users/User" + chatId + ".json");
+//
+            System.out.println("check resource");
+            if (url != null) {
+//
+                System.out.println("read from resource");
+                ChatBotSettings settingFromResource = SettingUtils.readUserSetting(chatId);
 
-            settings.put(chatId, new ChatBotSettings(chatId));
+
+                if (settingFromResource.isReminderStarted()) {
+                    ReminderTimer restartTimer = new ReminderTimer(this, chatId);
+
+                    restartTimer.startTimer("0/" + settingFromResource.getReminderTime() + " * * * * ?");
+                    timers.put(chatId, restartTimer);
+                        }else {
+                    settingFromResource.setReminderTime(0);
+                }
+
+                settings.put(chatId, settingFromResource);
+
+            } else {
+//
+                System.out.println("make new user");
+
+                settings.put(chatId, new ChatBotSettings(chatId));
+            }
         }
     }
 

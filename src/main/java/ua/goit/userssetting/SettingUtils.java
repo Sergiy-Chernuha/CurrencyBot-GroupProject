@@ -62,7 +62,7 @@ public class SettingUtils {
     }
 
     public static ChatBotSettings readUserSetting(Long chatId) {
-        ChatBotSettings rededUserSetting = new ChatBotSettings(chatId);
+        ChatBotSettings newUserSetting = new ChatBotSettings(chatId);
         String fileName = "src/main/resources/Users/User" + chatId + ".json";
         Gson gson = new GsonBuilder().create();
         StringBuilder stringBuilder = new StringBuilder();
@@ -77,11 +77,11 @@ public class SettingUtils {
                 }
             }
 
-            rededUserSetting = gson.fromJson(stringBuilder.toString(), ChatBotSettings.class);
+            newUserSetting = gson.fromJson(stringBuilder.toString(), ChatBotSettings.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return rededUserSetting;
+        return newUserSetting;
     }
 }
