@@ -16,8 +16,13 @@ import java.util.stream.Collectors;
 @Getter
 public class NBUBank implements Banks {
 
-    List<WorkingCurrency> currencies;
+    private static List<WorkingCurrency> currencies;
     String name = "NBUBank";
+
+    @Override
+    public List<WorkingCurrency> getCurrencies() {
+        return currencies;
+    }
 
     @Override
     public void updateCurrentData() throws IOException {
