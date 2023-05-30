@@ -1,11 +1,12 @@
 package ua.goit.userssetting;
 
+import lombok.Data;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.privatbank.PrivatBank;
 
 import java.util.List;
-
+@Data
 public class ChatBotSettings {
 
     private int numberOfDecimal = 2;
@@ -19,47 +20,7 @@ public class ChatBotSettings {
         this.chatId = chatId;
     }
 
-    public Long getChatId() {
-        return chatId;
-    }
-
-    public int getNumberOfDecimal() {
-        return numberOfDecimal;
-    }
-
-    public void setNumberOfDecimal(int numberOfDecimal) {
-        this.numberOfDecimal = numberOfDecimal;
-    }
-
-    public Banks getBank() {
-        return bank;
-    }
-
-    public void setBank(Banks bank) {
-        this.bank = bank;
-    }
-
-    public List<Currencies> getChoicesCurrencies() {
-        return choicesCurrencies;
-    }
-
-    public void setChoicesCurrencies(List<Currencies> choicesCurrencies) {
-        this.choicesCurrencies = choicesCurrencies;
-    }
-
-    public int getReminderTime() {
-        return reminderTime;
-    }
-
-    public void setReminderTime(int reminderTime) {
-        this.reminderTime = reminderTime;
-    }
-
     public boolean isReminderStarted() {
             return reminderStarted;
-    }
-
-    public void setReminderStarted(boolean reminderStarted) {
-        this.reminderStarted = reminderStarted;
     }
 }
