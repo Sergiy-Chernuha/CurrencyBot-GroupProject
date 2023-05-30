@@ -1,10 +1,10 @@
 package ua.goit.userssetting;
 
 import lombok.Data;
-import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 
 import java.util.List;
+
 @Data
 public class ChatBotSettings {
 
