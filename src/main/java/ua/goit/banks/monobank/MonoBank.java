@@ -16,8 +16,13 @@ import java.util.stream.Collectors;
 @Getter
 public class MonoBank implements Banks {
 
-    List<WorkingCurrency> currencies;
+    private static List<WorkingCurrency> currencies;
     String name = "MonoBank";
+
+    @Override
+    public List<WorkingCurrency> getCurrencies() {
+        return currencies;
+    }
 
     @Override
     public void updateCurrentData() throws IOException {
