@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment=" merge conflict solution">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_05_2023__12_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_05_2023__12_20__Changes_.xml" afterDir="false" />
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="Package">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBotConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBotConst.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/nbubank/NBUBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/nbubank/NBUBank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +36,7 @@
     </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="checkMark" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -46,6 +46,13 @@
     &quot;state&quot;: &quot;OPEN&quot;
   }
 }</component>
+  <component name="GithubProjectSettings">
+    <option name="branchProtectionPatterns">
+      <list>
+        <option value="main" />
+      </list>
+    </option>
+  </component>
   <component name="GithubPullRequestsUISettings">
     <option name="recentNewPullRequestHead">
       <RepoCoordinatesHolder>
@@ -73,11 +80,12 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/1/Documents/GitHub/CurrencyBot-GroupProject1&quot;
   }
 }</component>
   <component name="RunManager">
-    <configuration name="AppLauncher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+    <configuration name="AppLauncher" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ua.goit.AppLauncher" />
       <module name="CurrencyBot-GroupProject" />
       <extension name="coverage">
@@ -99,7 +107,7 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="0d7db63f-899b-4d92-b2f5-a0325d5769fc" name="Changes" comment="-Added ability to choose both EUR and USD&#10;-Added confirm button for this" />
+      <changelist id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment=" merge conflict solution" />
       <created>1684394986460</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -147,7 +155,42 @@
       <option name="project" value="LOCAL" />
       <updated>1685190907497</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="-added alerts that aren't working">
+      <created>1685283843357</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685283843357</updated>
+    </task>
+    <task id="LOCAL-00008" summary="-remindertimer with QuarzScheduler">
+      <created>1685371725105</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1685371725105</updated>
+    </task>
+    <task id="LOCAL-00009" summary="-remindertimer with QuarzScheduler">
+      <created>1685387459924</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1685387459924</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Finish work">
+      <created>1685474093740</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1685474093740</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Package">
+      <created>1685476124728</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1685476124728</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -161,7 +204,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="checkMark2" />
+                        <option value="Packedge" />
                       </list>
                     </value>
                   </entry>
@@ -181,6 +224,11 @@
     <MESSAGE value="new branch" />
     <MESSAGE value="Little nearer to markup  solution" />
     <MESSAGE value=" solution merge conflict" />
-    <option name="LAST_COMMIT_MESSAGE" value=" solution merge conflict" />
+    <MESSAGE value="-added alerts that aren't working" />
+    <MESSAGE value="-remindertimer with QuarzScheduler" />
+    <MESSAGE value="Working version mix MapSetting and NewTimer" />
+    <MESSAGE value="Finish work" />
+    <MESSAGE value="Package" />
+    <option name="LAST_COMMIT_MESSAGE" value="Package" />
   </component>
 </project>
