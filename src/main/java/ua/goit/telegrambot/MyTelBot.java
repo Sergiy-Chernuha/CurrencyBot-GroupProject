@@ -129,7 +129,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                         timers.get(chatId).stopTimer();
                     }
 
-                    String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
+                    String cronExpression = "0/" + inputQueryMessage + " * * * * ?";
                     timers.put(chatId, new ReminderTimer(this, chatId));
                     timers.get(chatId).startTimer(cronExpression);
 
@@ -154,6 +154,7 @@ public class MyTelBot extends TelegramLongPollingBot {
 
                     sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setReminderStarted(false);
+                    settings.get(chatId).setReminderTime(0);
 
                     if (isNewSetting) {
                         editMessage.setReplyMarkup(getChoiceReminderKeyBoard(chatId));
