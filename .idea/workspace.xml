@@ -4,12 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="Package">
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above">
+      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/BankSettings.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/CurrencySettings.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/DecimalsSettings.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/RemindersSettings.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/TelegramBotUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_23_05_2023,_21_52_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_23_05_2023__21_52__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023,_21_38_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_05_2023_21_28_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_05_2023_21_28__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_05_2023,_12_20_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_05_2023__12_20__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/nbubank/NBUBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/nbubank/NBUBank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -229,6 +240,7 @@
     <MESSAGE value="Working version mix MapSetting and NewTimer" />
     <MESSAGE value="Finish work" />
     <MESSAGE value="Package" />
-    <option name="LAST_COMMIT_MESSAGE" value="Package" />
+    <MESSAGE value="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above" />
+    <option name="LAST_COMMIT_MESSAGE" value="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above" />
   </component>
 </project>
