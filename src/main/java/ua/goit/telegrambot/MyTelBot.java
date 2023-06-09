@@ -70,9 +70,9 @@ public class MyTelBot extends TelegramLongPollingBot {
             AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(update.getCallbackQuery().getId());
 
             switch (inputQueryMessage) {
-                case ("bank") -> new BankSettings().sendChoiceBankMessage(sendMessage, chatId);
-                case ("decimals") -> new DecimalsSettings().sendChoiceDecimalsMessage(sendMessage, chatId);
-                case ("currencies") -> new CurrencySettings().sendChoiceCurrenciesMessage(sendMessage, chatId);
+                case ("bank") -> new BankMenu().sendChoiceBankMessage(sendMessage, chatId);
+                case ("decimals") -> new DecimalMenu().sendChoiceDecimalsMessage(sendMessage, chatId);
+                case ("currencies") -> new CurrencyMenu().sendChoiceCurrenciesMessage(sendMessage, chatId);
                 case ("USD"), ("EUR") -> {
                     List<Currencies> choicesCurrenciesNow = new ArrayList<>(settings.get(chatId).getChoicesCurrencies());
                     Currencies newCurrency = Currencies.valueOf(inputQueryMessage);
@@ -90,7 +90,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     settings.get(chatId).setChoicesCurrencies(choicesCurrenciesNow);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new CurrencySettings().getChoiceCurrenciesKeyBoard(chatId));
+                        editMessage.setReplyMarkup(new CurrencyMenu().getChoiceCurrenciesKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
@@ -101,7 +101,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     settings.get(chatId).setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new DecimalsSettings().getChoiceDecimalsKeyBoard(chatId));
+                        editMessage.setReplyMarkup(new DecimalMenu().getChoiceDecimalsKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
@@ -113,12 +113,12 @@ public class MyTelBot extends TelegramLongPollingBot {
                     settings.get(chatId).setBank(inputQueryMessage);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new BankSettings().getChoiceBankKeyBoard(chatId));
+                        editMessage.setReplyMarkup(new BankMenu().getChoiceBankKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
-                case ("reminders") -> new RemindersSettings().sendChoiceReminderMessage(sendMessage, chatId);
+                case ("reminders") -> new RemindersMenu().sendChoiceReminderMessage(sendMessage, chatId);
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     if (settings.get(chatId).isReminderStarted()) {
                         timers.get(chatId).stopTimer();
@@ -135,7 +135,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     settings.get(chatId).setReminderStarted(true);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new RemindersSettings().getChoiceReminderKeyBoard(chatId));
+                        editMessage.setReplyMarkup(new RemindersMenu().getChoiceReminderKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
@@ -151,7 +151,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     settings.get(chatId).setReminderStarted(false);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new RemindersSettings().getChoiceReminderKeyBoard(chatId));
+                        editMessage.setReplyMarkup(new RemindersMenu().getChoiceReminderKeyBoard(chatId));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }

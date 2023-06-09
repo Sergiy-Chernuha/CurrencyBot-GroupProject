@@ -6,18 +6,15 @@ import ua.goit.banks.Currencies;
 
 import java.util.List;
 
-public class CurrencySettings {
+public class CurrencyMenu {
     InlineKeyboardMarkup getChoiceCurrenciesKeyBoard(Long chatId) {
         List<Currencies> choicesCurrenciesNow = MyTelBot.settings.get(chatId).getChoicesCurrencies();
 
-        String button1Name = (choicesCurrenciesNow.contains(Currencies.EUR)) ? "✅ Євро" : "Євро";
-        String Callback1 = "EUR";
+        SomeButton button1 = new SomeButton((choicesCurrenciesNow.contains(Currencies.EUR)) ? "✅ Євро" : "Євро", "EUR");
+        SomeButton button2 = new SomeButton((choicesCurrenciesNow.contains(Currencies.USD)) ? "✅ Американський долар" : "Американський долар", "USD");
 
-        String button2Name = (choicesCurrenciesNow.contains(Currencies.USD)) ? "✅ Американський долар" : "Американський долар";
-        String Callback2 = "USD";
-
-        String[] names = new String[]{button1Name, button2Name};
-        String[] keys = new String[]{Callback1, Callback2};
+        String[] names = new String[]{button1.getButtonName(), button2.getButtonName()};
+        String[] keys = new String[]{button1.getCallback(), button2.getCallback()};
 
         return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }

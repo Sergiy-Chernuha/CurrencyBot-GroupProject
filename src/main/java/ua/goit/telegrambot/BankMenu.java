@@ -3,22 +3,17 @@ package ua.goit.telegrambot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
-public class BankSettings {
+public class BankMenu {
 
     InlineKeyboardMarkup getChoiceBankKeyBoard(Long chatId) {
         String bankNow = MyTelBot.settings.get(chatId).getBank();
 
-        String button1Name = (bankNow.equals("NBUBank")) ? "✅ Національний банк України" : "Національний банк України";
-        String callback1 = "NBUBank";
+        SomeButton button1 = new SomeButton((bankNow.equals("NBUBank")) ? "✅ Національний банк України" : "Національний банк України", "NBUBank");
+        SomeButton button2 = new SomeButton((bankNow.equals("PrivatBank")) ? "✅ Приват Банк" : "Приват Банк", "PrivatBank");
+        SomeButton button3 = new SomeButton((bankNow.equals("MonoBank")) ? "✅ МоноБанк" : "МоноБанк", "MonoBank");
 
-        String button2Name = (bankNow.equals("PrivatBank")) ? "✅ Приват Банк" : "Приват Банк";
-        String callback2 = "PrivatBank";
-
-        String button3Name = (bankNow.equals("MonoBank")) ? "✅ МоноБанк" : "МоноБанк";
-        String callback3 = "MonoBank";
-
-        String[] names = new String[]{button1Name, button2Name, button3Name};
-        String[] keys = new String[]{callback1, callback2, callback3};
+        String[] names = new String[]{button1.getButtonName(), button2.getButtonName(), button3.getButtonName()};
+        String[] keys = new String[]{button1.getCallback(), button2.getCallback(), button3.getCallback()};
 
         return KeyboardBuilder.getSimpleKeyboard(names, keys);
     }
