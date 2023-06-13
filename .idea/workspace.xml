@@ -4,27 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="first">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/BankMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/ButtonValue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/RemindersMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_23_05_2023__21_52__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_23_05_2023__21_52__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_05_2023__21_38__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_05_2023_21_28__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_30_05_2023_21_28__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_05_2023__12_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_05_2023__12_20__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/BankMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/CurrencyMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/CurrencyMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/DecimalMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/DecimalMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/KeyboardBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/KeyboardBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/RemindersMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SomeButton.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
-    </list>
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="first" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,7 +20,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="master" />
+    <option name="BRANCH" value="separateClassesRefacoring" />
   </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">

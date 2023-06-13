@@ -1,0 +1,10 @@
+{
+  "chatId": 692303959,
+  "numberOfDecimal": 2,
+  "bank": "NBUBank",
+  "choicesCurrencies": [
+    "USD"
+  ],
+  "reminderTime": 13,
+  "reminderStarted": true
+}
