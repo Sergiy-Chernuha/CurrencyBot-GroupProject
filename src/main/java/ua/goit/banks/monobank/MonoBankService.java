@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MonoBank implements Banks {
+public class MonoBankService implements Banks {
 
     List<WorkingCurrency> currencies;
     String name = "МоноБанк";
@@ -34,15 +34,17 @@ public class MonoBank implements Banks {
         Type type = TypeToken.getParameterized(List.class, MonoCurrency.class).getType();
         List<MonoCurrency> monoCurrencies = new Gson().fromJson(json, type);
 
-//		_____change for working with other currencies
-        currencies =
-                monoCurrencies.stream()
-                        .filter(x -> x.getCurrencyCodeA() == 840 || x.getCurrencyCodeA() == 978)
-                        .filter(x -> x.getCurrencyCodeB() == 980)
-                        .map(x -> new WorkingCurrency(Currencies.valueOf(parseIsoToCurrency(x.getCurrencyCodeA()))
-                                , x.getRateSell()
-                                , x.getRateBuy()))
-                        .collect(Collectors.toList());
+        filterAndMapCurrencies(monoCurrencies);
+
+
+//        currencies =
+//                monoCurrencies.stream()
+//                        .filter(x -> x.getCurrencyCodeA() == 840 || x.getCurrencyCodeA() == 978)
+//                        .filter(x -> x.getCurrencyCodeB() == 980)
+//                        .map(x -> new WorkingCurrency(Currencies.valueOf(parseIsoToCurrency(x.getCurrencyCodeA()))
+//                                , x.getRateSell()
+//                                , x.getRateBuy()))
+//                        .collect(Collectors.toList());
 
         System.out.println(name + " " + currencies.get(0).getName());
     }
@@ -57,5 +59,16 @@ public class MonoBank implements Banks {
         }
 
         return "000";
+    }
+
+    private void filterAndMapCurrencies(List<MonoCurrency> monoCurrencies) {
+        currencies = monoCurrencies.stream()
+                .filter(x -> x.getCurrencyCodeA() == 840 || x.getCurrencyCodeA() == 978)
+                .filter(x -> x.getCurrencyCodeB() == 980)
+                .map(x -> new WorkingCurrency(
+                        Currencies.valueOf(parseIsoToCurrency(x.getCurrencyCodeA())),
+                        x.getRateSell(),
+                        x.getRateBuy()))
+                .collect(Collectors.toList());
     }
 }

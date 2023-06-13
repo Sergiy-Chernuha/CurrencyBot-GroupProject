@@ -2,14 +2,14 @@ package ua.goit.userssetting;
 
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
-import ua.goit.banks.privatbank.PrivatBank;
+import ua.goit.banks.privatbank.PrivatBankService;
 
 import java.util.List;
 
 public class ChatBotSettings {
 
     private int numberOfDecimal = 2;
-    private Banks bank = new PrivatBank();
+    private Banks bank = new PrivatBankService();
     private List<Currencies> choicesCurrencies = List.of(Currencies.USD);
     private int alertTime = 9;
 
