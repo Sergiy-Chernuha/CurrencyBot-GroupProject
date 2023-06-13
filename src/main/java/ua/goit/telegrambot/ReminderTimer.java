@@ -22,14 +22,14 @@ public class ReminderTimer {
             }
 
             JobDetail job = JobBuilder.newJob(ReminderJob.class)
-                    .withIdentity("reminderJob", "reminderGroup")
+                    .withIdentity("reminderJob", "reminderGroup"+chatId+"")
                     .build();
 
             job.getJobDataMap().put("myTelBot", myTelBot);
             job.getJobDataMap().put("chatId", chatId);
 
             CronTrigger trigger = TriggerBuilder.newTrigger()
-                    .withIdentity("reminderTrigger", "reminderGroup")
+                    .withIdentity("reminderTrigger", "reminderGroup"+chatId+"")
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                     .build();
 
