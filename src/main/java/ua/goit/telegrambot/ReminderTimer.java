@@ -6,12 +6,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ua.goit.userssetting.SettingUtils;
 
 public class ReminderTimer {
-    private final MyTelBot myTelBot;
     private final Long chatId;
     private Scheduler scheduler;
 
-    public ReminderTimer(MyTelBot myTelBot, Long chatId) {
-        this.myTelBot = myTelBot;
+    public ReminderTimer(Long chatId) {
         this.chatId = chatId;
     }
 
@@ -25,7 +23,6 @@ public class ReminderTimer {
                     .withIdentity("reminderJob", "reminderGroup"+chatId+"")
                     .build();
 
-            job.getJobDataMap().put("myTelBot", myTelBot);
             job.getJobDataMap().put("chatId", chatId);
 
             CronTrigger trigger = TriggerBuilder.newTrigger()
@@ -54,12 +51,11 @@ public class ReminderTimer {
     public static class ReminderJob implements Job {
         @Override
         public void execute(JobExecutionContext context) {
-            MyTelBot myTelBot = (MyTelBot) context.getJobDetail().getJobDataMap().get("myTelBot");
             Long chatId = (Long) context.getJobDetail().getJobDataMap().get("chatId");
             SendMessage sendMessage = new SendMessage();
 
             sendMessage.setChatId(chatId);
-            sendMessage.setText(SettingUtils.getCurrentData(myTelBot.getUserSetting(chatId)));
+            sendMessage.setText(SettingUtils.getCurrentData(MyTelBot.getSettings().get(chatId)));
             new MyTelBot().sendNextMessage(sendMessage);
         }
     }

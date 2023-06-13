@@ -6,8 +6,11 @@ import com.google.gson.stream.JsonWriter;
 import ua.goit.banks.BankFactory;
 import ua.goit.banks.Banks;
 import ua.goit.banks.WorkingCurrency;
+import ua.goit.telegrambot.MyTelBot;
+import ua.goit.telegrambot.ReminderTimer;
 
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 public class SettingUtils {
@@ -83,5 +86,30 @@ public class SettingUtils {
         }
 
         return newUserSetting;
+    }
+
+    public static void updateSettings(Long chatId) {
+        if (!MyTelBot.getSettings().containsKey(chatId)) {
+            URL url = MyTelBot.class.getResource("/Users/User" + chatId + ".json");
+
+            if (url != null) {
+                ChatBotSettings settingFromResource = readUserSetting(chatId);
+
+                if (settingFromResource.isReminderStarted()) {
+                    ReminderTimer restartTimer = new ReminderTimer(chatId);
+                    String cronExpression = "0 0 " + settingFromResource.getReminderTime() + " * * ?";
+
+                    restartTimer.startTimer(cronExpression);
+                    MyTelBot.getTimers().put(chatId, restartTimer);
+                } else {
+                    settingFromResource.setReminderTime(0);
+                }
+
+                MyTelBot.getSettings().put(chatId, settingFromResource);
+
+            } else {
+                MyTelBot.getSettings().put(chatId, new ChatBotSettings(chatId));
+            }
+        }
     }
 }
