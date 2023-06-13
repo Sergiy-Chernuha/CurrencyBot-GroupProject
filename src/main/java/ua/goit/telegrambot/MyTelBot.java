@@ -9,6 +9,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import ua.goit.banks.Currencies;
+
+import ua.goit.telegrambot.buttonmenus.BankMenu;
+import ua.goit.telegrambot.buttonmenus.CurrencyMenu;
+import ua.goit.telegrambot.buttonmenus.DecimalMenu;
+import ua.goit.telegrambot.buttonmenus.RemindersMenu;
 import ua.goit.userssetting.ChatBotSettings;
 import ua.goit.userssetting.SettingUtils;
 
@@ -19,14 +24,18 @@ import java.util.Map;
 
 public class MyTelBot extends TelegramLongPollingBot {
 
-    static Map<Long, ChatBotSettings> settings = new HashMap<>();
-    Map<Long, ReminderTimer> timers = new HashMap<>();
+    private static final Map<Long, ChatBotSettings> settings = new HashMap<>();
+    private static final Map<Long, ReminderTimer> timers = new HashMap<>();
 
     public MyTelBot() {
     }
 
-    public ChatBotSettings getUserSetting(Long chatId) {
-        return settings.get(chatId);
+    public static Map<Long, ChatBotSettings> getSettings() {
+        return settings;
+    }
+
+    public static Map<Long, ReminderTimer> getTimers() {
+        return timers;
     }
 
     @Override
@@ -34,7 +43,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             Message message = update.getMessage();
             Long chatId = update.getMessage().getChatId();
-            new SettingsKeyboardsUtils().updateSettings(chatId);
+            SettingUtils.updateSettings(chatId);
 
             if (message.hasText()) {
                 String text = message.getText();
@@ -56,7 +65,7 @@ public class MyTelBot extends TelegramLongPollingBot {
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
             Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
-            new SettingsKeyboardsUtils().updateSettings(chatId);
+            SettingUtils.updateSettings(chatId);
 
             String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
 
@@ -70,9 +79,9 @@ public class MyTelBot extends TelegramLongPollingBot {
             AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(update.getCallbackQuery().getId());
 
             switch (inputQueryMessage) {
-                case ("bank") -> new BankMenu().sendChoiceBankMessage(sendMessage, chatId);
-                case ("decimals") -> new DecimalMenu().sendChoiceDecimalsMessage(sendMessage, chatId);
-                case ("currencies") -> new CurrencyMenu().sendChoiceCurrenciesMessage(sendMessage, chatId);
+                case ("bank") -> BankMenu.sendChoiceBankMessage(sendMessage, settings.get(chatId));
+                case ("decimals") -> DecimalMenu.sendChoiceDecimalsMessage(sendMessage, settings.get(chatId));
+                case ("currencies") -> CurrencyMenu.sendChoiceCurrenciesMessage(sendMessage, settings.get(chatId));
                 case ("USD"), ("EUR") -> {
                     List<Currencies> choicesCurrenciesNow = new ArrayList<>(settings.get(chatId).getChoicesCurrencies());
                     Currencies newCurrency = Currencies.valueOf(inputQueryMessage);
@@ -85,57 +94,57 @@ public class MyTelBot extends TelegramLongPollingBot {
                         choicesCurrenciesNow.add(newCurrency);
                     }
 
-                    boolean isNewSetting = new SettingsKeyboardsUtils().isThisNewSetting(choicesCurrenciesNow.toString(), chatId);
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(choicesCurrenciesNow.toString(), settings.get(chatId));
                     new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setChoicesCurrencies(choicesCurrenciesNow);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new CurrencyMenu().getChoiceCurrenciesKeyBoard(chatId));
+                        editMessage.setReplyMarkup(CurrencyMenu.getChoiceCurrenciesKeyBoard(settings.get(chatId)));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
                 case ("2"), ("3"), ("4") -> {
-                    boolean isNewSetting = new SettingsKeyboardsUtils().isThisNewSetting(inputQueryMessage, chatId);
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(inputQueryMessage, settings.get(chatId));
                     new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new DecimalMenu().getChoiceDecimalsKeyBoard(chatId));
+                        editMessage.setReplyMarkup(DecimalMenu.getChoiceDecimalsKeyBoard(settings.get(chatId)));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
-                    boolean isNewSetting = new SettingsKeyboardsUtils().isThisNewSetting(inputQueryMessage, chatId);
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(inputQueryMessage, settings.get(chatId));
 
                     new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setBank(inputQueryMessage);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new BankMenu().getChoiceBankKeyBoard(chatId));
+                        editMessage.setReplyMarkup(BankMenu.getChoiceBankKeyBoard(settings.get(chatId)));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
                 }
-                case ("reminders") -> new RemindersMenu().sendChoiceReminderMessage(sendMessage, chatId);
+                case ("reminders") -> RemindersMenu.sendChoiceReminderMessage(sendMessage, settings.get(chatId));
                 case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
                     if (settings.get(chatId).isReminderStarted()) {
                         timers.get(chatId).stopTimer();
                     }
 
                     String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
-                    timers.put(chatId, new ReminderTimer(this, chatId));
+                    timers.put(chatId, new ReminderTimer(chatId));
                     timers.get(chatId).startTimer(cronExpression);
 
-                    boolean isNewSetting = new SettingsKeyboardsUtils().isThisNewSetting(inputQueryMessage, chatId);
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(inputQueryMessage, settings.get(chatId));
 
                     new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setReminderTime(Integer.parseInt(inputQueryMessage));
                     settings.get(chatId).setReminderStarted(true);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new RemindersMenu().getChoiceReminderKeyBoard(chatId));
+                        editMessage.setReplyMarkup(RemindersMenu.getChoiceReminderKeyBoard(settings.get(chatId)));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
@@ -145,13 +154,13 @@ public class MyTelBot extends TelegramLongPollingBot {
                         timers.get(chatId).stopTimer();
                         timers.remove(chatId);
                     }
-                    boolean isNewSetting = new SettingsKeyboardsUtils().isThisNewSetting("false", chatId);
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting("false", settings.get(chatId));
 
                     new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
                     settings.get(chatId).setReminderStarted(false);
 
                     if (isNewSetting) {
-                        editMessage.setReplyMarkup(new RemindersMenu().getChoiceReminderKeyBoard(chatId));
+                        editMessage.setReplyMarkup(RemindersMenu.getChoiceReminderKeyBoard(settings.get(chatId)));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
                     }
