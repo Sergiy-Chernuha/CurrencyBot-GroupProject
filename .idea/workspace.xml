@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="first" />
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="change with marge">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBotConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBotConst.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Users/User692303959.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/Users/User969527119.json" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -194,7 +202,14 @@
       <option name="project" value="LOCAL" />
       <updated>1686222245330</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="change with marge">
+      <created>1686663370094</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1686663370094</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -234,6 +249,7 @@
     <MESSAGE value="Finish work" />
     <MESSAGE value="Package" />
     <MESSAGE value="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above" />
+    <MESSAGE value="change with marge" />
+    <option name="LAST_COMMIT_MESSAGE" value="change with marge" />
   </component>
 </project>

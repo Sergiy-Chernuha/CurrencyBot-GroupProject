@@ -1,10 +1,10 @@
 {
   "chatId": 969527119,
   "numberOfDecimal": 3,
-  "bank": "PrivatBank",
+  "bank": "NBUBank",
   "choicesCurrencies": [
-    "USD",
-    "EUR"
+    "EUR",
+    "USD"
   ],
   "reminderTime": 0,
   "reminderStarted": false
