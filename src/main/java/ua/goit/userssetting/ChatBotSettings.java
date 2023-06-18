@@ -2,6 +2,7 @@ package ua.goit.userssetting;
 
 import lombok.Data;
 import ua.goit.banks.Currencies;
+import ua.goit.banks.privatbank.PrivatBankService;
 
 import java.util.List;
 

@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class MonoBank implements Banks {
+public class MonoBankService implements Banks {
 
     private static List<WorkingCurrency> currencies;
-    String name = "MonoBank";
+    private final String name = "МоноБанк";
 
     @Override
     public List<WorkingCurrency> getCurrencies() {
@@ -31,14 +31,7 @@ public class MonoBank implements Banks {
         Type type = TypeToken.getParameterized(List.class, MonoCurrency.class).getType();
         List<MonoCurrency> monoCurrencies = new Gson().fromJson(json, type);
 
-        currencies =
-                monoCurrencies.stream()
-                        .filter(x -> x.getCurrencyCodeA() == 840 || x.getCurrencyCodeA() == 978)
-                        .filter(x -> x.getCurrencyCodeB() == 980)
-                        .map(x -> new WorkingCurrency(Currencies.valueOf(parseIsoToCurrency(x.getCurrencyCodeA()))
-                                , x.getRateSell()
-                                , x.getRateBuy()))
-                        .collect(Collectors.toList());
+        filterAndMapCurrencies(monoCurrencies);
     }
 
     private String parseIsoToCurrency(int code) {
@@ -51,5 +44,16 @@ public class MonoBank implements Banks {
         }
 
         return "000";
+    }
+
+    private void filterAndMapCurrencies(List<MonoCurrency> monoCurrencies) {
+        currencies = monoCurrencies.stream()
+                .filter(x -> x.getCurrencyCodeA() == 840 || x.getCurrencyCodeA() == 978)
+                .filter(x -> x.getCurrencyCodeB() == 980)
+                .map(x -> new WorkingCurrency(
+                        Currencies.valueOf(parseIsoToCurrency(x.getCurrencyCodeA())),
+                        x.getRateSell(),
+                        x.getRateBuy()))
+                .collect(Collectors.toList());
     }
 }
