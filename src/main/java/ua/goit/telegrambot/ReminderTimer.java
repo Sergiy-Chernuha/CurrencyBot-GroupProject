@@ -5,19 +5,17 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ua.goit.userssetting.SettingUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ReminderTimer {
-   static Map<Long, Scheduler> schedulers=new HashMap<>();
+    private static Scheduler scheduler;
 
-    public void startTimer(String cronExpression, Long chatId) {
+    public static void startTimer(String cronExpression, Long chatId) {
+        JobKey jobKey = JobKey.jobKey("reminderJob", "reminderGroup" + chatId + "");
+        checkInit();
+
         try {
-            if (schedulers.containsKey(chatId)) {
-                schedulers.get(chatId).shutdown();
+            if (scheduler != null && !scheduler.isShutdown() && scheduler.checkExists(jobKey)) {
+                scheduler.deleteJob(jobKey);
             }
-
-            Scheduler scheduler = new StdSchedulerFactory().getScheduler();
 
             JobDetail job = JobBuilder.newJob(ReminderJob.class)
                     .withIdentity("reminderJob", "reminderGroup" + chatId + "")
@@ -31,18 +29,29 @@ public class ReminderTimer {
             job.getJobDataMap().put("chatId", chatId);
             scheduler.start();
             scheduler.scheduleJob(job, trigger);
-            schedulers.put(chatId, scheduler);
 
         } catch (SchedulerException e) {
             e.printStackTrace();
         }
     }
 
-    public void stopTimer(Long chatId) {
+    private static void checkInit() {
+        if (scheduler == null) {
+            try {
+                scheduler = new StdSchedulerFactory()
+                        .getScheduler();
+            } catch (SchedulerException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void stopTimer(Long chatId) {
+        JobKey jobKey = JobKey.jobKey("reminderJob", "reminderGroup" + chatId + "");
+
         try {
-            if (schedulers.get(chatId) != null && !schedulers.get(chatId).isShutdown()) {
-                schedulers.get(chatId).shutdown();
-                schedulers.remove(chatId);
+            if (scheduler != null && !scheduler.isShutdown() && scheduler.checkExists(jobKey)) {
+                scheduler.deleteJob(jobKey);
             }
         } catch (SchedulerException e) {
             e.printStackTrace();

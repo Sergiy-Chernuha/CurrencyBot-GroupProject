@@ -96,11 +96,9 @@ public class SettingUtils {
                 ChatBotSettings settingFromResource = readUserSetting(chatId);
 
                 if (settingFromResource.isReminderStarted()) {
-//                    ReminderTimer restartTimer = new ReminderTimer(chatId);
                     String cronExpression = "0 0 " + settingFromResource.getReminderTime() + " * * ?";
 
-                    MyTelBot.getTimerController().startTimer(cronExpression,chatId);
-//                    MyTelBot.getTimers().put(chatId, restartTimer);
+                    ReminderTimer.startTimer(cronExpression, chatId);
                 } else {
                     settingFromResource.setReminderTime(0);
                 }
