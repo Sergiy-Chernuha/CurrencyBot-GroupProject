@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class MonoBankService implements Banks {
 
     private static List<WorkingCurrency> currencies;
-    String name = "МоноБанк";
+    private final String name = "МоноБанк";
 
     @Override
     public List<WorkingCurrency> getCurrencies() {

@@ -1,0 +1,10 @@
+{
+  "chatId": 969527119,
+  "numberOfDecimal": 4,
+  "bank": "PrivatBank",
+  "choicesCurrencies": [
+    "USD"
+  ],
+  "reminderTime": 0,
+  "reminderStarted": false
+}

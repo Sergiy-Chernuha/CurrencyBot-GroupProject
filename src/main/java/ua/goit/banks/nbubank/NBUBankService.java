@@ -7,7 +7,6 @@ import org.jsoup.Jsoup;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.banks.WorkingCurrency;
-import ua.goit.banks.monobank.MonoCurrency;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 public class NBUBankService implements Banks {
 
     private static List<WorkingCurrency> currencies;
-    String name = "Національний банк України";
+    private final String name = "Національний банк України";
 
     @Override
     public List<WorkingCurrency> getCurrencies() {
