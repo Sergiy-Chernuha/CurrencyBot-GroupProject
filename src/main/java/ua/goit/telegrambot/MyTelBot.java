@@ -1,61 +1,179 @@
 package ua.goit.telegrambot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ua.goit.banks.Banks;
-import ua.goit.banks.WorkingCurrency;
-import ua.goit.banks.BankFactory;
-import ua.goit.userssetting.ChatBotSettings;
 
-import java.io.IOException;
+import ua.goit.banks.Currencies;
+
+import ua.goit.telegrambot.buttonmenus.BankMenu;
+import ua.goit.telegrambot.buttonmenus.CurrencyMenu;
+import ua.goit.telegrambot.buttonmenus.DecimalMenu;
+import ua.goit.telegrambot.buttonmenus.RemindersMenu;
+import ua.goit.userssetting.ChatBotSettings;
+import ua.goit.userssetting.SettingUtils;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MyTelBot extends TelegramLongPollingBot {
 
-    private final ChatBotSettings options;
+    private static final Map<Long, ChatBotSettings> settings = new HashMap<>();
+    private static final Map<Long, ReminderTimer> timers = new HashMap<>();
 
     public MyTelBot() {
-        options = new ChatBotSettings();
+    }
+
+    public static Map<Long, ChatBotSettings> getSettings() {
+        return settings;
+    }
+
+    public static Map<Long, ReminderTimer> getTimers() {
+        return timers;
     }
 
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
-            if (update.getMessage().hasText() && update.getMessage().getText().equals("/start")) {
-                sendNextMessage(sendHelloMessage(update.getMessage().getChatId()));
+            Message message = update.getMessage();
+            Long chatId = update.getMessage().getChatId();
+            SettingUtils.updateSettings(chatId);
+
+            if (message.hasText()) {
+                String text = message.getText();
+                SendMessage sendMessage = new SendMessage();
+
+                sendMessage.setChatId(String.valueOf(chatId));
+
+                switch (text) {
+                    case "/start" -> sendNextMessage(new TelegramBotUtils().sendHelloMessage(chatId));
+                    case "Отримати інфо" -> {
+                        sendMessage.setText(SettingUtils.getCurrentData(settings.get(chatId)));
+                        sendNextMessage(sendMessage);
+                    }
+                    case "Налаштування" -> new SettingsKeyboardsUtils().sendChoiceOptionsMessage(sendMessage);
+                    case "/end" -> sendNextMessage(new TelegramBotUtils().sendEndMessage(chatId));
+                }
             }
         } else if (update.hasCallbackQuery()) {
-            System.out.print("id user= " + update.getCallbackQuery().getMessage().getChatId() + "  ");
-            String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
-            SendMessage sendMessage = new SendMessage();
+            Long chatId = update.getCallbackQuery().getMessage().getChatId();
+            Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
-            sendMessage.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
+            SettingUtils.updateSettings(chatId);
+
+            String inputQueryMessage = String.valueOf(update.getCallbackQuery().getData());
+
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(chatId);
+
+            EditMessageReplyMarkup editMessage = new EditMessageReplyMarkup();
+            editMessage.setChatId(chatId);
+            editMessage.setMessageId(messageId);
+
+            AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery(update.getCallbackQuery().getId());
 
             switch (inputQueryMessage) {
-                case ("current") -> {
-                    sendMessage.setText(getCurrentData());
-                    sendNextMessage(sendMessage);
+                case ("bank") -> BankMenu.sendChoiceBankMessage(sendMessage, settings.get(chatId));
+                case ("decimals") -> DecimalMenu.sendChoiceDecimalsMessage(sendMessage, settings.get(chatId));
+                case ("currencies") -> CurrencyMenu.sendChoiceCurrenciesMessage(sendMessage, settings.get(chatId));
+                case ("USD"), ("EUR") -> {
+                    List<Currencies> choicesCurrenciesNow = new ArrayList<>(settings.get(chatId).getChoicesCurrencies());
+                    Currencies newCurrency = Currencies.valueOf(inputQueryMessage);
+
+                    if (choicesCurrenciesNow.contains(newCurrency)) {
+                        if (choicesCurrenciesNow.size() > 1) {
+                            choicesCurrenciesNow.remove(newCurrency);
+                        }
+                    } else {
+                        choicesCurrenciesNow.add(newCurrency);
+                    }
+
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(choicesCurrenciesNow.toString(), settings.get(chatId));
+                    new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
+                    settings.get(chatId).setChoicesCurrencies(choicesCurrenciesNow);
+
+                    if (isNewSetting) {
+                        editMessage.setReplyMarkup(CurrencyMenu.getChoiceCurrenciesKeyBoard(settings.get(chatId)));
+                        sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
+                    }
                 }
-                case ("options") -> sendNextMessage(sendChoiceBankMessage(sendMessage));
+                case ("2"), ("3"), ("4") -> {
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(inputQueryMessage, settings.get(chatId));
+                    new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
+                    settings.get(chatId).setNumberOfDecimal(Integer.parseInt(inputQueryMessage));
+
+                    if (isNewSetting) {
+                        editMessage.setReplyMarkup(DecimalMenu.getChoiceDecimalsKeyBoard(settings.get(chatId)));
+                        sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
+                    }
+                }
                 case ("NBUBank"), ("PrivatBank"), ("MonoBank") -> {
-                    Banks newBank = BankFactory.getBank(inputQueryMessage);
-                    options.setBank(newBank);
-                    sendNextMessage(sendUpdatedSettingMessage(sendMessage));
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(inputQueryMessage, settings.get(chatId));
+
+                    new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
+                    settings.get(chatId).setBank(inputQueryMessage);
+
+                    if (isNewSetting) {
+                        editMessage.setReplyMarkup(BankMenu.getChoiceBankKeyBoard(settings.get(chatId)));
+                        sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
+                    }
+                }
+                case ("reminders") -> RemindersMenu.sendChoiceReminderMessage(sendMessage, settings.get(chatId));
+                case ("9"), ("10"), ("11"), ("12"), ("13"), ("14"), ("15"), ("16"), ("17"), ("18") -> {
+                    if (settings.get(chatId).isReminderStarted()) {
+                        timers.get(chatId).stopTimer();
+                    }
+
+                    String cronExpression = "0 0 " + inputQueryMessage + " * * ?";
+                    timers.put(chatId, new ReminderTimer(chatId));
+                    timers.get(chatId).startTimer(cronExpression);
+
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(inputQueryMessage, settings.get(chatId));
+
+                    new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
+                    settings.get(chatId).setReminderTime(Integer.parseInt(inputQueryMessage));
+                    settings.get(chatId).setReminderStarted(true);
+
+                    if (isNewSetting) {
+                        editMessage.setReplyMarkup(RemindersMenu.getChoiceReminderKeyBoard(settings.get(chatId)));
+                        sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
+                    }
+                }
+                case ("OffReminder") -> {
+                    if (settings.get(chatId).isReminderStarted()) {
+                        timers.get(chatId).stopTimer();
+                        timers.remove(chatId);
+                    }
+                    boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting("false", settings.get(chatId));
+
+                    new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
+                    settings.get(chatId).setReminderStarted(false);
+
+                    if (isNewSetting) {
+                        editMessage.setReplyMarkup(RemindersMenu.getChoiceReminderKeyBoard(settings.get(chatId)));
+                        sendNextEditMessage(editMessage);
+                        SettingUtils.writeUserSettings(settings.get(chatId));
+                    }
                 }
                 default -> {
-                    sendMessage.setText("Тут може бути ваша реклама): " + update.getCallbackQuery().getData());
+                    sendMessage.setText("Немає обробки цієї кнопки: " + update.getCallbackQuery().getData());
                     sendNextMessage(sendMessage);
                 }
             }
         }
     }
 
-    private void sendNextMessage(SendMessage message) {
+    public void sendNextMessage(SendMessage message) {
         try {
             execute(message);
         } catch (TelegramApiException e) {
@@ -63,119 +181,29 @@ public class MyTelBot extends TelegramLongPollingBot {
         }
     }
 
-    private SendMessage sendHelloMessage(long chatId) {
-        SendMessage sendMessage = new SendMessage();
-        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
-
-        sendMessage.setChatId(String.valueOf(chatId));
-        sendMessage.setText("Ласкаво просимо. Цей бот допоможе відслідковувати актуальні курси валют");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        return sendMessage;
-    }
-
-    private SendMessage sendChoiceBankMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard();
-
-        sendMessage.setText("Виберіть банк");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        return sendMessage;
-    }
-
-    private SendMessage sendUpdatedSettingMessage(SendMessage sendMessage) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = getDefaultKeyBoard();
-
-        sendMessage.setText("Налаштування оновлені");
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        return sendMessage;
-    }
-
-    private InlineKeyboardMarkup getDefaultKeyBoard() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Отримати інфо");
-        inlineKeyboardButton1.setCallbackData("current");
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(inlineKeyboardButton1);
-
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Налаштування");
-        inlineKeyboardButton2.setCallbackData("options");
-        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow2.add(inlineKeyboardButton2);
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-        rowList.add(keyboardButtonsRow2);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-        return inlineKeyboardMarkup;
-    }
-
-    private InlineKeyboardMarkup getChoiceBankKeyBoard() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton("Національний банк України");
-        inlineKeyboardButton1.setCallbackData("NBUBank");
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(inlineKeyboardButton1);
-
-        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton("Приват Банк");
-        inlineKeyboardButton2.setCallbackData("PrivatBank");
-        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
-        keyboardButtonsRow2.add(inlineKeyboardButton2);
-
-        InlineKeyboardButton inlineKeyboardButton3 = new InlineKeyboardButton("МоноБанк");
-        inlineKeyboardButton3.setCallbackData("MonoBank");
-        List<InlineKeyboardButton> keyboardButtonsRow3 = new ArrayList<>();
-        keyboardButtonsRow3.add(inlineKeyboardButton3);
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-        rowList.add(keyboardButtonsRow2);
-        rowList.add(keyboardButtonsRow3);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-        return inlineKeyboardMarkup;
-    }
-
-    private String getCurrentData() {
-        StringBuilder result = new StringBuilder();
-        int numberOfDecimal = options.getNumberOfDecimal();
-
+    public void sendNextQuery(AnswerCallbackQuery answerCallbackQuery) {
         try {
-            options.getBank().updateCurrentData();
-        } catch (IOException e) {
-            System.out.println("No bank connection");
+            execute(answerCallbackQuery);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
+    }
 
-        result.append("Курс в ");
-        result.append(options.getBank().getName());
-        result.append(": \n");
-
-        for (WorkingCurrency current : options.getBank().getCurrencies()) {
-            if (!options.getChoicesCurrencies().contains(current.getName())) {
-                continue;
-            }
-
-            result.append("\n");
-            result.append(current.getName());
-            result.append("/UAH\n");
-            result.append("   Продаж:");
-            result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencySellingRate()));
-            result.append("   Купівля:");
-            result.append(String.format("%." + numberOfDecimal + "f", current.getCurrencyBuyingRate()));
+    public void sendNextEditMessage(EditMessageReplyMarkup editMessage) {
+        try {
+            execute(editMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
-
-        return result.toString();
     }
 
     @Override
     public String getBotUsername() {
-        return "BlackBot23_bot";
+        return MyTelBotConst.MY_TEL_BOT_NAME;
     }
 
-    // добавить имя и токен своего бота, они не подлежат заливке в GitHub
     @Override
     public String getBotToken() {
-        return null;
+        return MyTelBotConst.MY_TEL_BOT_TOKEN;
     }
 }

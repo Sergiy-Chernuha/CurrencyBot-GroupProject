@@ -2,6 +2,7 @@ package ua.goit.banks.nbubank;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.Getter;
 import org.jsoup.Jsoup;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
@@ -13,19 +14,15 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 public class NBUBankService implements Banks {
 
-    List<WorkingCurrency> currencies;
+    private static List<WorkingCurrency> currencies;
     String name = "Національний банк України";
 
     @Override
     public List<WorkingCurrency> getCurrencies() {
         return currencies;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -36,12 +33,6 @@ public class NBUBankService implements Banks {
         List<NBUCurrent> nbuCurrencies = new Gson().fromJson(json, type);
 
         filterAndMapCurrencies(nbuCurrencies);
-
-//        currencies = monoCurrencies.stream().filter(x -> x.getR030() == 840 || x.getR030() == 978)
-//                .map(x -> new WorkingCurrency(Currencies.valueOf(x.getCc()), x.getRate(), x.getRate()))
-//                .collect(Collectors.toList());
-
-        System.out.println(name + " " + currencies.get(0).getName());
     }
 
     private void filterAndMapCurrencies(List<NBUCurrent> nbuCurrencies) {

@@ -2,6 +2,7 @@ package ua.goit.banks.monobank;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.Getter;
 import org.jsoup.Jsoup;
 import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
@@ -12,19 +13,15 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 public class MonoBankService implements Banks {
 
-    List<WorkingCurrency> currencies;
+    private static List<WorkingCurrency> currencies;
     String name = "МоноБанк";
 
     @Override
     public List<WorkingCurrency> getCurrencies() {
         return currencies;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override
@@ -35,18 +32,6 @@ public class MonoBankService implements Banks {
         List<MonoCurrency> monoCurrencies = new Gson().fromJson(json, type);
 
         filterAndMapCurrencies(monoCurrencies);
-
-
-//        currencies =
-//                monoCurrencies.stream()
-//                        .filter(x -> x.getCurrencyCodeA() == 840 || x.getCurrencyCodeA() == 978)
-//                        .filter(x -> x.getCurrencyCodeB() == 980)
-//                        .map(x -> new WorkingCurrency(Currencies.valueOf(parseIsoToCurrency(x.getCurrencyCodeA()))
-//                                , x.getRateSell()
-//                                , x.getRateBuy()))
-//                        .collect(Collectors.toList());
-
-        System.out.println(name + " " + currencies.get(0).getName());
     }
 
     private String parseIsoToCurrency(int code) {
