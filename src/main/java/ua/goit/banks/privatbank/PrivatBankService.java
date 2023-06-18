@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class PrivatBankService implements Banks {
 
     private static List<WorkingCurrency> currencies;
-    private final String name = "PrivatBank";
+    private final String name = "Приват Банк";
 
     @Override
     public List<WorkingCurrency> getCurrencies() {

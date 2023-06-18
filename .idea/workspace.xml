@@ -4,29 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="first">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/BankMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/ButtonValue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/RemindersMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_05__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_05__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_20__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_21_05_2023_22_20__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/BankMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/CurrencyMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/CurrencyMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/DecimalMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/buttonmenus/DecimalMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/KeyboardBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/KeyboardBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/ReminderTimer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/RemindersMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SomeButton.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/SettingUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/BankFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/BankFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/monobank/MonoBankService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/nbubank/NBUBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/nbubank/NBUBankService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/banks/privatbank/PrivatBankService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/ChatBotSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/userssetting/ChatBotSettings.java" afterDir="false" />
-    </list>
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="same refactor bank services" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -213,7 +191,21 @@
       <option name="project" value="LOCAL" />
       <updated>1686222245330</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="same refactor bank services">
+      <created>1687099762104</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1687099762105</updated>
+    </task>
+    <task id="LOCAL-00014" summary="same refactor bank services">
+      <created>1687099807387</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1687099807387</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -253,6 +245,7 @@
     <MESSAGE value="Finish work" />
     <MESSAGE value="Package" />
     <MESSAGE value="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above" />
-    <option name="LAST_COMMIT_MESSAGE" value="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above" />
+    <MESSAGE value="same refactor bank services" />
+    <option name="LAST_COMMIT_MESSAGE" value="same refactor bank services" />
   </component>
 </project>
