@@ -20,7 +20,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="master" />
+    <option name="BRANCH" value="separateClassesRefacoring" />
   </component>
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
@@ -75,9 +75,17 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/1/Documents/GitHub/CurrencyBot-GroupProject1&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/1/Documents/GitHub/CurrencyBot-GroupProject1&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\homeworkspacegoit\CurrencyBot-GroupProject\src\main\java\ua\goit\telegrambot" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="AppLauncher" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ua.goit.AppLauncher" />
@@ -206,6 +214,21 @@
       <updated>1687099807387</updated>
     </task>
     <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00012" summary="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above">
+      <created>1686222245330</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1686222245330</updated>
+    </task>
+    <task id="LOCAL-00013" summary="change with marge">
+      <created>1686663370094</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1686663370094</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -219,7 +242,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="Valya2" />
+                        <option value="MultyTimer" />
                       </list>
                     </value>
                   </entry>
@@ -245,7 +268,7 @@
     <MESSAGE value="Finish work" />
     <MESSAGE value="Package" />
     <MESSAGE value="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above" />
-    <MESSAGE value="same refactor bank services" />
-    <option name="LAST_COMMIT_MESSAGE" value="same refactor bank services" />
+    <MESSAGE value="change with marge" />
+    <option name="LAST_COMMIT_MESSAGE" value="change with marge" />
   </component>
 </project>
