@@ -1,8 +1,8 @@
 package ua.goit.banks;
 
-import ua.goit.banks.monobank.MonoBank;
-import ua.goit.banks.nbubank.NBUBank;
-import ua.goit.banks.privatbank.PrivatBank;
+import ua.goit.banks.monobank.MonoBankService;
+import ua.goit.banks.nbubank.NBUBankService;
+import ua.goit.banks.privatbank.PrivatBankService;
 
 public class BankFactory {
 
@@ -11,11 +11,11 @@ public class BankFactory {
 
     public static Banks getBank(String bankName) {
         if (bankName.equals("PrivatBank")) {
-            return new PrivatBank();
+            return new PrivatBankService();
         } else if (bankName.equals("MonoBank")) {
-            return new MonoBank();
+            return new MonoBankService();
         }
 
-        return new NBUBank();
+        return new NBUBankService();
     }
 }

@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class PrivatBank implements Banks {
+public class PrivatBankService implements Banks {
 
     private static List<WorkingCurrency> currencies;
-    String name = "PrivatBank";
+    private final String name = "Приват Банк";
 
     @Override
     public List<WorkingCurrency> getCurrencies() {
@@ -31,8 +31,16 @@ public class PrivatBank implements Banks {
         Type type = TypeToken.getParameterized(List.class, PrivatCurrency.class).getType();
         List<PrivatCurrency> privateCurrencies = new Gson().fromJson(json, type);
 
-        currencies = privateCurrencies.stream().filter(x -> Currencies.contains(x.getCcy()))
-                .map(x -> new WorkingCurrency(Currencies.valueOf(x.getCcy()), x.getSale(), x.getBuy()))
+        filterAndMapCurrencies(privateCurrencies);
+    }
+
+    private void filterAndMapCurrencies(List<PrivatCurrency> privateCurrencies) {
+        currencies = privateCurrencies.stream()
+                .filter(x -> Currencies.contains(x.getCcy()))
+                .map(x -> new WorkingCurrency(
+                        Currencies.valueOf(x.getCcy()),
+                        x.getSale(),
+                        x.getBuy()))
                 .collect(Collectors.toList());
     }
 }
