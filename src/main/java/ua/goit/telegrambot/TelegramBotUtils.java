@@ -4,6 +4,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import ua.goit.banks.Currencies;
+import ua.goit.userssetting.ChatBotSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,17 @@ public class TelegramBotUtils {
         sendEndMessage.setText("До зустрічі!");
 
         return sendEndMessage;
+    }
+
+    SendMessage sendCurrentSettingsMessage(long chatId, ChatBotSettings userSettings){
+        SendMessage sendCurrentSettingsMessage = new SendMessage();
+        sendCurrentSettingsMessage.setChatId(chatId);
+        String currencies = (userSettings.getChoicesCurrencies().size() > 1) ? "Валюти: " + userSettings.getChoicesCurrencies() : "Валюта: " + userSettings.getChoicesCurrencies();
+        String reminders = (userSettings.isReminderStarted()) ? "Сповіщення на " + userSettings.getReminderTime() : "Сповіщення вимкнені";
+        sendCurrentSettingsMessage.setText(currencies + "\nЗнаки після коми: " +
+                userSettings.getNumberOfDecimal() + "\n" + reminders + "\n" +
+                "Банк: " + userSettings.getBank());
+        return sendCurrentSettingsMessage;
     }
 
     private ReplyKeyboardMarkup getDefaultKeyBoard() {
