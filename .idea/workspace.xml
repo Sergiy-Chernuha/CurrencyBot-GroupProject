@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="same refactor bank services">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_06_2023_16_24__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_06_2023_16_24__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_06_2023_16_24_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_06_2023_16_24__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/TelegramBotUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/TelegramBotUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,10 +75,16 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/1/Documents/GitHub/CurrencyBot-GroupProject1&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/homeworkspacegoit/CurrencyBot-GroupProject&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -112,6 +120,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1684394986460</updated>
+      <workItem from="1689067664573" duration="46000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1684395758173</created>
@@ -213,6 +222,9 @@
     </task>
     <option name="localTasksCounter" value="14" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

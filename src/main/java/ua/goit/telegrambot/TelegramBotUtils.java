@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TelegramBotUtils {
 
-    SendMessage sendHelloMessage(long chatId) {
+    public SendMessage sendHelloMessage(long chatId) {
         SendMessage sendMessage = new SendMessage();
         ReplyKeyboardMarkup replyKeyboardMarkup = getDefaultKeyBoard();
 
@@ -22,7 +22,7 @@ public class TelegramBotUtils {
         return sendMessage;
     }
 
-    SendMessage sendEndMessage(long chatId) {
+    public SendMessage sendEndMessage(long chatId) {
         SendMessage sendEndMessage = new SendMessage();
         sendEndMessage.setChatId(chatId);
         sendEndMessage.setText("До зустрічі!");
@@ -30,14 +30,22 @@ public class TelegramBotUtils {
         return sendEndMessage;
     }
 
-    SendMessage sendCurrentSettingsMessage(long chatId, ChatBotSettings userSettings){
+    public SendMessage sendCurrentSettingsMessage(long chatId, ChatBotSettings userSettings) {
         SendMessage sendCurrentSettingsMessage = new SendMessage();
         sendCurrentSettingsMessage.setChatId(chatId);
-        String currencies = (userSettings.getChoicesCurrencies().size() > 1) ? "Валюти: " + userSettings.getChoicesCurrencies() : "Валюта: " + userSettings.getChoicesCurrencies();
-        String reminders = (userSettings.isReminderStarted()) ? "Сповіщення на " + userSettings.getReminderTime() : "Сповіщення вимкнені";
+
+        String currencies = (userSettings.getChoicesCurrencies().size() > 1)
+                ? "Валюти: " + userSettings.getChoicesCurrencies()
+                : "Валюта: " + userSettings.getChoicesCurrencies();
+
+        String reminders = (userSettings.isReminderStarted())
+                ? "Сповіщення на " + userSettings.getReminderTime()
+                : "Сповіщення вимкнені";
+
         sendCurrentSettingsMessage.setText(currencies + "\nЗнаки після коми: " +
                 userSettings.getNumberOfDecimal() + "\n" + reminders + "\n" +
                 "Банк: " + userSettings.getBank());
+
         return sendCurrentSettingsMessage;
     }
 
