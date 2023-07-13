@@ -51,6 +51,7 @@ public class MyTelBot extends TelegramLongPollingBot {
                     }
                     case "Налаштування" -> new SettingsKeyboardsUtils().sendChoiceOptionsMessage(sendMessage);
                     case "/end" -> sendNextMessage(new TelegramBotUtils().sendEndMessage(chatId));
+                    case "/settings" -> sendNextMessage(new TelegramBotUtils().sendCurrentSettingsMessage(chatId, settings.get(chatId)));
                 }
             }
         } else if (update.hasCallbackQuery()) {

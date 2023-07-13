@@ -31,7 +31,7 @@ public class SettingsKeyboardsUtils {
         return KeyboardBuilder.getSimpleKeyboard(buttons);
     }
 
-    void sendChoiceOptionsMessage(SendMessage sendMessage) {
+    public void sendChoiceOptionsMessage(SendMessage sendMessage) {
         InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceOptionsKeyBoard();
 
         sendMessage.setText("Налаштування");
@@ -40,7 +40,7 @@ public class SettingsKeyboardsUtils {
         new MyTelBot().sendNextMessage(sendMessage);
     }
 
-    void sendAnswerCallbackQuery(AnswerCallbackQuery answerCallbackQuery, boolean isNewSetting) {
+    public void sendAnswerCallbackQuery(AnswerCallbackQuery answerCallbackQuery, boolean isNewSetting) {
         String callBackAnswer = isNewSetting ? "Налаштування оновлені." : "Ці налаштування вже встановлені.";
 
         answerCallbackQuery.setText(callBackAnswer);
