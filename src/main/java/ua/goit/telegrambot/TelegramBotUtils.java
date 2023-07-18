@@ -4,6 +4,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import ua.goit.banks.BankFactory;
+import ua.goit.banks.Banks;
 import ua.goit.banks.Currencies;
 import ua.goit.userssetting.ChatBotSettings;
 
@@ -34,17 +36,20 @@ public class TelegramBotUtils {
         SendMessage sendCurrentSettingsMessage = new SendMessage();
         sendCurrentSettingsMessage.setChatId(chatId);
 
+        String banks = (userSettings.getBanks().size() > 1)
+                ? "Банки :" + getStringBanks(userSettings.getBanks())
+                : "Банк :" + userSettings.getBanks().get(0);
+
         String currencies = (userSettings.getChoicesCurrencies().size() > 1)
-                ? "Валюти: " + userSettings.getChoicesCurrencies()
-                : "Валюта: " + userSettings.getChoicesCurrencies();
+                ? "Валюти: " + getStringCurrency(userSettings.getChoicesCurrencies())
+                : "Валюта: " + userSettings.getChoicesCurrencies().get(0);
 
         String reminders = (userSettings.isReminderStarted())
-                ? "Сповіщення на " + userSettings.getReminderTime()
+                ? "Сповіщення на " + getHours(userSettings.getReminderHours())
                 : "Сповіщення вимкнені";
 
-        sendCurrentSettingsMessage.setText(currencies + "\nЗнаки після коми: " +
-                userSettings.getNumberOfDecimal() + "\n" + reminders + "\n" +
-                "Банк: " + userSettings.getBank());
+        sendCurrentSettingsMessage.setText(banks + "\n" + currencies + "\nЗнаки після коми: " +
+                userSettings.getNumberOfDecimal() + "\n" + reminders);
 
         return sendCurrentSettingsMessage;
     }
@@ -68,5 +73,51 @@ public class TelegramBotUtils {
         replyKeyboardMarkup.setKeyboard(keyboard);
 
         return replyKeyboardMarkup;
+    }
+
+    private static String getStringBanks(List<String> list) {
+        StringBuilder result = new StringBuilder();
+
+        for (String oneBank : list) {
+            Banks bank = BankFactory.getBank(oneBank);
+
+            if (!result.isEmpty()) {
+                result.append(", ");
+            }
+
+            result.append(bank.getName());
+        }
+
+        return result.toString();
+    }
+
+    private static String getStringCurrency(List<Currencies> list) {
+        StringBuilder result = new StringBuilder();
+
+        for (Currencies oneCurrency : list) {
+            if (!result.isEmpty()) {
+                result.append(", ");
+            }
+
+            result.append(oneCurrency.toString());
+        }
+
+        return result.toString();
+    }
+
+    private static String getHours(List<Integer> list) {
+        StringBuilder hours = new StringBuilder();
+        list.sort(Integer::compareTo);
+
+        for (Integer userSetting : list) {
+            if (!hours.isEmpty()) {
+                hours.append(", ");
+            }
+
+            hours.append(userSetting);
+            hours.append(":00");
+        }
+
+        return hours.toString();
     }
 }

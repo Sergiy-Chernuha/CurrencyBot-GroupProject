@@ -10,13 +10,13 @@ public class SettingsKeyboardsUtils {
 
    public static boolean isThisNewSetting(String inputQueryMessage, ChatBotSettings userSettings) {
 
-        String bank = userSettings.getBank();
+        String banks = userSettings.getBanks().toString();
         String numberOfDecimal = String.valueOf(userSettings.getNumberOfDecimal());
         String currencies = userSettings.getChoicesCurrencies().toString();
-        String reminderTime = String.valueOf(userSettings.getReminderTime());
+        String reminderTime = String.valueOf(userSettings.getReminderHours());
         String reminderStarted = String.valueOf(userSettings.isReminderStarted());
 
-        return !bank.equals(inputQueryMessage) && !numberOfDecimal.equals(inputQueryMessage) &&
+        return !banks.equals(inputQueryMessage) && !numberOfDecimal.equals(inputQueryMessage) &&
                 !currencies.equals(inputQueryMessage) && !reminderTime.equals(inputQueryMessage) &&
                 !reminderStarted.equals(inputQueryMessage);
     }

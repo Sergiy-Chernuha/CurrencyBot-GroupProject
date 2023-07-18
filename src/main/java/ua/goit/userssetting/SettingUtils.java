@@ -20,8 +20,21 @@ public class SettingUtils {
 
     public static String getCurrentData(ChatBotSettings userSettings) {
         StringBuilder result = new StringBuilder();
+
+
+        for (String oneBank : userSettings.getBanks()) {
+            if (!result.isEmpty()) {
+                result.append("\n\n");
+            }
+            getDataFromOneBank(userSettings, result, oneBank);
+        }
+
+        return result.toString();
+    }
+
+    private static void getDataFromOneBank(ChatBotSettings userSettings, StringBuilder result, String oneBank) {
+        Banks bank = BankFactory.getBank(oneBank);
         int numberOfDecimal = userSettings.getNumberOfDecimal();
-        Banks bank = BankFactory.getBank(userSettings.getBank());
 
         try {
             bank.updateCurrentData();
@@ -31,28 +44,25 @@ public class SettingUtils {
 
         result.append("Курс в ");
         result.append(bank.getName());
-        result.append(": \n");
+        result.append(": \n\n");
 
         for (WorkingCurrency current : bank.getCurrencies()) {
             if (!userSettings.getChoicesCurrencies().contains(current.getName())) {
                 continue;
             }
 
-            result.append("\n");
             result.append(current.getName());
             result.append("/UAH\n");
-            result.append("   Продаж:");
+            result.append("     Продаж:");
             result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencySellingRate()));
-            result.append("   Купівля:");
-            result.append(String.format("%." + numberOfDecimal + "f", current.getCurrencyBuyingRate()));
+            result.append("     Купівля:");
+            result.append(String.format("%." + numberOfDecimal + "f\n", current.getCurrencyBuyingRate()));
         }
-
-        return result.toString();
     }
 
     public static void writeUserSettings(ChatBotSettings userSetting) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String fileName = "src/main/resources/Users/User" + userSetting.getChatId() + ".json";
+        String fileName = "src/main/resources/User" + userSetting.getChatId() + ".json";
 
         try (JsonWriter jsonWriter = new JsonWriter(new FileWriter(fileName, false))) {
             String json = gson.toJson(userSetting);
@@ -66,7 +76,7 @@ public class SettingUtils {
 
     public static ChatBotSettings readUserSetting(Long chatId) {
         ChatBotSettings newUserSetting = new ChatBotSettings(chatId);
-        String fileName = "src/main/resources/Users/User" + chatId + ".json";
+        String fileName = "src/main/resources/User" + chatId + ".json";
         Gson gson = new GsonBuilder().create();
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -90,19 +100,14 @@ public class SettingUtils {
 
     public static void updateSettings(Long chatId) {
         if (!MyTelBot.getSettings().containsKey(chatId)) {
-            URL url = MyTelBot.class.getResource("/Users/User" + chatId + ".json");
+            URL url = MyTelBot.class.getResource("/User" + chatId + ".json");
 
             if (url != null) {
                 ChatBotSettings settingFromResource = readUserSetting(chatId);
 
                 if (settingFromResource.isReminderStarted()) {
-                    String cronExpression = "0 0 " + settingFromResource.getReminderTime() + " * * ?";
-
-                    ReminderTimer.startTimer(cronExpression, chatId);
-                } else {
-                    settingFromResource.setReminderTime(0);
+                    ReminderTimer.startAllTimers(settingFromResource.getReminderHours(), chatId);
                 }
-
                 MyTelBot.getSettings().put(chatId, settingFromResource);
 
             } else {
