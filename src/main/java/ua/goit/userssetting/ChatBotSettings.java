@@ -3,7 +3,6 @@ package ua.goit.userssetting;
 import lombok.Data;
 import ua.goit.banks.Currencies;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 

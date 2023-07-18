@@ -28,7 +28,7 @@ public class ReminderTimer {
                     .build();
 
             CronTrigger trigger = TriggerBuilder.newTrigger()
-                    .withIdentity("reminderTrigger" + newTimer, "reminderGroup" + chatId + "")
+                    .withIdentity("reminderTrigger" + newTimer, "reminderGroup" + chatId)
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                     .build();
 

@@ -10,12 +10,12 @@ public class WorkingCurrency implements CurrencyInterface {
     private final float currencyBuyingRate;
 
     @Override
-    public double getCurrencySellingRate() {
+    public float getCurrencySellingRate() {
         return currencySellingRate;
     }
 
     @Override
-    public double getCurrencyBuyingRate() {
+    public float getCurrencyBuyingRate() {
         return currencyBuyingRate;
     }
 }

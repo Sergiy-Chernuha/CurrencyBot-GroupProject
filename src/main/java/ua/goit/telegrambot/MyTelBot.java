@@ -87,9 +87,9 @@ public class MyTelBot extends TelegramLongPollingBot {
 
                     boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(choicesCurrenciesNow.toString(), settings.get(chatId));
                     new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
-                    settings.get(chatId).setChoicesCurrencies(choicesCurrenciesNow);
 
                     if (isNewSetting) {
+                        settings.get(chatId).setChoicesCurrencies(choicesCurrenciesNow);
                         editMessage.setReplyMarkup(CurrencyMenu.getChoiceCurrenciesKeyBoard(settings.get(chatId)));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
@@ -121,9 +121,8 @@ public class MyTelBot extends TelegramLongPollingBot {
                     boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(choicesBanksNow.toString(), settings.get(chatId));
                     new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
 
-                    settings.get(chatId).setBanks(choicesBanksNow);
-
                     if (isNewSetting) {
+                        settings.get(chatId).setBanks(choicesBanksNow);
                         editMessage.setReplyMarkup(BankMenu.getChoiceBankKeyBoard(settings.get(chatId)));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
@@ -151,15 +150,16 @@ public class MyTelBot extends TelegramLongPollingBot {
                         ReminderTimer.startTimer(inputQueryMessage, chatId);
                     }
 
+
                     boolean isNewSetting = SettingsKeyboardsUtils.isThisNewSetting(choicesReminderHoursNow.toString(), settings.get(chatId));
                     new SettingsKeyboardsUtils().sendAnswerCallbackQuery(answerCallbackQuery, isNewSetting);
 
-                    settings.get(chatId).setReminderHours(choicesReminderHoursNow);
                     if (!settings.get(chatId).isReminderStarted()) {
                         settings.get(chatId).setReminderStarted(true);
                     }
 
                     if (isNewSetting) {
+                        settings.get(chatId).setReminderHours(choicesReminderHoursNow);
                         editMessage.setReplyMarkup(RemindersMenu.getChoiceReminderKeyBoard(settings.get(chatId)));
                         sendNextEditMessage(editMessage);
                         SettingUtils.writeUserSettings(settings.get(chatId));
