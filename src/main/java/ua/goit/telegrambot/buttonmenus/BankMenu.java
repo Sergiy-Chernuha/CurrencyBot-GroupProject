@@ -6,15 +6,16 @@ import ua.goit.telegrambot.KeyboardBuilder;
 import ua.goit.telegrambot.MyTelBot;
 import ua.goit.userssetting.ChatBotSettings;
 
-public class BankMenu {
+import java.util.List;
 
+public class BankMenu {
     public static InlineKeyboardMarkup getChoiceBankKeyBoard(ChatBotSettings userSettings) {
-        String bankNow = userSettings.getBank();
+        List<String> banksNow  = userSettings.getBanks();
 
         ButtonValue[] buttons = new ButtonValue[]{
-                new ButtonValue((bankNow.equals("NBUBank")) ? "✅ Національний банк України" : "Національний банк України", "NBUBank")
-                , new ButtonValue((bankNow.equals("PrivatBank")) ? "✅ Приват Банк" : "Приват Банк", "PrivatBank")
-                , new ButtonValue((bankNow.equals("MonoBank")) ? "✅ МоноБанк" : "МоноБанк", "MonoBank")};
+                new ButtonValue((banksNow.contains("NBUBank")) ? "✅ Національний банк України" : "Національний банк України", "NBUBank")
+                , new ButtonValue((banksNow.contains("PrivatBank")) ? "✅ Приват Банк" : "Приват Банк", "PrivatBank")
+                , new ButtonValue((banksNow.contains("MonoBank")) ? "✅ МоноБанк" : "МоноБанк", "MonoBank")};
 
         return KeyboardBuilder.getSimpleKeyboard(buttons);
     }
@@ -22,7 +23,7 @@ public class BankMenu {
     public static void sendChoiceBankMessage(SendMessage sendMessage, ChatBotSettings userSettings) {
         InlineKeyboardMarkup inlineKeyboardMarkup = getChoiceBankKeyBoard(userSettings);
 
-        sendMessage.setText("Виберіть банк:");
+        sendMessage.setText("Виберіть банки:");
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
         new MyTelBot().sendNextMessage(sendMessage);

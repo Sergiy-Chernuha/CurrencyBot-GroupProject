@@ -2,9 +2,9 @@ package ua.goit.banks;
 
 public interface CurrencyInterface {
 
-    double getCurrencySellingRate();
+    float getCurrencySellingRate();
 
-    double getCurrencyBuyingRate();
+    float getCurrencyBuyingRate();
 
     Currencies getName();
 }

@@ -5,11 +5,14 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ua.goit.userssetting.SettingUtils;
 
+import java.util.List;
+
 public class ReminderTimer {
     private static Scheduler scheduler;
 
-    public static void startTimer(String cronExpression, Long chatId) {
-        JobKey jobKey = JobKey.jobKey("reminderJob", "reminderGroup" + chatId + "");
+    public static void startTimer(String newTimer, Long chatId) {
+        String cronExpression = "0 0 " + newTimer + " * * ?";
+        JobKey jobKey = JobKey.jobKey("reminderJob" + newTimer, "reminderGroup" + chatId);
         checkInit();
 
         try {
@@ -18,11 +21,11 @@ public class ReminderTimer {
             }
 
             JobDetail job = JobBuilder.newJob(ReminderJob.class)
-                    .withIdentity("reminderJob", "reminderGroup" + chatId + "")
+                    .withIdentity(jobKey)
                     .build();
 
             CronTrigger trigger = TriggerBuilder.newTrigger()
-                    .withIdentity("reminderTrigger", "reminderGroup" + chatId + "")
+                    .withIdentity("reminderTrigger" + newTimer, "reminderGroup" + chatId)
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                     .build();
 
@@ -32,6 +35,12 @@ public class ReminderTimer {
 
         } catch (SchedulerException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void startAllTimers(List<Integer> newTimers, Long chatId) {
+        for (Integer newTimer : newTimers) {
+            startTimer(newTimer.toString(), chatId);
         }
     }
 
@@ -46,15 +55,24 @@ public class ReminderTimer {
         }
     }
 
-    public static void stopTimer(Long chatId) {
-        JobKey jobKey = JobKey.jobKey("reminderJob", "reminderGroup" + chatId + "");
+    public static void stopTimer(String remoteTimer, Long chatId) {
+        JobKey jobKey = JobKey.jobKey("reminderJob" + remoteTimer, "reminderGroup" + chatId);
 
         try {
             if (scheduler != null && !scheduler.isShutdown() && scheduler.checkExists(jobKey)) {
                 scheduler.deleteJob(jobKey);
+            }else{
+                System.out.println("Not correct stopping!!!");
             }
+
         } catch (SchedulerException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void stopAllTimers(List<Integer> remoteTimers, Long chatId) {
+        for (Integer remoteTimer : remoteTimers) {
+            stopTimer(remoteTimer.toString(), chatId);
         }
     }
 

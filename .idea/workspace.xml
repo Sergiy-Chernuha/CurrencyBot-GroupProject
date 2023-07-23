@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="same refactor bank services">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_06_2023_16_24_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_18_06_2023_16_24__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/MyTelBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/SettingsKeyboardsUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/TelegramBotUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/goit/telegrambot/TelegramBotUtils.java" afterDir="false" />
-    </list>
+    <list default="true" id="047d9f92-58b8-43c2-9c58-2c36a96558ef" name="Changes" comment="refactoring after review" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -121,6 +117,10 @@
       <option name="presentableId" value="Default" />
       <updated>1684394986460</updated>
       <workItem from="1689067664573" duration="46000" />
+      <workItem from="1689268122894" duration="7038000" />
+      <workItem from="1689494899508" duration="876000" />
+      <workItem from="1689681747943" duration="16469000" />
+      <workItem from="1690101384905" duration="898000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1684395758173</created>
@@ -213,14 +213,39 @@
       <option name="project" value="LOCAL" />
       <updated>1686663370094</updated>
     </task>
-    <task id="LOCAL-00014" summary="same refactor bank services">
-      <created>1687099807387</created>
+    <task id="LOCAL-00014" summary="not big changes">
+      <option name="closed" value="true" />
+      <created>1689269332992</created>
       <option name="number" value="00014" />
       <option name="presentableId" value="LOCAL-00014" />
       <option name="project" value="LOCAL" />
-      <updated>1687099807387</updated>
+      <updated>1689269332992</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00015" summary="Add multiTimer">
+      <option name="closed" value="true" />
+      <created>1689694550770</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1689694550770</updated>
+    </task>
+    <task id="LOCAL-00016" summary="some refactoring multiTimer">
+      <option name="closed" value="true" />
+      <created>1689695993556</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1689695993556</updated>
+    </task>
+    <task id="LOCAL-00017" summary="refactoring after review">
+      <option name="closed" value="true" />
+      <created>1690102229211</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1690102229211</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -264,6 +289,10 @@
     <MESSAGE value="Package" />
     <MESSAGE value="-Refactorred MyTelBot class&#10;-Added classes BankSettings, CurrencySettings, DecimalsSettings, RemindersSettings, SettingsKeyboardsUtils, TelegramBotUtils.&#10;-Moved all methods except for sendNextMessage and sendNextQuery to the classes mentioned above" />
     <MESSAGE value="change with marge" />
-    <option name="LAST_COMMIT_MESSAGE" value="change with marge" />
+    <MESSAGE value="not big changes" />
+    <MESSAGE value="Add multiTimer" />
+    <MESSAGE value="some refactoring multiTimer" />
+    <MESSAGE value="refactoring after review" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactoring after review" />
   </component>
 </project>
