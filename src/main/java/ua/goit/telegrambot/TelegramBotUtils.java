@@ -45,7 +45,7 @@ public class TelegramBotUtils {
                 : "Валюта: " + userSettings.getChoicesCurrencies().get(0);
 
         String reminders = (userSettings.isReminderStarted())
-                ? "Сповіщення на " + getHours(userSettings.getReminderHours())
+                ? "Сповіщення на: " + getHours(userSettings.getReminderHours())
                 : "Сповіщення вимкнені";
 
         sendCurrentSettingsMessage.setText(banks + "\n" + currencies + "\nЗнаки після коми: " +
