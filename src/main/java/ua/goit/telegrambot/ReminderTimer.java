@@ -11,10 +11,7 @@ public class ReminderTimer {
     private static Scheduler scheduler;
 
     public static void startTimer(String newTimer, Long chatId) {
-
-//        ________________________________
-//        String cronExpression = "0 0 " + newTimer + " * * ?";
-        String cronExpression = "0/" + newTimer + " * * * * ?";
+        String cronExpression = "0 0 " + newTimer + " * * ?";
         JobKey jobKey = JobKey.jobKey("reminderJob" + newTimer, "reminderGroup" + chatId);
         checkInit();
 
@@ -65,7 +62,7 @@ public class ReminderTimer {
             if (scheduler != null && !scheduler.isShutdown() && scheduler.checkExists(jobKey)) {
                 scheduler.deleteJob(jobKey);
             }else{
-                System.out.println("WTF");
+                System.out.println("Not correct stopping!!!");
             }
 
         } catch (SchedulerException e) {

@@ -50,6 +50,10 @@ public class MyTelBot extends TelegramLongPollingBot {
                     case "/end" -> sendNextMessage(new TelegramBotUtils().sendEndMessage(chatId));
                     case "/settings" ->
                             sendNextMessage(new TelegramBotUtils().sendCurrentSettingsMessage(chatId, settings.get(chatId)));
+                    default -> {
+                        sendMessage.setText("Немає обробки тексту " + text);
+                        sendNextMessage(sendMessage);
+                    }
                 }
             }
         } else if (update.hasCallbackQuery()) {

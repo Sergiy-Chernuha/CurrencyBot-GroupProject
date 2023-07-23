@@ -37,8 +37,8 @@ public class TelegramBotUtils {
         sendCurrentSettingsMessage.setChatId(chatId);
 
         String banks = (userSettings.getBanks().size() > 1)
-                ? "Банки :" + getStringBanks(userSettings.getBanks())
-                : "Банк :" + userSettings.getBanks().get(0);
+                ? "Банки: " + getStringBanks(userSettings.getBanks())
+                : "Банк: " + userSettings.getBanks().get(0);
 
         String currencies = (userSettings.getChoicesCurrencies().size() > 1)
                 ? "Валюти: " + getStringCurrency(userSettings.getChoicesCurrencies())
