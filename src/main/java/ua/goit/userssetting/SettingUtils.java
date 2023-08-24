@@ -3,6 +3,8 @@ package ua.goit.userssetting;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ua.goit.banks.BankFactory;
 import ua.goit.banks.Banks;
 import ua.goit.banks.WorkingCurrency;
@@ -14,6 +16,7 @@ import java.net.URL;
 import java.util.*;
 
 public class SettingUtils {
+    public static Logger logger = LoggerFactory.getLogger(SettingUtils.class);
 
     private SettingUtils() {
     }
@@ -39,7 +42,7 @@ public class SettingUtils {
         try {
             bank.updateCurrentData();
         } catch (IOException e) {
-            System.out.println("No bank connection");
+            logger.error("No bank connection for {}", bank.getName(), e);
         }
 
         result.append("Курс в ");
@@ -70,7 +73,7 @@ public class SettingUtils {
             jsonWriter.jsonValue(json);
             jsonWriter.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error writing user settings", e);
         }
     }
 
@@ -92,7 +95,7 @@ public class SettingUtils {
 
             newUserSetting = gson.fromJson(stringBuilder.toString(), ChatBotSettings.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error reading user settings", e);
         }
 
         return newUserSetting;
@@ -103,15 +106,19 @@ public class SettingUtils {
             URL url = MyTelBot.class.getResource("/User" + chatId + ".json");
 
             if (url != null) {
+                logger.info("Found user settings file for chatId: {}", chatId);
                 ChatBotSettings settingFromResource = readUserSetting(chatId);
 
                 if (settingFromResource.isReminderStarted()) {
                     ReminderTimer.startAllTimers(settingFromResource.getReminderHours(), chatId);
+                    logger.info("Reminder timers started for chatId: {}", chatId);
                 }
                 MyTelBot.getSettings().put(chatId, settingFromResource);
+                logger.info("User settings added to MyTelBot.getSettings() for chatId: {}", chatId);
 
             } else {
                 MyTelBot.getSettings().put(chatId, new ChatBotSettings(chatId));
+                logger.info("No user settings file found for chatId {}. Default settings used.", chatId);
             }
         }
     }

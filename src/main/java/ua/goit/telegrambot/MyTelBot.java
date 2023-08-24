@@ -1,5 +1,7 @@
 package ua.goit.telegrambot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,6 +22,7 @@ import ua.goit.userssetting.SettingUtils;
 import java.util.*;
 
 public class MyTelBot extends TelegramLongPollingBot {
+    public static Logger logger = LoggerFactory.getLogger(MyTelBot.class);
 
     private static final Map<Long, ChatBotSettings> settings = new HashMap<>();
 
@@ -196,7 +199,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error("Error sending message", e);
         }
     }
 
@@ -204,7 +207,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         try {
             execute(answerCallbackQuery);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error("Error sending query", e);
         }
     }
 
@@ -212,7 +215,7 @@ public class MyTelBot extends TelegramLongPollingBot {
         try {
             execute(editMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            logger.error("Error editing message", e);
         }
     }
 

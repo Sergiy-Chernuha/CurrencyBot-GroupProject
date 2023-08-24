@@ -2,12 +2,15 @@ package ua.goit.telegrambot;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ua.goit.userssetting.SettingUtils;
 
 import java.util.List;
 
 public class ReminderTimer {
+    public static Logger logger = LoggerFactory.getLogger(ReminderTimer.class);
     private static Scheduler scheduler;
 
     public static void startTimer(String newTimer, Long chatId) {
@@ -34,7 +37,7 @@ public class ReminderTimer {
             scheduler.scheduleJob(job, trigger);
 
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            logger.error("Error starting timer", e);
         }
     }
 
@@ -50,6 +53,7 @@ public class ReminderTimer {
                 scheduler = new StdSchedulerFactory()
                         .getScheduler();
             } catch (SchedulerException e) {
+                logger.error("Error initializing scheduler", e);
                 throw new RuntimeException(e);
             }
         }
@@ -62,11 +66,11 @@ public class ReminderTimer {
             if (scheduler != null && !scheduler.isShutdown() && scheduler.checkExists(jobKey)) {
                 scheduler.deleteJob(jobKey);
             }else{
-                System.out.println("Not correct stopping!!!");
+                logger.error("Not correct stopping of the timer: {}", remoteTimer);
             }
 
         } catch (SchedulerException e) {
-            e.printStackTrace();
+            logger.error("Error stopping timer", e);
         }
     }
 
