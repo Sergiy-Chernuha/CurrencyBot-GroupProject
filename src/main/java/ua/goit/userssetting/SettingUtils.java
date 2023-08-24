@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ua.goit.AppLauncher;
 import ua.goit.banks.BankFactory;
 import ua.goit.banks.Banks;
 import ua.goit.banks.WorkingCurrency;
@@ -17,7 +16,7 @@ import java.net.URL;
 import java.util.*;
 
 public class SettingUtils {
-    public static Logger logger = LoggerFactory.getLogger(AppLauncher.class);
+    public static Logger logger = LoggerFactory.getLogger(SettingUtils.class);
 
     private SettingUtils() {
     }
@@ -115,7 +114,7 @@ public class SettingUtils {
                     logger.info("Reminder timers started for chatId: {}", chatId);
                 }
                 MyTelBot.getSettings().put(chatId, settingFromResource);
-                logger.debug("User settings added to MyTelBot.getSettings() for chatId: {}", chatId);
+                logger.info("User settings added to MyTelBot.getSettings() for chatId: {}", chatId);
 
             } else {
                 MyTelBot.getSettings().put(chatId, new ChatBotSettings(chatId));

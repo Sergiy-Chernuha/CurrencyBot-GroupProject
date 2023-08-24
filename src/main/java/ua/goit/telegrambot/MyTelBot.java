@@ -10,7 +10,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import ua.goit.AppLauncher;
 import ua.goit.banks.Currencies;
 
 import ua.goit.telegrambot.buttonmenus.BankMenu;
@@ -23,7 +22,7 @@ import ua.goit.userssetting.SettingUtils;
 import java.util.*;
 
 public class MyTelBot extends TelegramLongPollingBot {
-    public static Logger logger = LoggerFactory.getLogger(AppLauncher.class);
+    public static Logger logger = LoggerFactory.getLogger(MyTelBot.class);
 
     private static final Map<Long, ChatBotSettings> settings = new HashMap<>();
 
